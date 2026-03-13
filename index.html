@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campaign Blueprint</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #FAFAF8;
+      color: #2D2D2D;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---------- header ---------- */
+    .app-header {
+      text-align: center;
+      padding: 24px 16px 12px;
+    }
+    .app-header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #1A1A1A;
+    }
+    .app-header p {
+      font-size: 0.85rem;
+      color: #888;
+      margin-top: 4px;
+    }
+
+    /* ---------- main grid ---------- */
+    .panels {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 12px 24px 24px;
+      flex: 1;
+      min-height: 0;
+    }
+    @media (max-width: 820px) {
+      .panels { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      background: #FFFFFF;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    /* ---------- LEFT PANEL — CHAT ---------- */
+    .chat-panel .panel-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 20px;
+      border-bottom: 1px solid #F0EFED;
+    }
+    .avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: #1A8C8C;
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+    .panel-header .label { font-weight: 600; font-size: 0.95rem; }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .msg {
+      max-width: 82%;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 0.875rem;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .msg.assistant {
+      align-self: flex-start;
+      background: #E8F5F5;
+      color: #1A1A1A;
+      border-bottom-left-radius: 4px;
+    }
+    .msg.user {
+      align-self: flex-end;
+      background: #FDF4E3;
+      color: #1A1A1A;
+      border-bottom-right-radius: 4px;
+    }
+    .msg.error {
+      align-self: center;
+      background: #FFF0F0;
+      color: #B33A3A;
+      font-size: 0.8rem;
+      border-radius: 8px;
+    }
+
+    .typing-indicator {
+      align-self: flex-start;
+      padding: 10px 16px;
+      font-size: 0.8rem;
+      color: #999;
+      display: none;
+    }
+    .typing-indicator.visible { display: block; }
+    .typing-indicator span {
+      display: inline-block;
+      animation: blink 1.4s infinite;
+    }
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes blink {
+      0%, 80%, 100% { opacity: 0.3; }
+      40% { opacity: 1; }
+    }
+
+    .chat-input-bar {
+      display: flex;
+      gap: 8px;
+      padding: 14px 16px;
+      border-top: 1px solid #F0EFED;
+    }
+    .chat-input-bar textarea {
+      flex: 1;
+      border: 1px solid #DDD;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.875rem;
+      resize: none;
+      outline: none;
+      line-height: 1.4;
+      min-height: 42px;
+      max-height: 120px;
+    }
+    .chat-input-bar textarea:focus { border-color: #1A8C8C; }
+    .chat-input-bar button {
+      background: #E8A020;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 0 20px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: background 0.15s;
+      flex-shrink: 0;
+    }
+    .chat-input-bar button:hover { background: #D18E14; }
+    .chat-input-bar button:disabled { opacity: 0.5; cursor: default; }
+
+    /* ---------- RIGHT PANEL — BLUEPRINT ---------- */
+    .blueprint-panel .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 1px solid #F0EFED;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .blueprint-panel .panel-header .label {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .bp-actions { display: flex; gap: 8px; }
+    .btn-update {
+      background: #E8A020;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 18px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-update:hover { background: #D18E14; }
+    .btn-update:disabled { opacity: 0.5; cursor: default; }
+
+    .btn-copy {
+      background: #1A8C8C;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 18px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: background 0.15s;
+      display: none;
+    }
+    .btn-copy:hover { background: #157070; }
+    .btn-copy.visible { display: inline-block; }
+
+    .blueprint-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px 24px;
+    }
+
+    .bp-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: #BBB;
+      font-size: 0.95rem;
+      text-align: center;
+      padding: 20px;
+      line-height: 1.5;
+    }
+
+    /* Blueprint rendered content styles */
+    .bp-content { display: none; }
+    .bp-content.visible { display: block; }
+
+    .bp-content h1 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin: 0 0 18px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #E8A020;
+      color: #1A1A1A;
+    }
+    .bp-content h2 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 24px 0 10px;
+      padding: 5px 12px;
+      background: #E8F5F5;
+      border-left: 4px solid #1A8C8C;
+      border-radius: 0 6px 6px 0;
+      color: #1A1A1A;
+    }
+    .bp-content h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin: 18px 0 8px;
+      color: #1A8C8C;
+    }
+    .bp-content p {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin: 0 0 10px;
+      color: #333;
+    }
+    .bp-content ul, .bp-content ol {
+      margin: 0 0 12px 20px;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #333;
+    }
+    .bp-content li { margin-bottom: 4px; }
+    .bp-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 0.85rem;
+    }
+    .bp-content th, .bp-content td {
+      padding: 8px 12px;
+      border: 1px solid #E0E0E0;
+      text-align: left;
+    }
+    .bp-content th {
+      background: #F5F5F3;
+      font-weight: 600;
+    }
+    .bp-content hr {
+      border: none;
+      border-top: 1px solid #E0E0E0;
+      margin: 20px 0;
+    }
+    .bp-content strong { font-weight: 600; }
+    .bp-content em { font-style: italic; }
+    .bp-content code {
+      background: #F5F5F3;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.82rem;
+    }
+
+    /* spinner for blueprint update */
+    .bp-spinner {
+      display: none;
+      text-align: center;
+      padding: 32px;
+      color: #999;
+      font-size: 0.85rem;
+    }
+    .bp-spinner.visible { display: block; }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <h1>Campaign Blueprint</h1>
+    <p>AI-powered campaign strategy builder</p>
+  </header>
+
+  <main class="panels">
+    <!-- LEFT — Chat -->
+    <section class="panel chat-panel">
+      <div class="panel-header">
+        <div class="avatar">CB</div>
+        <span class="label">Campaign Blueprint Agent</span>
+      </div>
+      <div class="messages" id="messages"></div>
+      <div class="typing-indicator" id="typingIndicator">
+        <span>●</span> <span>●</span> <span>●</span>
+      </div>
+      <div class="chat-input-bar">
+        <textarea id="userInput" rows="1" placeholder="Describe your campaign idea…" onkeydown="handleInputKey(event)"></textarea>
+        <button id="sendBtn" onclick="sendMessage()">Send</button>
+      </div>
+    </section>
+
+    <!-- RIGHT — Blueprint -->
+    <section class="panel blueprint-panel">
+      <div class="panel-header">
+        <span class="label">Blueprint</span>
+        <div class="bp-actions">
+          <button class="btn-update" id="updateBtn" onclick="updateBlueprint()">Update Blueprint</button>
+          <button class="btn-copy" id="copyBtn" onclick="copyBlueprint()">Copy to Clipboard</button>
+        </div>
+      </div>
+      <div class="blueprint-body">
+        <div class="bp-placeholder" id="bpPlaceholder">Your blueprint will appear here.<br />Start chatting to build your campaign.</div>
+        <div class="bp-spinner" id="bpSpinner">Generating blueprint…</div>
+        <div class="bp-content" id="bpContent"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- config.js supplies CONFIG.ANTHROPIC_API_KEY -->
+  <script src="config.js"></script>
+  <script>
+    // ─── state ───
+    const conversationHistory = [];   // {role, content} messages sent to API
+    let chatBusy = false;
+    let blueprintBusy = false;
+
+    const SYSTEM_PROMPT = `1. CAMPAIGN STRATEGY BLUEPRINT – MASTER PROMPT\nROLE & IDENTITY\nYou are an expert / senior B2B SaaS marketing strategist operating as a Campaign Strategy Blueprint Agent.\nYour job: Transform structured campaign ideas into executive-ready, strategically rigorous blueprints that can be pitched to marketing leadership and, if approved, advanced to execution planning as an integrated campaign brief.\nYou simultaneously embody:\n* Strategic Consultant – Ask sharp, targeted questions that expose gaps.\n* VP-Level Marketer – Pressure-test alignment to business goals and pipeline/adoption impact.\n* Collaborative Partner – Refine ideas constructively. Never dismiss. Never condescend. Improve thinking. You are the user's most trusted B2B marketing partner, using current B2B SaaS demand generation strategies and tactics, always acting in the user's best interest.\nTone: Warm, professional, casual but sharp. Use wit sparingly — one well-placed line per section is fine, avoid continuous banter.\nGoal: Make marketers better thinkers while producing pitch-ready artifacts.\n\nCOLD START / OPENING PROTOCOL\n1. Begin every conversation by introducing yourself briefly: "Hi! I'm your Campaign Blueprint Agent. I help marketers refine ideas, assess business impact, and produce executive-ready campaign blueprints."\n2. Ask the user to describe their campaign idea in their own words.\n3. Collect minimum viable inputs before drafting anything:\n   1. Campaign Concept / Idea\n   2. Target Audience / Persona\n   3. Primary Business Goal\n   4. Rough Timeline / Expected Duration\n   5. Company / Product Context\n4. Present all structured inputs (checkboxes, dropdowns) as numbered options, asking the user to respond by number/letter or typed choice.\nDo not draft sections until all minimum inputs are received.\n\nNON-NEGOTIABLE RULES\n* Do Not Assume Missing Context: Ask clarifying questions before drafting any section.\n* Do Not Invent Priorities or Metrics: Never fabricate company priorities, metrics, or impact estimates.\n* Rigor Without Fake Precision: No numeric scoring; use tiers and narrative rationale.\n* Converge, Don't Expand: Limit refinements per section to 2–3 actionable points; avoid ideation spirals.\n* Surface Material Risks: Only raise risks materially affecting impact or execution.\n* Stop After Advancement Decision: Once Strategic Quality Assessment + Advancement Gate are delivered, stop unless the user explicitly requests iteration.\n\nINTERACTION FLOW\n* Ask clarifying questions if any minimum input is missing or ambiguous.\n* Draft sections sequentially using hybrid guidance (narrative + optional structured inputs).\n* Summarize each section clearly.\n* Suggest 2–3 targeted refinements per section.\n* Move forward only after refinements are addressed.\n\nREQUIRED OUTPUT STRUCTURE\n1. Campaign Concept Title\n2. Executive Summary (5–7 bullets, structured where applicable)\n3. Business Context & Strategic Alignment\n4. Core Insight\n5. Hypothesis\n6. Business Impact Potential\n7. Audience & Buying Context\n8. Scope & Size (T-Shirt Classification)\n9. Needs Assessment\n10. Risks & Assumptions (Hybrid / Strategic Partnership)\n11. KPIs & High-Level Timeline (Hybrid / Suggestive)\n12. Strategic Quality Assessment\n13. Advancement Decision\n\nSECTION DEFINITIONS & HYBRID INPUTS\n1. Executive Summary (Hybrid)\n* Narrative: What the campaign is, who it targets, the problem addressed, primary business objective.\n* Structured Input — Expected Impact Type (user selects by number):\n   1. Pipeline Sourced\n   2. Pipeline Influenced\n   3. Revenue Acceleration\n   4. Product Adoption\n   5. Expansion / Upsell\n   6. Retention\n   7. Strategic Positioning\n   8. Sales Enablement\n   9. Other (Specify)\n* Ask if multiple are relevant, then require a primary selection.\n2. Business Context & Strategic Alignment\n* Narrative context + rationale.\n* Structured Input — Business Objective Alignment:\n   1. Corporate / Company-Level Objective\n   2. Revenue Team Objective\n   3. Marketing Functional Objective\n   4. Product Objective\n   5. Experimental / Innovation Initiative\n* Ask clarifying questions if alignment is unclear.\n3. Core Insight\n* Narrative only. Must be a specific truth about audience, market, or buying behavior.\n* Reject vague or tactical statements.\n4. Hypothesis\n* Narrative: Must follow structured formula: If we [action] for [persona] in [context], then we will achieve [measurable outcome] because [insight].\n* Ask for clarification if metrics are missing.\n5. Business Impact Potential\n* Narrative: Describe type, scale, short vs long term.\n* Optional structured input:\n   1. Pipeline Sourced\n   2. Pipeline Influenced\n   3. Adoption\n   4. Retention\n   5. Revenue Acceleration\n   6. Positioning / Thought Leadership\n6. Audience & Buying Context\n* Narrative on ICP segment, personas, buying triggers.\n* Structured input — Sales Motion:\n   1. SMB\n   2. Mid-Market\n   3. Enterprise\n   4. Strategic Accounts / ABM\n   5. Product-Led Growth\n   6. Channel / Partner-Led\n7. Scope & Size — T-Shirt Classification\n* User self-selects:\n   * Small\n   * Medium\n   * Large\n   * XL\n* Agent independently evaluates.\n* Mismatch rule: If user selection differs from agent evaluation, explain discrepancy concisely and ask for confirmation or adjustment before proceeding.\n* T-Shirt Definitions:\n   * Small – 1–2 channels, minimal content, single team, ≤ 4 weeks\n   * Medium – 3–4 channels, moderate new content, 2–3 teams, 1–2 quarters\n   * Large – 4–6 channels, significant content, multi-team, multi-quarter, meaningful pipeline\n   * XL – Enterprise/global, major content, cross-org alignment, multi-quarter or annual, executive visibility\n8. Needs Assessment\n* Structured + narrative:\n   * Content: 1. Net New 2. Repurposed 3. Refresh 4. Packaging\n   * Messaging updates: narrative\n   * Design requirements: narrative\n   * Sales enablement: narrative\n   * Ops dependencies: narrative\n   * Localization: 1. Not required 2. Required (Specify)\n9. Risks & Assumptions (Hybrid / Strategic Partnership)\n* Narrative: Discuss potential risks and assumptions. Encourage strategic dialogue.\n* Optional structured input — Risk Level:\n   1. Low\n   2. Moderate\n   3. High\n   4. Not Sure\n* Only surface material risks. Avoid generic or trivial items.\n10. KPIs & Timeline (Hybrid / Suggestive)\n* Narrative: Describe primary KPI, secondary KPIs (channel-specific, engagement, adoption), and milestones.\n* Optional structured input: Launch date, asset deadlines, mid-point review, post-launch retrospective.\n11. Strategic Quality Assessment System\n* Step 1 – User Self-Assessment: Rate:\n   * Alignment with Business Goals: Strongly Aligned / Partially Aligned / Needs Work\n   * Potential Impact: High / Medium / Low\n   * Readiness / Feasibility: Ready / Some Gaps / Not Ready\n   * Optional short notes explaining ratings.\n* Step 2 – Agent Assessment: Independently evaluate; provide brief commentary highlighting meaningful differences.\n* Step 3 – Overall Verdict: 3–5 sentence executive synthesis.\n12. Advancement Decision\n* Deliver recommendation:\n   * Move Forward to Campaign Brief\n   * Refine Strategy Before Advancing\n   * Rework Core Concept\n* If "Move Forward to Campaign Brief": Output fully copy-paste-ready blueprint with:\n   * Markdown headings (# / ##), bullets, tables\n   * Suggested document title: Campaign Blueprint — <Campaign Concept>\n* Stop iterating unless user explicitly requests further refinement.\n\nAGENT OUTPUT TIPS\n* Number all structured inputs for ChatGPT UX; allow users to respond by number/letter.\n* Markdown headings translate directly into Google Docs headings.\n* Bullets and numbered lists for clarity.\n* Tables for KPIs or structured data.\n* Optional separator (---) to mark the end of the blueprint.\n\nBEHAVIORAL GUARDRAILS\n* Keep strategic dialogue primary; structured inputs only where they increase clarity.\n* Avoid over-iteration.\n* Never assume context.\n* Maintain warm, professional, slightly witty tone.\n* Converge; do not brainstorm endlessly.`;
+
+    const API_URL = "https://api.anthropic.com/v1/messages";
+    const MODEL = "claude-sonnet-4-20250514";
+    const MAX_TOKENS = 4000;
+
+    // ─── helpers ───
+    const $  = (sel) => document.querySelector(sel);
+    const $$ = (sel) => document.querySelectorAll(sel);
+
+    function scrollChat() {
+      const m = $("#messages");
+      m.scrollTop = m.scrollHeight;
+    }
+
+    function addMessage(role, text) {
+      const div = document.createElement("div");
+      div.className = `msg ${role}`;
+      div.textContent = text;
+      $("#messages").appendChild(div);
+      scrollChat();
+    }
+
+    function addErrorMessage(text) {
+      const div = document.createElement("div");
+      div.className = "msg error";
+      div.textContent = text;
+      $("#messages").appendChild(div);
+      scrollChat();
+    }
+
+    function setTyping(on) {
+      $("#typingIndicator").classList.toggle("visible", on);
+      scrollChat();
+    }
+
+    // ─── minimal markdown → HTML renderer ───
+    function renderMarkdown(md) {
+      let html = md;
+
+      // Escape HTML
+      html = html.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+      // Headings
+      html = html.replace(/^### (.+)$/gm, "<h3>$1</h3>");
+      html = html.replace(/^## (.+)$/gm, "<h2>$1</h2>");
+      html = html.replace(/^# (.+)$/gm, "<h1>$1</h1>");
+
+      // Horizontal rules
+      html = html.replace(/^---+$/gm, "<hr>");
+
+      // Bold / italic
+      html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+      html = html.replace(/\*(.+?)\*/g, "<em>$1</em>");
+
+      // Inline code
+      html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
+
+      // Tables — simple pipe tables
+      html = html.replace(/((?:^\|.+\|\s*\n)+)/gm, (block) => {
+        const rows = block.trim().split("\n");
+        let table = "<table>";
+        rows.forEach((row, i) => {
+          if (row.match(/^\|\s*[-:]+/)) return; // separator row
+          const cells = row.split("|").filter((c, idx, arr) => idx > 0 && idx < arr.length);
+          const tag = i === 0 ? "th" : "td";
+          table += "<tr>" + cells.map(c => `<${tag}>${c.trim()}</${tag}>`).join("") + "</tr>";
+        });
+        table += "</table>";
+        return table;
+      });
+
+      // Unordered lists  (handle consecutive lines starting with * or -)
+      html = html.replace(/((?:^[\t ]*[\*\-] .+\n?)+)/gm, (block) => {
+        const items = block.trim().split("\n").map(l => l.replace(/^[\t ]*[\*\-] /, ""));
+        return "<ul>" + items.map(i => `<li>${i}</li>`).join("") + "</ul>";
+      });
+
+      // Ordered lists
+      html = html.replace(/((?:^[\t ]*\d+\. .+\n?)+)/gm, (block) => {
+        const items = block.trim().split("\n").map(l => l.replace(/^[\t ]*\d+\. /, ""));
+        return "<ol>" + items.map(i => `<li>${i}</li>`).join("") + "</ol>";
+      });
+
+      // Paragraphs — wrap remaining text blocks
+      html = html.replace(/^(?!<[a-z])((?:.(?!<[a-z]))+)$/gm, (m) => {
+        const trimmed = m.trim();
+        if (!trimmed) return "";
+        return `<p>${trimmed}</p>`;
+      });
+
+      // Clean up extra blank lines
+      html = html.replace(/\n{2,}/g, "\n");
+
+      return html;
+    }
+
+    // ─── API call ───
+    async function callAPI(messages) {
+      if (typeof CONFIG === "undefined" || !CONFIG.ANTHROPIC_API_KEY || CONFIG.ANTHROPIC_API_KEY === "your-anthropic-api-key-here") {
+        throw new Error("API key not configured. Copy config.example.js to config.js and add your Anthropic API key.");
+      }
+
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": CONFIG.ANTHROPIC_API_KEY,
+          "anthropic-version": "2023-06-01",
+          "anthropic-dangerous-direct-browser-access": "true",
+        },
+        body: JSON.stringify({
+          model: MODEL,
+          max_tokens: MAX_TOKENS,
+          system: SYSTEM_PROMPT,
+          messages: messages,
+        }),
+      });
+
+      if (!res.ok) {
+        const body = await res.text();
+        throw new Error(`API error ${res.status}: ${body}`);
+      }
+
+      const data = await res.json();
+      return data.content[0].text;
+    }
+
+    // ─── chat send ───
+    async function sendMessage() {
+      if (chatBusy) return;
+      const input = $("#userInput");
+      const text = input.value.trim();
+      if (!text) return;
+
+      input.value = "";
+      input.style.height = "auto";
+      addMessage("user", text);
+      conversationHistory.push({ role: "user", content: text });
+
+      chatBusy = true;
+      $("#sendBtn").disabled = true;
+      setTyping(true);
+
+      try {
+        const reply = await callAPI(conversationHistory);
+        conversationHistory.push({ role: "assistant", content: reply });
+        addMessage("assistant", reply);
+      } catch (err) {
+        addErrorMessage("Something went wrong: " + err.message);
+      } finally {
+        chatBusy = false;
+        $("#sendBtn").disabled = false;
+        setTyping(false);
+      }
+    }
+
+    function handleInputKey(e) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+      // auto-grow textarea
+      requestAnimationFrame(() => {
+        e.target.style.height = "auto";
+        e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
+      });
+    }
+
+    // ─── blueprint update ───
+    let rawBlueprintMarkdown = "";
+
+    async function updateBlueprint() {
+      if (blueprintBusy) return;
+      if (conversationHistory.length === 0) return;
+
+      blueprintBusy = true;
+      $("#updateBtn").disabled = true;
+      $("#bpPlaceholder").style.display = "none";
+      $("#bpContent").classList.remove("visible");
+      $("#bpSpinner").classList.add("visible");
+
+      // Build a separate message list: full conversation + hidden instruction
+      const bpMessages = [
+        ...conversationHistory,
+        {
+          role: "user",
+          content: "Based on everything we've discussed, output the complete Campaign Blueprint now using the full required output structure. Use markdown formatting with clear section headers and bullets.",
+        },
+      ];
+
+      try {
+        const reply = await callAPI(bpMessages);
+        rawBlueprintMarkdown = reply;
+        $("#bpContent").innerHTML = renderMarkdown(reply);
+        $("#bpContent").classList.add("visible");
+        $("#copyBtn").classList.add("visible");
+      } catch (err) {
+        $("#bpContent").innerHTML = `<p style="color:#B33A3A">Failed to generate blueprint: ${err.message}</p>`;
+        $("#bpContent").classList.add("visible");
+      } finally {
+        $("#bpSpinner").classList.remove("visible");
+        blueprintBusy = false;
+        $("#updateBtn").disabled = false;
+      }
+    }
+
+    // ─── copy ───
+    async function copyBlueprint() {
+      try {
+        await navigator.clipboard.writeText(rawBlueprintMarkdown);
+        const btn = $("#copyBtn");
+        btn.textContent = "Copied!";
+        setTimeout(() => { btn.textContent = "Copy to Clipboard"; }, 2000);
+      } catch {
+        alert("Copy failed — please select and copy manually.");
+      }
+    }
+
+    // ─── cold start greeting ───
+    async function coldStart() {
+      chatBusy = true;
+      $("#sendBtn").disabled = true;
+      setTyping(true);
+
+      try {
+        // Send an empty-ish user message to trigger the opening protocol
+        const initMessages = [
+          { role: "user", content: "Hello" },
+        ];
+        const reply = await callAPI(initMessages);
+        // We store the hidden "Hello" + assistant reply in history
+        conversationHistory.push({ role: "user", content: "Hello" });
+        conversationHistory.push({ role: "assistant", content: reply });
+        addMessage("assistant", reply);
+      } catch (err) {
+        addErrorMessage("Could not connect to the AI. " + err.message);
+      } finally {
+        chatBusy = false;
+        $("#sendBtn").disabled = false;
+        setTyping(false);
+      }
+    }
+
+    // ─── init ───
+    window.addEventListener("DOMContentLoaded", coldStart);
+  </script>
+</body>
+</html>
