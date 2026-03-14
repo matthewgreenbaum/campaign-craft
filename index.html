@@ -356,12 +356,13 @@
     </section>
   </main>
 
-  <!-- API Configuration — paste your Anthropic API key between the quotes below -->
+  <!-- API Configuration: config.js (git-ignored) overrides the default if present -->
   <script>
     const CONFIG = {
       ANTHROPIC_API_KEY: "your-anthropic-api-key-here"
     };
   </script>
+  <script src="config.js" onerror=""></script>
   <script>
     // ─── state ───
     const conversationHistory = [];   // {role, content} messages sent to API
