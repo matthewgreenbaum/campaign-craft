@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Campaign Blueprinter</title>
+  <title>Campaign Blueprint</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -14,7 +14,7 @@
     body {
       font-family: 'Open Sans', 'Inter', sans-serif;
       background: #F8F9FA;
-      color: #353090;
+      color: #3D38B0;
       min-height: 100vh;
       display: flex;
       flex-direction: row;
@@ -37,11 +37,11 @@
       font-size: 3.4rem;
       font-weight: 800;
       letter-spacing: -0.02em;
-      color: #353090;
+      color: #3D38B0;
       line-height: 1.1;
     }
     .app-header .gradient-word {
-      background: linear-gradient(90deg, #353090, #6B6BB0, #1c767b, #6B6BB0, #353090);
+      background: linear-gradient(90deg, #3D38B0, #7B7BD0, #1c767b, #7B7BD0, #3D38B0);
       background-size: 300% 100%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -153,7 +153,7 @@
     }
     .campaign-item {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: space-between;
       padding: 10px 12px;
       border-radius: 10px;
@@ -184,23 +184,23 @@
     .campaign-item-dots {
       background: none;
       border: none;
-      color: rgba(255,255,255,0.35);
+      color: rgba(255,255,255,0.4);
       cursor: pointer;
-      font-size: 1rem;
-      padding: 2px 4px;
+      font-size: 1.4rem;
+      padding: 2px 6px;
       line-height: 1;
-      letter-spacing: 0.5px;
       transition: color 0.15s;
     }
-    .campaign-item-dots:hover { color: rgba(255,255,255,0.8); }
+    .campaign-item-dots:hover { color: rgba(255,255,255,0.85); }
     .campaign-item-dropdown {
       display: none;
       position: absolute;
       right: 0;
       top: 100%;
-      background: #fff;
+      background: #1a6b70;
+      border: 1px solid rgba(255,255,255,0.15);
       border-radius: 8px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
       min-width: 130px;
       z-index: 200;
       overflow: hidden;
@@ -215,13 +215,13 @@
       text-align: left;
       font-family: 'Open Sans', 'Inter', sans-serif;
       font-size: 0.78rem;
-      color: #333;
+      color: rgba(255,255,255,0.85);
       cursor: pointer;
       transition: background 0.12s;
     }
-    .campaign-item-dropdown button:hover { background: #f0f0f0; }
-    .campaign-item-dropdown button.danger { color: #d44; }
-    .campaign-item-dropdown button.danger:hover { background: #fef2f2; }
+    .campaign-item-dropdown button:hover { background: rgba(255,255,255,0.1); }
+    .campaign-item-dropdown button.danger { color: #FF8A80; }
+    .campaign-item-dropdown button.danger:hover { background: rgba(255,80,80,0.12); }
 
     .sidebar-empty {
       text-align: center;
@@ -294,7 +294,7 @@
     }
     .drag-handle:hover::after,
     .drag-handle.dragging::after {
-      background: #353090;
+      background: #3D38B0;
       height: 72px;
     }
 
@@ -319,7 +319,7 @@
     .avatar {
       width: 36px; height: 36px;
       border-radius: 50%;
-      background: #353090;
+      background: #3D38B0;
       color: #fff;
       display: flex; align-items: center; justify-content: center;
       font-weight: 700; font-size: 0.85rem;
@@ -403,9 +403,9 @@
       min-height: 42px;
       max-height: 120px;
     }
-    .chat-input-bar textarea:focus { border-color: #353090; }
+    .chat-input-bar textarea:focus { border-color: #3D38B0; }
     .chat-input-bar button {
-      background: #353090;
+      background: #3D38B0;
       color: #fff;
       border: none;
       border-radius: 999px;
@@ -436,7 +436,7 @@
     }
     .bp-actions { display: flex; gap: 8px; }
     .btn-update {
-      background: #353090;
+      background: #3D38B0;
       color: #fff;
       border: none;
       border-radius: 999px;
@@ -451,7 +451,7 @@
     .btn-update:disabled { opacity: 0.5; cursor: default; }
 
     .btn-copy {
-      background: #353090;
+      background: #3D38B0;
       color: #fff;
       border: none;
       border-radius: 999px;
@@ -493,8 +493,8 @@
       font-weight: 700;
       margin: 0 0 18px;
       padding-bottom: 10px;
-      border-bottom: 2px solid #353090;
-      color: #353090;
+      border-bottom: 2px solid #3D38B0;
+      color: #3D38B0;
     }
     .bp-content h2 {
       font-size: 1.05rem;
@@ -502,15 +502,15 @@
       margin: 24px 0 10px;
       padding: 5px 12px;
       background: #EEF2FF;
-      border-left: 4px solid #353090;
+      border-left: 4px solid #3D38B0;
       border-radius: 0 6px 6px 0;
-      color: #353090;
+      color: #3D38B0;
     }
     .bp-content h3 {
       font-size: 0.95rem;
       font-weight: 600;
       margin: 18px 0 8px;
-      color: #353090;
+      color: #3D38B0;
     }
     .bp-content p {
       font-size: 0.9rem;
@@ -584,7 +584,7 @@
 
   <div class="app-body">
   <header class="app-header">
-    <h1>Campaign Blueprinter</h1>
+    <h1>Campaign Blueprint</h1>
     <p class="gradient-word">AI-powered campaign strategy builder</p>
   </header>
 
@@ -593,8 +593,8 @@
     <!-- LEFT — Chat -->
     <section class="panel chat-panel">
       <div class="panel-header">
-        <div class="avatar">CB</div>
-        <span class="label">Campaign Blueprint Agent</span>
+        <div class="avatar">BA</div>
+        <span class="label">Blueprint Agent</span>
       </div>
       <div class="messages" id="messages"></div>
       <div class="typing-indicator" id="typingIndicator">
@@ -612,7 +612,7 @@
     <!-- RIGHT — Blueprint -->
     <section class="panel blueprint-panel">
       <div class="panel-header">
-        <span class="label">Blueprint</span>
+        <span class="label" id="blueprintPanelTitle">Blueprint</span>
         <div class="bp-actions">
           <button class="btn-update" id="updateBtn" onclick="updateBlueprint()">Update Blueprint</button>
           <button class="btn-copy" id="copyBtn" onclick="copyBlueprint()">Copy to Clipboard</button>
@@ -658,6 +658,14 @@
       return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
     }
 
+    function updateBlueprintPanelTitle() {
+      const el = $("#blueprintPanelTitle");
+      if (!currentCampaignId) { el.textContent = "Blueprint"; return; }
+      const campaigns = loadAllCampaigns();
+      const c = campaigns.find(c => c.id === currentCampaignId);
+      el.textContent = c ? "Blueprint: " + c.title : "Blueprint";
+    }
+
     function saveCurrent() {
       if (!currentCampaignId) return;
       const campaigns = loadAllCampaigns();
@@ -675,6 +683,7 @@
       campaigns[idx].updatedAt = Date.now();
       saveAllCampaigns(campaigns);
       renderCampaignList();
+      updateBlueprintPanelTitle();
     }
 
     function renderCampaignList() {
@@ -777,6 +786,7 @@
       // Create new campaign
       currentCampaignId = createCampaignRecord();
       renderCampaignList();
+      updateBlueprintPanelTitle();
 
       // Trigger cold start
       coldStart();
@@ -819,6 +829,7 @@
       }
 
       renderCampaignList();
+      updateBlueprintPanelTitle();
     }
 
     function deleteCampaign(id) {
@@ -859,6 +870,7 @@
         campaign.title = newTitle.trim();
         saveAllCampaigns(campaigns);
         renderCampaignList();
+        updateBlueprintPanelTitle();
       }
     }
 
