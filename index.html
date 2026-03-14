@@ -13,8 +13,8 @@
     html, body { height: 100%; }
     body {
       font-family: 'Inter', sans-serif;
-      background: #F5F0E3;
-      color: #2D2D2D;
+      background: #F7F6F3;
+      color: #2C3E7B;
       min-height: 100vh;
       display: flex;
       flex-direction: row;
@@ -41,7 +41,7 @@
       line-height: 1.1;
     }
     .app-header .gradient-word {
-      background: linear-gradient(90deg, #2C3E7B, #5A7BAF, #B85C38, #D4A050, #2C3E7B);
+      background: linear-gradient(90deg, #2C3E7B, #5A7BAF, #1A6B3C, #5A7BAF, #2C3E7B);
       background-size: 300% 100%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -73,9 +73,19 @@
     /* ---------- sidebar ---------- */
     .sidebar {
       width: 260px;
-      background: #FFFFFF;
+      background: #1A6B3C;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size:
+        50px 50px,
+        50px 50px,
+        10px 10px,
+        10px 10px;
       border-radius: 0;
-      border-right: 1px solid #E0DED8;
+      border-right: 2px solid #145930;
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
@@ -94,17 +104,17 @@
       align-items: center;
       justify-content: space-between;
       padding: 14px 16px;
-      border-bottom: 1px solid #F0EFED;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
     }
     .sidebar-header .label {
       font-weight: 700;
       font-size: 0.9rem;
-      color: #1A1A1A;
+      color: #FFFFFF;
     }
     .btn-new-campaign {
-      background: #B85C38;
+      background: rgba(255,255,255,0.18);
       color: #fff;
-      border: none;
+      border: 1px solid rgba(255,255,255,0.3);
       border-radius: 8px;
       padding: 6px 12px;
       font-family: 'Inter', sans-serif;
@@ -113,7 +123,7 @@
       cursor: pointer;
       transition: background 0.15s;
     }
-    .btn-new-campaign:hover { background: #A04E2D; }
+    .btn-new-campaign:hover { background: rgba(255,255,255,0.28); }
 
     .campaign-list {
       flex: 1;
@@ -130,26 +140,26 @@
       transition: background 0.15s;
       margin-bottom: 4px;
     }
-    .campaign-item:hover { background: #F5F0E3; }
-    .campaign-item.active { background: #E8EAF2; }
+    .campaign-item:hover { background: rgba(255,255,255,0.08); }
+    .campaign-item.active { background: rgba(255,255,255,0.15); }
     .campaign-item-info { flex: 1; min-width: 0; }
     .campaign-item-title {
       font-weight: 600;
       font-size: 0.82rem;
-      color: #1A1A1A;
+      color: #FFFFFF;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
     .campaign-item-date {
       font-size: 0.7rem;
-      color: #999;
+      color: rgba(255,255,255,0.55);
       margin-top: 2px;
     }
     .campaign-item-delete {
       background: none;
       border: none;
-      color: #CCC;
+      color: rgba(255,255,255,0.35);
       cursor: pointer;
       font-size: 0.85rem;
       padding: 0 0 0 8px;
@@ -157,12 +167,12 @@
       flex-shrink: 0;
       transition: color 0.15s;
     }
-    .campaign-item-delete:hover { color: #C0392B; }
+    .campaign-item-delete:hover { color: #FF8A80; }
 
     .sidebar-empty {
       text-align: center;
       padding: 24px 16px;
-      color: #BBB;
+      color: rgba(255,255,255,0.45);
       font-size: 0.82rem;
       line-height: 1.5;
     }
@@ -198,7 +208,7 @@
     .panels > .panel { flex: 1; min-width: 200px; }
     @media (max-width: 820px) {
       body { flex-direction: column; }
-      .sidebar { width: 100% !important; height: auto !important; max-height: 200px; border-right: none; border-bottom: 1px solid #E0DED8; }
+      .sidebar { width: 100% !important; height: auto !important; max-height: 200px; border-right: none; border-bottom: 2px solid #145930; }
       .sidebar.collapsed { max-height: 0; border-bottom: none; }
       .app-body { height: auto; flex: 1; }
       .main-layout { flex-direction: column; }
@@ -289,7 +299,7 @@
     }
     .msg.user {
       align-self: flex-end;
-      background: #F0EBD8;
+      background: #DCE0ED;
       color: #1A1A1A;
       border-bottom-right-radius: 4px;
     }
@@ -341,7 +351,7 @@
     }
     .chat-input-bar textarea:focus { border-color: #2C3E7B; }
     .chat-input-bar button {
-      background: #B85C38;
+      background: #2C3E7B;
       color: #fff;
       border: none;
       border-radius: 10px;
@@ -353,7 +363,7 @@
       transition: background 0.15s;
       flex-shrink: 0;
     }
-    .chat-input-bar button:hover { background: #A04E2D; }
+    .chat-input-bar button:hover { background: #1E2F66; }
     .chat-input-bar button:disabled { opacity: 0.5; cursor: default; }
 
     /* ---------- RIGHT PANEL — BLUEPRINT ---------- */
@@ -372,7 +382,7 @@
     }
     .bp-actions { display: flex; gap: 8px; }
     .btn-update {
-      background: #B85C38;
+      background: #2C3E7B;
       color: #fff;
       border: none;
       border-radius: 10px;
@@ -383,7 +393,7 @@
       cursor: pointer;
       transition: background 0.15s;
     }
-    .btn-update:hover { background: #A04E2D; }
+    .btn-update:hover { background: #1E2F66; }
     .btn-update:disabled { opacity: 0.5; cursor: default; }
 
     .btn-copy {
@@ -429,8 +439,8 @@
       font-weight: 700;
       margin: 0 0 18px;
       padding-bottom: 10px;
-      border-bottom: 2px solid #B85C38;
-      color: #1A1A1A;
+      border-bottom: 2px solid #2C3E7B;
+      color: #2C3E7B;
     }
     .bp-content h2 {
       font-size: 1.05rem;
@@ -440,7 +450,7 @@
       background: #E8EAF2;
       border-left: 4px solid #2C3E7B;
       border-radius: 0 6px 6px 0;
-      color: #1A1A1A;
+      color: #2C3E7B;
     }
     .bp-content h3 {
       font-size: 0.95rem;
