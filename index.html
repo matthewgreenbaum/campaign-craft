@@ -26,13 +26,14 @@
     }
     .app-header h1 {
       font-family: 'DM Sans', sans-serif;
-      font-size: 2.6rem;
+      font-size: 3.4rem;
       font-weight: 800;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.02em;
       color: #1A1A1A;
+      line-height: 1.1;
     }
     .app-header .gradient-word {
-      background: linear-gradient(90deg, #f857a6, #a855f7, #6366f1, #06b6d4, #f857a6);
+      background: linear-gradient(90deg, #D4A017, #C0392B, #E84393, #1E9BD7, #D4A017);
       background-size: 300% 100%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -46,9 +47,9 @@
     }
     .app-header p {
       font-family: 'DM Sans', sans-serif;
-      font-size: 1.05rem;
+      font-size: 1.15rem;
       color: #999;
-      margin-top: 8px;
+      margin-top: 10px;
       font-weight: 500;
     }
 
@@ -90,7 +91,7 @@
     }
     .drag-handle:hover::after,
     .drag-handle.dragging::after {
-      background: #1A8C8C;
+      background: #1E9BD7;
       height: 72px;
     }
 
@@ -115,7 +116,7 @@
     .avatar {
       width: 36px; height: 36px;
       border-radius: 50%;
-      background: #1A8C8C;
+      background: #1E9BD7;
       color: #fff;
       display: flex; align-items: center; justify-content: center;
       font-weight: 700; font-size: 0.85rem;
@@ -143,7 +144,7 @@
     }
     .msg.assistant {
       align-self: flex-start;
-      background: #E8F5F5;
+      background: #E3F1FA;
       color: #1A1A1A;
       border-bottom-left-radius: 4px;
     }
@@ -199,9 +200,9 @@
       min-height: 42px;
       max-height: 120px;
     }
-    .chat-input-bar textarea:focus { border-color: #1A8C8C; }
+    .chat-input-bar textarea:focus { border-color: #1E9BD7; }
     .chat-input-bar button {
-      background: #E8A020;
+      background: #D4A017;
       color: #fff;
       border: none;
       border-radius: 10px;
@@ -213,7 +214,7 @@
       transition: background 0.15s;
       flex-shrink: 0;
     }
-    .chat-input-bar button:hover { background: #D18E14; }
+    .chat-input-bar button:hover { background: #B8880F; }
     .chat-input-bar button:disabled { opacity: 0.5; cursor: default; }
 
     /* ---------- RIGHT PANEL — BLUEPRINT ---------- */
@@ -232,7 +233,7 @@
     }
     .bp-actions { display: flex; gap: 8px; }
     .btn-update {
-      background: #E8A020;
+      background: #D4A017;
       color: #fff;
       border: none;
       border-radius: 10px;
@@ -243,11 +244,11 @@
       cursor: pointer;
       transition: background 0.15s;
     }
-    .btn-update:hover { background: #D18E14; }
+    .btn-update:hover { background: #B8880F; }
     .btn-update:disabled { opacity: 0.5; cursor: default; }
 
     .btn-copy {
-      background: #1A8C8C;
+      background: #1E9BD7;
       color: #fff;
       border: none;
       border-radius: 10px;
@@ -259,7 +260,7 @@
       transition: background 0.15s;
       display: none;
     }
-    .btn-copy:hover { background: #157070; }
+    .btn-copy:hover { background: #1780B5; }
     .btn-copy.visible { display: inline-block; }
 
     .blueprint-body {
@@ -289,7 +290,7 @@
       font-weight: 700;
       margin: 0 0 18px;
       padding-bottom: 10px;
-      border-bottom: 2px solid #E8A020;
+      border-bottom: 2px solid #D4A017;
       color: #1A1A1A;
     }
     .bp-content h2 {
@@ -297,8 +298,8 @@
       font-weight: 600;
       margin: 24px 0 10px;
       padding: 5px 12px;
-      background: #E8F5F5;
-      border-left: 4px solid #1A8C8C;
+      background: #E3F1FA;
+      border-left: 4px solid #1E9BD7;
       border-radius: 0 6px 6px 0;
       color: #1A1A1A;
     }
@@ -306,7 +307,7 @@
       font-size: 0.95rem;
       font-weight: 600;
       margin: 18px 0 8px;
-      color: #1A8C8C;
+      color: #1E9BD7;
     }
     .bp-content p {
       font-size: 0.9rem;
