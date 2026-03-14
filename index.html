@@ -555,6 +555,23 @@
       gap: 10px;
       flex-wrap: wrap;
     }
+    .blueprint-panel .panel-header .bp-title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .blueprint-panel .panel-header .preview-badge {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: #3D38B0;
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.55rem;
+      letter-spacing: 0.02em;
+      flex-shrink: 0;
+      text-transform: uppercase;
+    }
     .blueprint-panel .panel-header .label {
       font-weight: 600;
       font-size: 0.95rem;
@@ -741,7 +758,10 @@
     <!-- RIGHT — Blueprint -->
     <section class="panel blueprint-panel">
       <div class="panel-header">
-        <span class="label" id="blueprintPanelTitle">Preview</span>
+        <div class="bp-title-group">
+          <div class="preview-badge">PRV</div>
+          <span class="label" id="blueprintPanelTitle">Preview</span>
+        </div>
         <div class="bp-actions">
           <button class="btn-update" id="updateBtn" onclick="updateBlueprint()">Update</button>
           <button class="btn-copy" id="copyBtn" onclick="copyBlueprint()">&#128203; Copy</button>
