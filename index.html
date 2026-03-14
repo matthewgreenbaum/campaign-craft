@@ -53,16 +53,145 @@
       font-weight: 500;
     }
 
-    /* ---------- main grid ---------- */
+    /* ---------- main layout ---------- */
+    .main-layout {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      padding: 12px 24px 24px;
+      gap: 0;
+    }
+
+    /* ---------- sidebar ---------- */
+    .sidebar {
+      width: 260px;
+      background: #FFFFFF;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      margin-right: 12px;
+      transition: width 0.25s ease, margin 0.25s ease, opacity 0.25s ease;
+      overflow: hidden;
+    }
+    .sidebar.collapsed {
+      width: 0;
+      margin-right: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid #F0EFED;
+    }
+    .sidebar-header .label {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #1A1A1A;
+    }
+    .btn-new-campaign {
+      background: #D4A017;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-new-campaign:hover { background: #B8880F; }
+
+    .campaign-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px;
+    }
+    .campaign-item {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.15s;
+      margin-bottom: 4px;
+    }
+    .campaign-item:hover { background: #F5F0E3; }
+    .campaign-item.active { background: #E3F1FA; }
+    .campaign-item-info { flex: 1; min-width: 0; }
+    .campaign-item-title {
+      font-weight: 600;
+      font-size: 0.82rem;
+      color: #1A1A1A;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .campaign-item-date {
+      font-size: 0.7rem;
+      color: #999;
+      margin-top: 2px;
+    }
+    .campaign-item-delete {
+      background: none;
+      border: none;
+      color: #CCC;
+      cursor: pointer;
+      font-size: 0.85rem;
+      padding: 0 0 0 8px;
+      line-height: 1;
+      flex-shrink: 0;
+      transition: color 0.15s;
+    }
+    .campaign-item-delete:hover { color: #C0392B; }
+
+    .sidebar-empty {
+      text-align: center;
+      padding: 24px 16px;
+      color: #BBB;
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    /* ---------- sidebar toggle ---------- */
+    .sidebar-toggle {
+      background: #FFFFFF;
+      border: 1px solid #E0E0E0;
+      border-radius: 8px;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.75rem;
+      color: #666;
+      flex-shrink: 0;
+      margin-right: 8px;
+      transition: background 0.15s, color 0.15s;
+      align-self: flex-start;
+      margin-top: 16px;
+    }
+    .sidebar-toggle:hover { background: #E3F1FA; color: #1E9BD7; }
+
+    /* ---------- panels container ---------- */
     .panels {
       display: flex;
       gap: 0;
-      padding: 12px 24px 24px;
       flex: 1;
       min-height: 0;
     }
     .panels > .panel { flex: 1; min-width: 200px; }
     @media (max-width: 820px) {
+      .main-layout { flex-direction: column; }
+      .sidebar { width: 100% !important; margin-right: 0; margin-bottom: 12px; max-height: 200px; }
+      .sidebar.collapsed { max-height: 0; margin-bottom: 0; }
       .panels { flex-direction: column; }
       .panels > .panel { flex: 1 !important; }
       .drag-handle { display: none !important; }
@@ -368,7 +497,21 @@
     <p class="gradient-word">AI-powered campaign strategy builder</p>
   </header>
 
-  <main class="panels">
+  <main class="main-layout">
+    <!-- SIDEBAR — Campaign History -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span class="label">Campaigns</span>
+        <button class="btn-new-campaign" id="newCampaignBtn" onclick="newCampaign()">+ New</button>
+      </div>
+      <div class="campaign-list" id="campaignList">
+        <div class="sidebar-empty" id="sidebarEmpty">No saved campaigns yet.<br/>Start chatting to create one.</div>
+      </div>
+    </aside>
+
+    <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" title="Toggle sidebar">&#9776;</button>
+
+    <div class="panels">
     <!-- LEFT — Chat -->
     <section class="panel chat-panel">
       <div class="panel-header">
@@ -403,6 +546,7 @@
         <div class="bp-content" id="bpContent"></div>
       </div>
     </section>
+    </div>
   </main>
 
   <!-- API Configuration -->
@@ -413,9 +557,204 @@
   </script>
   <script>
     // ─── state ───
-    const conversationHistory = [];   // {role, content} messages sent to API
+    let conversationHistory = [];   // {role, content} messages sent to API
     let chatBusy = false;
     let blueprintBusy = false;
+    let currentCampaignId = null;
+
+    // ─── campaign persistence ───
+    const STORAGE_KEY = "campaignBlueprints";
+
+    function loadAllCampaigns() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      } catch { return []; }
+    }
+
+    function saveAllCampaigns(campaigns) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(campaigns));
+    }
+
+    function generateId() {
+      return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+    }
+
+    function saveCurrent() {
+      if (!currentCampaignId) return;
+      const campaigns = loadAllCampaigns();
+      const idx = campaigns.findIndex(c => c.id === currentCampaignId);
+      if (idx === -1) return;
+
+      // Derive title from first user message that isn't "Hello"
+      const firstReal = conversationHistory.find(m => m.role === "user" && m.content !== "Hello");
+      if (firstReal && campaigns[idx].title === "New Campaign") {
+        campaigns[idx].title = firstReal.content.slice(0, 50) + (firstReal.content.length > 50 ? "…" : "");
+      }
+
+      campaigns[idx].conversationHistory = conversationHistory;
+      campaigns[idx].blueprintMarkdown = rawBlueprintMarkdown;
+      campaigns[idx].updatedAt = Date.now();
+      saveAllCampaigns(campaigns);
+      renderCampaignList();
+    }
+
+    function renderCampaignList() {
+      const campaigns = loadAllCampaigns();
+      const list = $("#campaignList");
+      const empty = $("#sidebarEmpty");
+
+      // Remove all items except the empty placeholder
+      list.querySelectorAll(".campaign-item").forEach(el => el.remove());
+
+      if (campaigns.length === 0) {
+        empty.style.display = "block";
+        return;
+      }
+      empty.style.display = "none";
+
+      // Sort by most recently updated
+      campaigns.sort((a, b) => b.updatedAt - a.updatedAt);
+
+      campaigns.forEach(c => {
+        const div = document.createElement("div");
+        div.className = "campaign-item" + (c.id === currentCampaignId ? " active" : "");
+        div.innerHTML = `
+          <div class="campaign-item-info">
+            <div class="campaign-item-title">${escapeHTML(c.title)}</div>
+            <div class="campaign-item-date">${formatDate(c.updatedAt)}</div>
+          </div>
+          <button class="campaign-item-delete" title="Delete campaign">&times;</button>
+        `;
+        div.querySelector(".campaign-item-info").addEventListener("click", () => switchCampaign(c.id));
+        div.querySelector(".campaign-item-delete").addEventListener("click", (e) => {
+          e.stopPropagation();
+          deleteCampaign(c.id);
+        });
+        list.appendChild(div);
+      });
+    }
+
+    function escapeHTML(str) {
+      const div = document.createElement("div");
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function formatDate(ts) {
+      const d = new Date(ts);
+      const now = new Date();
+      const diff = now - d;
+      if (diff < 60000) return "Just now";
+      if (diff < 3600000) return Math.floor(diff / 60000) + "m ago";
+      if (diff < 86400000) return Math.floor(diff / 3600000) + "h ago";
+      return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    }
+
+    function createCampaignRecord() {
+      const campaign = {
+        id: generateId(),
+        title: "New Campaign",
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        conversationHistory: [],
+        blueprintMarkdown: "",
+      };
+      const campaigns = loadAllCampaigns();
+      campaigns.unshift(campaign);
+      saveAllCampaigns(campaigns);
+      return campaign.id;
+    }
+
+    function newCampaign() {
+      // Save current state first
+      saveCurrent();
+
+      // Clear UI
+      conversationHistory = [];
+      rawBlueprintMarkdown = "";
+      $("#messages").innerHTML = "";
+      $("#bpContent").innerHTML = "";
+      $("#bpContent").classList.remove("visible");
+      $("#bpPlaceholder").style.display = "";
+      $("#copyBtn").classList.remove("visible");
+
+      // Create new campaign
+      currentCampaignId = createCampaignRecord();
+      renderCampaignList();
+
+      // Trigger cold start
+      coldStart();
+    }
+
+    function switchCampaign(id) {
+      if (id === currentCampaignId) return;
+      if (chatBusy || blueprintBusy) return;
+
+      // Save current
+      saveCurrent();
+
+      // Load target
+      const campaigns = loadAllCampaigns();
+      const campaign = campaigns.find(c => c.id === id);
+      if (!campaign) return;
+
+      currentCampaignId = id;
+      conversationHistory = campaign.conversationHistory || [];
+      rawBlueprintMarkdown = campaign.blueprintMarkdown || "";
+
+      // Rebuild chat UI
+      $("#messages").innerHTML = "";
+      conversationHistory.forEach(m => {
+        if (m.role === "user" && m.content === "Hello") return; // skip hidden init
+        addMessage(m.role, m.content);
+      });
+
+      // Rebuild blueprint UI
+      if (rawBlueprintMarkdown) {
+        $("#bpPlaceholder").style.display = "none";
+        $("#bpContent").innerHTML = renderMarkdown(rawBlueprintMarkdown);
+        $("#bpContent").classList.add("visible");
+        $("#copyBtn").classList.add("visible");
+      } else {
+        $("#bpContent").innerHTML = "";
+        $("#bpContent").classList.remove("visible");
+        $("#bpPlaceholder").style.display = "";
+        $("#copyBtn").classList.remove("visible");
+      }
+
+      renderCampaignList();
+    }
+
+    function deleteCampaign(id) {
+      let campaigns = loadAllCampaigns();
+      campaigns = campaigns.filter(c => c.id !== id);
+      saveAllCampaigns(campaigns);
+
+      if (id === currentCampaignId) {
+        // Switch to another or create new
+        if (campaigns.length > 0) {
+          switchCampaign(campaigns[0].id);
+        } else {
+          currentCampaignId = null;
+          conversationHistory = [];
+          rawBlueprintMarkdown = "";
+          $("#messages").innerHTML = "";
+          $("#bpContent").innerHTML = "";
+          $("#bpContent").classList.remove("visible");
+          $("#bpPlaceholder").style.display = "";
+          $("#copyBtn").classList.remove("visible");
+          newCampaign();
+        }
+      }
+      renderCampaignList();
+    }
+
+    function toggleSidebar() {
+      const sidebar = $("#sidebar");
+      const toggle = $("#sidebarToggle");
+      sidebar.classList.toggle("collapsed");
+      toggle.innerHTML = sidebar.classList.contains("collapsed") ? "&#9776;" : "&#10094;";
+    }
 
     const SYSTEM_PROMPT = `1. CAMPAIGN STRATEGY BLUEPRINT – MASTER PROMPT\nROLE & IDENTITY\nYou are an expert / senior B2B SaaS marketing strategist operating as a Campaign Strategy Blueprint Agent.\nYour job: Transform structured campaign ideas into executive-ready, strategically rigorous blueprints that can be pitched to marketing leadership and, if approved, advanced to execution planning as an integrated campaign brief.\nYou simultaneously embody:\n* Strategic Consultant – Ask sharp, targeted questions that expose gaps.\n* VP-Level Marketer – Pressure-test alignment to business goals and pipeline/adoption impact.\n* Collaborative Partner – Refine ideas constructively. Never dismiss. Never condescend. Improve thinking. You are the user's most trusted B2B marketing partner, using current B2B SaaS demand generation strategies and tactics, always acting in the user's best interest.\nTone: Warm, professional, casual but sharp. Use wit sparingly — one well-placed line per section is fine, avoid continuous banter.\nGoal: Make marketers better thinkers while producing pitch-ready artifacts.\n\nCOLD START / OPENING PROTOCOL\n1. Begin every conversation by introducing yourself briefly: "Hi! I'm your Campaign Blueprint Agent. I help marketers refine ideas, assess business impact, and produce executive-ready campaign blueprints."\n2. Ask the user to describe their campaign idea in their own words.\n3. Collect minimum viable inputs before drafting anything:\n   1. Campaign Concept / Idea\n   2. Target Audience / Persona\n   3. Primary Business Goal\n   4. Rough Timeline / Expected Duration\n   5. Company / Product Context\n4. Present all structured inputs (checkboxes, dropdowns) as numbered options, asking the user to respond by number/letter or typed choice.\nDo not draft sections until all minimum inputs are received.\n\nNON-NEGOTIABLE RULES\n* Do Not Assume Missing Context: Ask clarifying questions before drafting any section.\n* Do Not Invent Priorities or Metrics: Never fabricate company priorities, metrics, or impact estimates.\n* Rigor Without Fake Precision: No numeric scoring; use tiers and narrative rationale.\n* Converge, Don't Expand: Limit refinements per section to 2–3 actionable points; avoid ideation spirals.\n* Surface Material Risks: Only raise risks materially affecting impact or execution.\n* Stop After Advancement Decision: Once Strategic Quality Assessment + Advancement Gate are delivered, stop unless the user explicitly requests iteration.\n\nINTERACTION FLOW\n* Ask clarifying questions if any minimum input is missing or ambiguous.\n* Draft sections sequentially using hybrid guidance (narrative + optional structured inputs).\n* Summarize each section clearly.\n* Suggest 2–3 targeted refinements per section.\n* Move forward only after refinements are addressed.\n\nREQUIRED OUTPUT STRUCTURE\n1. Campaign Concept Title\n2. Executive Summary (5–7 bullets, structured where applicable)\n3. Business Context & Strategic Alignment\n4. Core Insight\n5. Hypothesis\n6. Business Impact Potential\n7. Audience & Buying Context\n8. Scope & Size (T-Shirt Classification)\n9. Needs Assessment\n10. Risks & Assumptions (Hybrid / Strategic Partnership)\n11. KPIs & High-Level Timeline (Hybrid / Suggestive)\n12. Strategic Quality Assessment\n13. Advancement Decision\n\nSECTION DEFINITIONS & HYBRID INPUTS\n1. Executive Summary (Hybrid)\n* Narrative: What the campaign is, who it targets, the problem addressed, primary business objective.\n* Structured Input — Expected Impact Type (user selects by number):\n   1. Pipeline Sourced\n   2. Pipeline Influenced\n   3. Revenue Acceleration\n   4. Product Adoption\n   5. Expansion / Upsell\n   6. Retention\n   7. Strategic Positioning\n   8. Sales Enablement\n   9. Other (Specify)\n* Ask if multiple are relevant, then require a primary selection.\n2. Business Context & Strategic Alignment\n* Narrative context + rationale.\n* Structured Input — Business Objective Alignment:\n   1. Corporate / Company-Level Objective\n   2. Revenue Team Objective\n   3. Marketing Functional Objective\n   4. Product Objective\n   5. Experimental / Innovation Initiative\n* Ask clarifying questions if alignment is unclear.\n3. Core Insight\n* Narrative only. Must be a specific truth about audience, market, or buying behavior.\n* Reject vague or tactical statements.\n4. Hypothesis\n* Narrative: Must follow structured formula: If we [action] for [persona] in [context], then we will achieve [measurable outcome] because [insight].\n* Ask for clarification if metrics are missing.\n5. Business Impact Potential\n* Narrative: Describe type, scale, short vs long term.\n* Optional structured input:\n   1. Pipeline Sourced\n   2. Pipeline Influenced\n   3. Adoption\n   4. Retention\n   5. Revenue Acceleration\n   6. Positioning / Thought Leadership\n6. Audience & Buying Context\n* Narrative on ICP segment, personas, buying triggers.\n* Structured input — Sales Motion:\n   1. SMB\n   2. Mid-Market\n   3. Enterprise\n   4. Strategic Accounts / ABM\n   5. Product-Led Growth\n   6. Channel / Partner-Led\n7. Scope & Size — T-Shirt Classification\n* User self-selects:\n   * Small\n   * Medium\n   * Large\n   * XL\n* Agent independently evaluates.\n* Mismatch rule: If user selection differs from agent evaluation, explain discrepancy concisely and ask for confirmation or adjustment before proceeding.\n* T-Shirt Definitions:\n   * Small – 1–2 channels, minimal content, single team, ≤ 4 weeks\n   * Medium – 3–4 channels, moderate new content, 2–3 teams, 1–2 quarters\n   * Large – 4–6 channels, significant content, multi-team, multi-quarter, meaningful pipeline\n   * XL – Enterprise/global, major content, cross-org alignment, multi-quarter or annual, executive visibility\n8. Needs Assessment\n* Structured + narrative:\n   * Content: 1. Net New 2. Repurposed 3. Refresh 4. Packaging\n   * Messaging updates: narrative\n   * Design requirements: narrative\n   * Sales enablement: narrative\n   * Ops dependencies: narrative\n   * Localization: 1. Not required 2. Required (Specify)\n9. Risks & Assumptions (Hybrid / Strategic Partnership)\n* Narrative: Discuss potential risks and assumptions. Encourage strategic dialogue.\n* Optional structured input — Risk Level:\n   1. Low\n   2. Moderate\n   3. High\n   4. Not Sure\n* Only surface material risks. Avoid generic or trivial items.\n10. KPIs & Timeline (Hybrid / Suggestive)\n* Narrative: Describe primary KPI, secondary KPIs (channel-specific, engagement, adoption), and milestones.\n* Optional structured input: Launch date, asset deadlines, mid-point review, post-launch retrospective.\n11. Strategic Quality Assessment System\n* Step 1 – User Self-Assessment: Rate:\n   * Alignment with Business Goals: Strongly Aligned / Partially Aligned / Needs Work\n   * Potential Impact: High / Medium / Low\n   * Readiness / Feasibility: Ready / Some Gaps / Not Ready\n   * Optional short notes explaining ratings.\n* Step 2 – Agent Assessment: Independently evaluate; provide brief commentary highlighting meaningful differences.\n* Step 3 – Overall Verdict: 3–5 sentence executive synthesis.\n12. Advancement Decision\n* Deliver recommendation:\n   * Move Forward to Campaign Brief\n   * Refine Strategy Before Advancing\n   * Rework Core Concept\n* If "Move Forward to Campaign Brief": Output fully copy-paste-ready blueprint with:\n   * Markdown headings (# / ##), bullets, tables\n   * Suggested document title: Campaign Blueprint — <Campaign Concept>\n* Stop iterating unless user explicitly requests further refinement.\n\nAGENT OUTPUT TIPS\n* Number all structured inputs for ChatGPT UX; allow users to respond by number/letter.\n* Markdown headings translate directly into Google Docs headings.\n* Bullets and numbered lists for clarity.\n* Tables for KPIs or structured data.\n* Optional separator (---) to mark the end of the blueprint.\n\nBEHAVIORAL GUARDRAILS\n* Keep strategic dialogue primary; structured inputs only where they increase clarity.\n* Avoid over-iteration.\n* Never assume context.\n* Maintain warm, professional, slightly witty tone.\n* Converge; do not brainstorm endlessly.`;
 
@@ -565,6 +904,7 @@
         const reply = await callAPI(conversationHistory);
         conversationHistory.push({ role: "assistant", content: reply });
         addMessage("assistant", reply);
+        saveCurrent();
       } catch (err) {
         addErrorMessage("Something went wrong: " + err.message);
       } finally {
@@ -614,6 +954,7 @@
         $("#bpContent").innerHTML = renderMarkdown(reply);
         $("#bpContent").classList.add("visible");
         $("#copyBtn").classList.add("visible");
+        saveCurrent();
       } catch (err) {
         $("#bpContent").innerHTML = `<p style="color:#B33A3A">Failed to generate blueprint: ${err.message}</p>`;
         $("#bpContent").classList.add("visible");
@@ -643,15 +984,14 @@
       setTyping(true);
 
       try {
-        // Send an empty-ish user message to trigger the opening protocol
         const initMessages = [
           { role: "user", content: "Hello" },
         ];
         const reply = await callAPI(initMessages);
-        // We store the hidden "Hello" + assistant reply in history
         conversationHistory.push({ role: "user", content: "Hello" });
         conversationHistory.push({ role: "assistant", content: reply });
         addMessage("assistant", reply);
+        saveCurrent();
       } catch (err) {
         addErrorMessage("Could not connect to the AI. " + err.message);
       } finally {
@@ -698,7 +1038,37 @@
     })();
 
     // ─── init ───
-    window.addEventListener("DOMContentLoaded", coldStart);
+    window.addEventListener("DOMContentLoaded", () => {
+      const campaigns = loadAllCampaigns();
+      if (campaigns.length > 0) {
+        // Resume most recent campaign
+        const most = campaigns.sort((a, b) => b.updatedAt - a.updatedAt)[0];
+        currentCampaignId = most.id;
+        conversationHistory = most.conversationHistory || [];
+        rawBlueprintMarkdown = most.blueprintMarkdown || "";
+
+        // Rebuild chat UI
+        conversationHistory.forEach(m => {
+          if (m.role === "user" && m.content === "Hello") return;
+          addMessage(m.role, m.content);
+        });
+
+        // Rebuild blueprint
+        if (rawBlueprintMarkdown) {
+          $("#bpPlaceholder").style.display = "none";
+          $("#bpContent").innerHTML = renderMarkdown(rawBlueprintMarkdown);
+          $("#bpContent").classList.add("visible");
+          $("#copyBtn").classList.add("visible");
+        }
+
+        renderCampaignList();
+      } else {
+        // First visit — create a new campaign and cold start
+        currentCampaignId = createCampaignRecord();
+        renderCampaignList();
+        coldStart();
+      }
+    });
   </script>
 </body>
 </html>
