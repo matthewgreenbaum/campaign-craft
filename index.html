@@ -10,13 +10,21 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html, body { height: 100%; }
     body {
       font-family: 'Inter', sans-serif;
       background: #F5F0E3;
       color: #2D2D2D;
       min-height: 100vh;
       display: flex;
+      flex-direction: row;
+    }
+    .app-body {
+      display: flex;
       flex-direction: column;
+      flex: 1;
+      min-width: 0;
+      height: 100vh;
     }
 
     /* ---------- header ---------- */
@@ -29,11 +37,11 @@
       font-size: 3.4rem;
       font-weight: 800;
       letter-spacing: -0.02em;
-      color: #3B4468;
+      color: #2C3E7B;
       line-height: 1.1;
     }
     .app-header .gradient-word {
-      background: linear-gradient(90deg, #A07858, #7B6B8A, #5B6890, #8A9AB5, #A07858);
+      background: linear-gradient(90deg, #2C3E7B, #5A7BAF, #B85C38, #D4A050, #2C3E7B);
       background-size: 300% 100%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -66,20 +74,20 @@
     .sidebar {
       width: 260px;
       background: #FFFFFF;
-      border-radius: 16px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      border-radius: 0;
+      border-right: 1px solid #E0DED8;
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
-      margin-right: 12px;
-      transition: width 0.25s ease, margin 0.25s ease, opacity 0.25s ease;
+      height: 100vh;
+      transition: width 0.25s ease, opacity 0.25s ease;
       overflow: hidden;
     }
     .sidebar.collapsed {
       width: 0;
-      margin-right: 0;
       opacity: 0;
       pointer-events: none;
+      border-right: none;
     }
     .sidebar-header {
       display: flex;
@@ -94,7 +102,7 @@
       color: #1A1A1A;
     }
     .btn-new-campaign {
-      background: #A07858;
+      background: #B85C38;
       color: #fff;
       border: none;
       border-radius: 8px;
@@ -105,7 +113,7 @@
       cursor: pointer;
       transition: background 0.15s;
     }
-    .btn-new-campaign:hover { background: #8B6548; }
+    .btn-new-campaign:hover { background: #A04E2D; }
 
     .campaign-list {
       flex: 1;
@@ -123,7 +131,7 @@
       margin-bottom: 4px;
     }
     .campaign-item:hover { background: #F5F0E3; }
-    .campaign-item.active { background: #EAECF2; }
+    .campaign-item.active { background: #E8EAF2; }
     .campaign-item-info { flex: 1; min-width: 0; }
     .campaign-item-title {
       font-weight: 600;
@@ -176,9 +184,9 @@
       margin-right: 8px;
       transition: background 0.15s, color 0.15s;
       align-self: flex-start;
-      margin-top: 16px;
+      margin-top: 4px;
     }
-    .sidebar-toggle:hover { background: #EAECF2; color: #5B6890; }
+    .sidebar-toggle:hover { background: #E8EAF2; color: #2C3E7B; }
 
     /* ---------- panels container ---------- */
     .panels {
@@ -189,9 +197,11 @@
     }
     .panels > .panel { flex: 1; min-width: 200px; }
     @media (max-width: 820px) {
+      body { flex-direction: column; }
+      .sidebar { width: 100% !important; height: auto !important; max-height: 200px; border-right: none; border-bottom: 1px solid #E0DED8; }
+      .sidebar.collapsed { max-height: 0; border-bottom: none; }
+      .app-body { height: auto; flex: 1; }
       .main-layout { flex-direction: column; }
-      .sidebar { width: 100% !important; margin-right: 0; margin-bottom: 12px; max-height: 200px; }
-      .sidebar.collapsed { max-height: 0; margin-bottom: 0; }
       .panels { flex-direction: column; }
       .panels > .panel { flex: 1 !important; }
       .drag-handle { display: none !important; }
@@ -220,7 +230,7 @@
     }
     .drag-handle:hover::after,
     .drag-handle.dragging::after {
-      background: #5B6890;
+      background: #2C3E7B;
       height: 72px;
     }
 
@@ -245,7 +255,7 @@
     .avatar {
       width: 36px; height: 36px;
       border-radius: 50%;
-      background: #5B6890;
+      background: #2C3E7B;
       color: #fff;
       display: flex; align-items: center; justify-content: center;
       font-weight: 700; font-size: 0.85rem;
@@ -273,7 +283,7 @@
     }
     .msg.assistant {
       align-self: flex-start;
-      background: #EAECF2;
+      background: #E8EAF2;
       color: #1A1A1A;
       border-bottom-left-radius: 4px;
     }
@@ -329,9 +339,9 @@
       min-height: 42px;
       max-height: 120px;
     }
-    .chat-input-bar textarea:focus { border-color: #5B6890; }
+    .chat-input-bar textarea:focus { border-color: #2C3E7B; }
     .chat-input-bar button {
-      background: #A07858;
+      background: #B85C38;
       color: #fff;
       border: none;
       border-radius: 10px;
@@ -343,7 +353,7 @@
       transition: background 0.15s;
       flex-shrink: 0;
     }
-    .chat-input-bar button:hover { background: #8B6548; }
+    .chat-input-bar button:hover { background: #A04E2D; }
     .chat-input-bar button:disabled { opacity: 0.5; cursor: default; }
 
     /* ---------- RIGHT PANEL — BLUEPRINT ---------- */
@@ -362,7 +372,7 @@
     }
     .bp-actions { display: flex; gap: 8px; }
     .btn-update {
-      background: #A07858;
+      background: #B85C38;
       color: #fff;
       border: none;
       border-radius: 10px;
@@ -373,11 +383,11 @@
       cursor: pointer;
       transition: background 0.15s;
     }
-    .btn-update:hover { background: #8B6548; }
+    .btn-update:hover { background: #A04E2D; }
     .btn-update:disabled { opacity: 0.5; cursor: default; }
 
     .btn-copy {
-      background: #5B6890;
+      background: #2C3E7B;
       color: #fff;
       border: none;
       border-radius: 10px;
@@ -389,7 +399,7 @@
       transition: background 0.15s;
       display: none;
     }
-    .btn-copy:hover { background: #4A5575; }
+    .btn-copy:hover { background: #1E2F66; }
     .btn-copy.visible { display: inline-block; }
 
     .blueprint-body {
@@ -419,7 +429,7 @@
       font-weight: 700;
       margin: 0 0 18px;
       padding-bottom: 10px;
-      border-bottom: 2px solid #A07858;
+      border-bottom: 2px solid #B85C38;
       color: #1A1A1A;
     }
     .bp-content h2 {
@@ -427,8 +437,8 @@
       font-weight: 600;
       margin: 24px 0 10px;
       padding: 5px 12px;
-      background: #EAECF2;
-      border-left: 4px solid #5B6890;
+      background: #E8EAF2;
+      border-left: 4px solid #2C3E7B;
       border-radius: 0 6px 6px 0;
       color: #1A1A1A;
     }
@@ -436,7 +446,7 @@
       font-size: 0.95rem;
       font-weight: 600;
       margin: 18px 0 8px;
-      color: #5B6890;
+      color: #2C3E7B;
     }
     .bp-content p {
       font-size: 0.9rem;
@@ -492,23 +502,24 @@
   </style>
 </head>
 <body>
+  <!-- SIDEBAR — Campaign History (full height) -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="label">Campaigns</span>
+      <button class="btn-new-campaign" id="newCampaignBtn" onclick="newCampaign()">+ New</button>
+    </div>
+    <div class="campaign-list" id="campaignList">
+      <div class="sidebar-empty" id="sidebarEmpty">No saved campaigns yet.<br/>Start chatting to create one.</div>
+    </div>
+  </aside>
+
+  <div class="app-body">
   <header class="app-header">
     <h1>Campaign Blueprinter</h1>
     <p class="gradient-word">AI-powered campaign strategy builder</p>
   </header>
 
   <main class="main-layout">
-    <!-- SIDEBAR — Campaign History -->
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <span class="label">Campaigns</span>
-        <button class="btn-new-campaign" id="newCampaignBtn" onclick="newCampaign()">+ New</button>
-      </div>
-      <div class="campaign-list" id="campaignList">
-        <div class="sidebar-empty" id="sidebarEmpty">No saved campaigns yet.<br/>Start chatting to create one.</div>
-      </div>
-    </aside>
-
     <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" title="Toggle sidebar">&#9776;</button>
 
     <div class="panels">
@@ -548,6 +559,7 @@
     </section>
     </div>
   </main>
+  </div><!-- /.app-body -->
 
   <!-- API Configuration -->
   <script>
