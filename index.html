@@ -356,8 +356,12 @@
     </section>
   </main>
 
-  <!-- config.js supplies CONFIG.ANTHROPIC_API_KEY -->
-  <script src="config.js"></script>
+  <!-- API Configuration — paste your Anthropic API key between the quotes below -->
+  <script>
+    const CONFIG = {
+      ANTHROPIC_API_KEY: "your-anthropic-api-key-here"
+    };
+  </script>
   <script>
     // ─── state ───
     const conversationHistory = [];   // {role, content} messages sent to API
