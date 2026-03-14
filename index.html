@@ -898,13 +898,40 @@
       const campaigns = loadAllCampaigns();
       const campaign = campaigns.find(c => c.id === id);
       if (!campaign) return;
-      const newTitle = prompt("Edit blueprint title:", campaign.title);
-      if (newTitle !== null && newTitle.trim() !== "") {
-        campaign.title = newTitle.trim();
-        saveAllCampaigns(campaigns);
+
+      // Find the title element for this campaign in the sidebar
+      const items = document.querySelectorAll(".campaign-item");
+      let titleEl = null;
+      items.forEach(item => {
+        const t = item.querySelector(".campaign-item-title");
+        if (t && t.textContent === campaign.title) titleEl = t;
+      });
+      if (!titleEl) return;
+
+      // Replace title with an inline input
+      const input = document.createElement("input");
+      input.type = "text";
+      input.value = campaign.title;
+      input.style.cssText = "width:100%;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:4px;color:#fff;font-family:inherit;font-size:0.82rem;font-weight:600;padding:2px 6px;outline:none;";
+      titleEl.replaceWith(input);
+      input.focus();
+      input.select();
+
+      function commitRename() {
+        const val = input.value.trim();
+        if (val && val !== campaign.title) {
+          campaign.title = val;
+          saveAllCampaigns(campaigns);
+          updateBlueprintPanelTitle();
+        }
         renderCampaignList();
-        updateBlueprintPanelTitle();
       }
+
+      input.addEventListener("blur", commitRename);
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") { e.preventDefault(); input.blur(); }
+        if (e.key === "Escape") { input.value = campaign.title; input.blur(); }
+      });
     }
 
     function toggleSidebar() {
