@@ -674,7 +674,7 @@
 
       // Derive title from first user message that isn't "Hello"
       const firstReal = conversationHistory.find(m => m.role === "user" && m.content !== "Hello");
-      if (firstReal && campaigns[idx].title === "New Campaign") {
+      if (firstReal && campaigns[idx].title === "Untitled") {
         campaigns[idx].title = firstReal.content.slice(0, 50) + (firstReal.content.length > 50 ? "…" : "");
       }
 
@@ -758,7 +758,7 @@
     function createCampaignRecord() {
       const campaign = {
         id: generateId(),
-        title: "New Campaign",
+        title: "Untitled",
         createdAt: Date.now(),
         updatedAt: Date.now(),
         conversationHistory: [],
