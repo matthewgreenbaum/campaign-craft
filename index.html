@@ -6,7 +6,7 @@
   <title>Campaign Blueprint</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -22,18 +22,34 @@
     /* ---------- header ---------- */
     .app-header {
       text-align: center;
-      padding: 24px 16px 12px;
+      padding: 40px 16px 20px;
     }
     .app-header h1 {
-      font-size: 1.6rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 2.6rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
       color: #1A1A1A;
     }
+    .app-header h1 .gradient-word {
+      background: linear-gradient(90deg, #f857a6, #a855f7, #6366f1, #06b6d4, #f857a6);
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradient-shift 6s ease infinite;
+    }
+    @keyframes gradient-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
     .app-header p {
-      font-size: 0.85rem;
-      color: #888;
-      margin-top: 4px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.05rem;
+      color: #999;
+      margin-top: 8px;
+      font-weight: 500;
     }
 
     /* ---------- main grid ---------- */
@@ -347,7 +363,7 @@
 </head>
 <body>
   <header class="app-header">
-    <h1>Campaign Blueprint</h1>
+    <h1>Campaign <span class="gradient-word">Blueprint</span></h1>
     <p>AI-powered campaign strategy builder</p>
   </header>
 
