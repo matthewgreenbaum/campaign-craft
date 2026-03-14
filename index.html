@@ -31,7 +31,24 @@
     .app-header {
       text-align: center;
       padding: 40px 16px 20px;
+      position: relative;
     }
+    .btn-new-blueprint {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      background: #7FFF00;
+      color: #1a1a1a;
+      border: none;
+      border-radius: 999px;
+      padding: 9px 18px;
+      font-family: 'Open Sans', 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-new-blueprint:hover { background: #6FE600; }
     .app-header h1 {
       font-family: 'DM Sans', sans-serif;
       font-size: 3.4rem;
@@ -586,6 +603,7 @@
   <header class="app-header">
     <h1>Campaign Blueprint</h1>
     <p class="gradient-word">AI-powered campaign strategy builder</p>
+    <button class="btn-new-blueprint" onclick="newCampaign()">Start New Blueprint</button>
   </header>
 
   <main class="main-layout">
