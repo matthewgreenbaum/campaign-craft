@@ -516,7 +516,7 @@
     }
     .chat-input-bar textarea {
       flex: 1;
-      border: 1px solid #DDD;
+      border: 1px solid #D8D5F2;
       border-radius: 10px;
       padding: 10px 14px;
       font-family: 'Open Sans', 'Inter', sans-serif;
@@ -741,7 +741,7 @@
     <!-- RIGHT — Blueprint -->
     <section class="panel blueprint-panel">
       <div class="panel-header">
-        <span class="label" id="blueprintPanelTitle">Blueprint</span>
+        <span class="label" id="blueprintPanelTitle">Preview</span>
         <div class="bp-actions">
           <button class="btn-update" id="updateBtn" onclick="updateBlueprint()">Update</button>
           <button class="btn-copy" id="copyBtn" onclick="copyBlueprint()">&#128203; Copy</button>
@@ -830,10 +830,10 @@
 
     function updateBlueprintPanelTitle() {
       const el = $("#blueprintPanelTitle");
-      if (!currentCampaignId) { el.textContent = "Blueprint"; return; }
+      if (!currentCampaignId) { el.textContent = "Preview"; return; }
       const campaigns = loadAllCampaigns();
       const c = campaigns.find(c => c.id === currentCampaignId);
-      el.textContent = c ? "Blueprint: " + c.title : "Blueprint";
+      el.textContent = c ? "Preview: " + c.title + " Blueprint" : "Preview";
     }
 
     function saveCurrent() {
