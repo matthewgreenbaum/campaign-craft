@@ -356,13 +356,12 @@
     </section>
   </main>
 
-  <!-- API Configuration: config.js (git-ignored) overrides the default if present -->
+  <!-- API Configuration -->
   <script>
     const CONFIG = {
-      ANTHROPIC_API_KEY: "your-anthropic-api-key-here"
+      ANTHROPIC_API_KEY: "PASTE_YOUR_API_KEY_HERE"
     };
   </script>
-  <script src="config.js" onerror=""></script>
   <script>
     // ─── state ───
     const conversationHistory = [];   // {role, content} messages sent to API
@@ -468,8 +467,8 @@
 
     // ─── API call ───
     async function callAPI(messages) {
-      if (typeof CONFIG === "undefined" || !CONFIG.ANTHROPIC_API_KEY || CONFIG.ANTHROPIC_API_KEY === "your-anthropic-api-key-here") {
-        throw new Error("API key not configured. Copy config.example.js to config.js and add your Anthropic API key.");
+      if (typeof CONFIG === "undefined" || !CONFIG.ANTHROPIC_API_KEY || CONFIG.ANTHROPIC_API_KEY.startsWith("your-")) {
+        throw new Error("API key not configured. Add your Anthropic API key in the CONFIG section near the top of this file.");
       }
 
       const res = await fetch(API_URL, {
