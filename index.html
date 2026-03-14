@@ -59,12 +59,7 @@
       line-height: 1.1;
     }
     .app-header .gradient-word {
-      background: linear-gradient(90deg, #3D38B0, #7B7BD0, #1c767b, #F97316, #EC4899, #7B7BD0, #3D38B0);
-      background-size: 400% 100%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: gradient-shift 6s ease infinite;
+      color: #999;
     }
     @keyframes gradient-shift {
       0% { background-position: 0% 50%; }
@@ -563,15 +558,16 @@
     }
     .blueprint-panel .panel-header .preview-badge {
       height: 36px;
-      border-radius: 18px;
-      background: #3D38B0;
-      color: #fff;
       display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 0.75rem;
-      padding: 0 14px;
+      font-weight: 700; font-size: 0.95rem;
       flex-shrink: 0;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.02em;
+      background: linear-gradient(90deg, #3D38B0, #7B7BD0, #1c767b, #F97316, #EC4899, #7B7BD0, #3D38B0);
+      background-size: 400% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradient-shift 6s ease infinite;
     }
     .blueprint-panel .panel-header .label {
       font-weight: 600;
