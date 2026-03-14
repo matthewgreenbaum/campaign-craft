@@ -100,10 +100,51 @@
       transition: width 0.25s ease, opacity 0.25s ease;
       overflow: hidden;
     }
+    .sidebar.collapsed {
+      width: 0;
+      opacity: 0;
+      pointer-events: none;
+      border-right: none;
+    }
     .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       padding: 10px 8px;
       border-bottom: 1px solid rgba(255,255,255,0.15);
     }
+    .sidebar-collapse {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.5);
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      line-height: 1;
+      transition: color 0.15s;
+    }
+    .sidebar-collapse:hover { color: #fff; }
+
+    /* ---------- sidebar toggle ---------- */
+    .sidebar-reopen {
+      display: none;
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      z-index: 100;
+      background: none;
+      border: none;
+      width: 40px;
+      height: 40px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 2.2rem;
+      color: #888;
+      transition: color 0.15s;
+    }
+    .sidebar-reopen:hover { color: #333; }
+    .sidebar-reopen.visible { display: flex; }
     .new-blueprint-item {
       display: flex;
       align-items: center;
@@ -162,10 +203,11 @@
       right: 12px;
       height: 1px;
       background: rgba(255,255,255,0.12);
+      transition: opacity 0.15s;
     }
     .campaign-item:hover::before,
     .campaign-item:hover + .campaign-item::before {
-      background: transparent;
+      opacity: 0;
     }
     .campaign-item:hover { background: rgba(255,255,255,0.08); }
     .campaign-item.active { background: rgba(255,255,255,0.15); }
@@ -559,11 +601,13 @@
         <span class="new-blueprint-icon">+</span>
         <span class="new-blueprint-text">New Campaign</span>
       </div>
+      <button class="sidebar-collapse" onclick="toggleSidebar()" title="Collapse sidebar">&#8249;</button>
     </div>
     <div class="campaign-list" id="campaignList">
       <div class="sidebar-empty" id="sidebarEmpty">No saved campaigns yet.<br/>Start chatting to create one.</div>
     </div>
   </aside>
+  <button class="sidebar-reopen" id="sidebarReopen" onclick="toggleSidebar()" title="Open sidebar">&#9776;</button>
 
   <div class="app-body">
   <header class="app-header">
