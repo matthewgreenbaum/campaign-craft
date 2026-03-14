@@ -173,10 +173,11 @@
       align-items: center;
       justify-content: space-between;
       padding: 10px 12px;
-      border-radius: 10px;
+      border-radius: 0;
       cursor: pointer;
       transition: background 0.15s;
-      margin-bottom: 4px;
+      margin-bottom: 0;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
     }
     .campaign-item:hover { background: rgba(255,255,255,0.08); }
     .campaign-item.active { background: rgba(255,255,255,0.15); }
@@ -453,34 +454,34 @@
     }
     .bp-actions { display: flex; gap: 8px; }
     .btn-update {
-      background: #3D38B0;
-      color: #fff;
-      border: none;
+      background: transparent;
+      color: #3D38B0;
+      border: 1.5px solid #3D38B0;
       border-radius: 999px;
-      padding: 9px 18px;
+      padding: 8px 18px;
       font-family: 'Open Sans', 'Inter', sans-serif;
       font-weight: 600;
       font-size: 0.82rem;
       cursor: pointer;
-      transition: background 0.15s;
+      transition: background 0.15s, color 0.15s;
     }
-    .btn-update:hover { background: #4338CA; }
+    .btn-update:hover { background: #EEF2FF; }
     .btn-update:disabled { opacity: 0.5; cursor: default; }
 
     .btn-copy {
-      background: #3D38B0;
-      color: #fff;
-      border: none;
+      background: transparent;
+      color: #3D38B0;
+      border: 1.5px solid #3D38B0;
       border-radius: 999px;
-      padding: 9px 18px;
+      padding: 8px 18px;
       font-family: 'Open Sans', 'Inter', sans-serif;
       font-weight: 600;
       font-size: 0.82rem;
       cursor: pointer;
-      transition: background 0.15s;
+      transition: background 0.15s, color 0.15s;
       display: none;
     }
-    .btn-copy:hover { background: #4338CA; }
+    .btn-copy:hover { background: #EEF2FF; }
     .btn-copy.visible { display: inline-block; }
 
     .blueprint-body {
@@ -590,10 +591,6 @@
       <button class="sidebar-close" onclick="toggleSidebar()" title="Close sidebar">&times;</button>
     </div>
     <div class="campaign-list" id="campaignList">
-      <div class="new-blueprint-item" onclick="newCampaign()">
-        <span class="new-blueprint-icon">+</span>
-        <span class="new-blueprint-text">New Blueprint</span>
-      </div>
       <div class="sidebar-empty" id="sidebarEmpty">No saved campaigns yet.<br/>Start chatting to create one.</div>
     </div>
   </aside>
@@ -603,7 +600,7 @@
   <header class="app-header">
     <h1>Campaign Blueprint</h1>
     <p class="gradient-word">AI-powered campaign strategy builder</p>
-    <button class="btn-new-blueprint" onclick="newCampaign()">+ New Blueprint</button>
+    <button class="btn-new-blueprint" onclick="newCampaign()">+ New Campaign</button>
   </header>
 
   <main class="main-layout">
@@ -633,7 +630,7 @@
         <span class="label" id="blueprintPanelTitle">Blueprint</span>
         <div class="bp-actions">
           <button class="btn-update" id="updateBtn" onclick="updateBlueprint()">Update</button>
-          <button class="btn-copy" id="copyBtn" onclick="copyBlueprint()">Copy to Clipboard</button>
+          <button class="btn-copy" id="copyBtn" onclick="copyBlueprint()">&#128203; Copy</button>
         </div>
       </div>
       <div class="blueprint-body">
@@ -1113,8 +1110,8 @@
       try {
         await navigator.clipboard.writeText(rawBlueprintMarkdown);
         const btn = $("#copyBtn");
-        btn.textContent = "Copied!";
-        setTimeout(() => { btn.textContent = "Copy to Clipboard"; }, 2000);
+        btn.innerHTML = "&#10003; Copied!";
+        setTimeout(() => { btn.innerHTML = "&#128203; Copy"; }, 2000);
       } catch {
         alert("Copy failed — please select and copy manually.");
       }
