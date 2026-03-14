@@ -204,13 +204,14 @@
       right: 12px;
       height: 1px;
       background: rgba(255,255,255,0.12);
-      transition: opacity 0.15s;
+      pointer-events: none;
+      z-index: 1;
     }
     .campaign-item:hover::before,
     .campaign-item:hover + .campaign-item::before,
     .campaign-item.active::before,
     .campaign-item.active + .campaign-item::before {
-      opacity: 0;
+      display: none !important;
     }
     .campaign-item:hover { background: rgba(255,255,255,0.08); }
     .campaign-item.active { background: rgba(255,255,255,0.15); }
