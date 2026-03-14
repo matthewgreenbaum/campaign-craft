@@ -163,6 +163,10 @@
       height: 1px;
       background: rgba(255,255,255,0.12);
     }
+    .campaign-item:hover::before,
+    .campaign-item:hover + .campaign-item::before {
+      background: transparent;
+    }
     .campaign-item:hover { background: rgba(255,255,255,0.08); }
     .campaign-item.active { background: rgba(255,255,255,0.15); }
     .campaign-item-info { flex: 1; min-width: 0; }
