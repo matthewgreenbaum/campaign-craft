@@ -55,29 +55,8 @@
       font-size: 3.4rem;
       font-weight: 800;
       letter-spacing: -0.02em;
+      color: #3D38B0;
       line-height: 1.1;
-    }
-    /* Blueprint-sketch SVG title */
-    .app-header .blueprint-title-wrap {
-      display: block;
-      position: relative;
-      width: 100%;
-      max-width: 640px;
-      margin: 0 auto;
-      aspect-ratio: 600 / 70;
-    }
-    .app-header .blueprint-title-wrap h1 {
-      /* screen-reader accessible, visually replaced by SVG */
-      position: absolute;
-      width: 1px; height: 1px;
-      overflow: hidden;
-      clip: rect(0,0,0,0);
-    }
-    .app-header .blueprint-title-svg {
-      display: block;
-      width: 100%;
-      height: 100%;
-      overflow: visible;
     }
     .app-header .gradient-word {
       background: linear-gradient(90deg, #3D38B0, #7B7BD0, #1c767b, #F97316, #EC4899, #7B7BD0, #3D38B0);
@@ -733,57 +712,7 @@
 
   <div class="app-body">
   <header class="app-header">
-    <div class="blueprint-title-wrap">
-      <h1>Campaign Blueprint</h1>
-      <svg class="blueprint-title-svg" viewBox="0 0 600 70" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <!-- diagonal hatching patterns at different angles/densities -->
-          <pattern id="hatch1" patternUnits="userSpaceOnUse" width="4" height="4" patternTransform="rotate(55)">
-            <line x1="0" y1="0" x2="0" y2="4" stroke="#888" stroke-width="0.7" />
-          </pattern>
-          <pattern id="hatch2" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(-55)">
-            <line x1="0" y1="0" x2="0" y2="5" stroke="#999" stroke-width="0.5" />
-          </pattern>
-          <pattern id="hatch3" patternUnits="userSpaceOnUse" width="3" height="3" patternTransform="rotate(40)">
-            <line x1="0" y1="0" x2="0" y2="3" stroke="#777" stroke-width="0.4" />
-          </pattern>
-          <!-- combined cross-hatch -->
-          <pattern id="crosshatch" patternUnits="userSpaceOnUse" width="20" height="20">
-            <rect width="20" height="20" fill="url(#hatch1)" />
-            <rect width="20" height="20" fill="url(#hatch2)" />
-            <rect width="20" height="20" fill="url(#hatch3)" />
-          </pattern>
-          <!-- clip for grid lines inside text -->
-          <clipPath id="textClip">
-            <text x="300" y="52" text-anchor="middle"
-                  font-family="'DM Sans', sans-serif" font-weight="800"
-                  font-size="56" letter-spacing="-0.5">Campaign Blueprint</text>
-          </clipPath>
-        </defs>
-        <!-- thin outline for structure -->
-        <text x="300" y="52" text-anchor="middle"
-              font-family="'DM Sans', sans-serif" font-weight="800"
-              font-size="56" letter-spacing="-0.5"
-              fill="none" stroke="#bbb" stroke-width="0.6">Campaign Blueprint</text>
-        <!-- cross-hatched fill -->
-        <text x="300" y="52" text-anchor="middle"
-              font-family="'DM Sans', sans-serif" font-weight="800"
-              font-size="56" letter-spacing="-0.5"
-              fill="url(#crosshatch)">Campaign Blueprint</text>
-        <!-- horizontal construction lines inside text -->
-        <g clip-path="url(#textClip)" opacity="0.25">
-          <line x1="0" y1="18" x2="600" y2="18" stroke="#999" stroke-width="0.5" />
-          <line x1="0" y1="30" x2="600" y2="30" stroke="#999" stroke-width="0.5" />
-          <line x1="0" y1="42" x2="600" y2="42" stroke="#999" stroke-width="0.5" />
-          <line x1="0" y1="54" x2="600" y2="54" stroke="#999" stroke-width="0.5" />
-        </g>
-        <!-- faint grid lines extending full width for architectural feel -->
-        <g opacity="0.12">
-          <line x1="0" y1="18" x2="600" y2="18" stroke="#999" stroke-width="0.4" />
-          <line x1="0" y1="42" x2="600" y2="42" stroke="#999" stroke-width="0.4" />
-        </g>
-      </svg>
-    </div>
+    <h1>Campaign Blueprint</h1>
     <p class="gradient-word">AI-powered campaign strategy builder</p>
     <button class="btn-new-blueprint" onclick="newCampaign()">+ New Campaign</button>
   </header>
