@@ -207,7 +207,9 @@
       transition: opacity 0.15s;
     }
     .campaign-item:hover::before,
-    .campaign-item:hover + .campaign-item::before {
+    .campaign-item:hover + .campaign-item::before,
+    .campaign-item.active::before,
+    .campaign-item.active + .campaign-item::before {
       opacity: 0;
     }
     .campaign-item:hover { background: rgba(255,255,255,0.08); }
