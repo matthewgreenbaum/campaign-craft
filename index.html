@@ -6,15 +6,15 @@
   <title>Campaign Blueprinter</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body { height: 100%; }
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Open Sans', 'Inter', sans-serif;
       background: #F8F9FA;
-      color: #1B1B3A;
+      color: #353090;
       min-height: 100vh;
       display: flex;
       flex-direction: row;
@@ -37,11 +37,11 @@
       font-size: 3.4rem;
       font-weight: 800;
       letter-spacing: -0.02em;
-      color: #1B1B3A;
+      color: #353090;
       line-height: 1.1;
     }
     .app-header .gradient-word {
-      background: linear-gradient(90deg, #1B1B3A, #4A4A6A, #1c767b, #4A4A6A, #1B1B3A);
+      background: linear-gradient(90deg, #353090, #6B6BB0, #1c767b, #6B6BB0, #353090);
       background-size: 300% 100%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -177,18 +177,51 @@
       color: rgba(255,255,255,0.55);
       margin-top: 2px;
     }
-    .campaign-item-delete {
+    .campaign-item-menu {
+      position: relative;
+      flex-shrink: 0;
+    }
+    .campaign-item-dots {
       background: none;
       border: none;
       color: rgba(255,255,255,0.35);
       cursor: pointer;
-      font-size: 0.85rem;
-      padding: 0 0 0 8px;
+      font-size: 1rem;
+      padding: 2px 4px;
       line-height: 1;
-      flex-shrink: 0;
+      letter-spacing: 0.5px;
       transition: color 0.15s;
     }
-    .campaign-item-delete:hover { color: #FF8A80; }
+    .campaign-item-dots:hover { color: rgba(255,255,255,0.8); }
+    .campaign-item-dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      min-width: 130px;
+      z-index: 200;
+      overflow: hidden;
+    }
+    .campaign-item-dropdown.open { display: block; }
+    .campaign-item-dropdown button {
+      display: block;
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 9px 14px;
+      text-align: left;
+      font-family: 'Open Sans', 'Inter', sans-serif;
+      font-size: 0.78rem;
+      color: #333;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .campaign-item-dropdown button:hover { background: #f0f0f0; }
+    .campaign-item-dropdown button.danger { color: #d44; }
+    .campaign-item-dropdown button.danger:hover { background: #fef2f2; }
 
     .sidebar-empty {
       text-align: center;
@@ -207,12 +240,12 @@
       z-index: 100;
       background: none;
       border: none;
-      width: 28px;
-      height: 28px;
+      width: 40px;
+      height: 40px;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 1.1rem;
+      font-size: 2.2rem;
       color: #888;
       transition: color 0.15s;
     }
@@ -261,7 +294,7 @@
     }
     .drag-handle:hover::after,
     .drag-handle.dragging::after {
-      background: #1B1B3A;
+      background: #353090;
       height: 72px;
     }
 
@@ -286,7 +319,7 @@
     .avatar {
       width: 36px; height: 36px;
       border-radius: 50%;
-      background: #1B1B3A;
+      background: #353090;
       color: #fff;
       display: flex; align-items: center; justify-content: center;
       font-weight: 700; font-size: 0.85rem;
@@ -362,7 +395,7 @@
       border: 1px solid #DDD;
       border-radius: 10px;
       padding: 10px 14px;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Open Sans', 'Inter', sans-serif;
       font-size: 0.875rem;
       resize: none;
       outline: none;
@@ -370,14 +403,14 @@
       min-height: 42px;
       max-height: 120px;
     }
-    .chat-input-bar textarea:focus { border-color: #1B1B3A; }
+    .chat-input-bar textarea:focus { border-color: #353090; }
     .chat-input-bar button {
-      background: #1B1B3A;
+      background: #353090;
       color: #fff;
       border: none;
       border-radius: 999px;
       padding: 0 20px;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Open Sans', 'Inter', sans-serif;
       font-weight: 600;
       font-size: 0.875rem;
       cursor: pointer;
@@ -403,12 +436,12 @@
     }
     .bp-actions { display: flex; gap: 8px; }
     .btn-update {
-      background: #1B1B3A;
+      background: #353090;
       color: #fff;
       border: none;
       border-radius: 999px;
       padding: 9px 18px;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Open Sans', 'Inter', sans-serif;
       font-weight: 600;
       font-size: 0.82rem;
       cursor: pointer;
@@ -418,12 +451,12 @@
     .btn-update:disabled { opacity: 0.5; cursor: default; }
 
     .btn-copy {
-      background: #1B1B3A;
+      background: #353090;
       color: #fff;
       border: none;
       border-radius: 999px;
       padding: 9px 18px;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Open Sans', 'Inter', sans-serif;
       font-weight: 600;
       font-size: 0.82rem;
       cursor: pointer;
@@ -460,8 +493,8 @@
       font-weight: 700;
       margin: 0 0 18px;
       padding-bottom: 10px;
-      border-bottom: 2px solid #1B1B3A;
-      color: #1B1B3A;
+      border-bottom: 2px solid #353090;
+      color: #353090;
     }
     .bp-content h2 {
       font-size: 1.05rem;
@@ -469,15 +502,15 @@
       margin: 24px 0 10px;
       padding: 5px 12px;
       background: #EEF2FF;
-      border-left: 4px solid #1B1B3A;
+      border-left: 4px solid #353090;
       border-radius: 0 6px 6px 0;
-      color: #1B1B3A;
+      color: #353090;
     }
     .bp-content h3 {
       font-size: 0.95rem;
       font-weight: 600;
       margin: 18px 0 8px;
-      color: #1B1B3A;
+      color: #353090;
     }
     .bp-content p {
       font-size: 0.9rem;
@@ -669,11 +702,28 @@
             <div class="campaign-item-title">${escapeHTML(c.title)}</div>
             <div class="campaign-item-date">${formatDate(c.updatedAt)}</div>
           </div>
-          <button class="campaign-item-delete" title="Delete campaign">&times;</button>
+          <div class="campaign-item-menu">
+            <button class="campaign-item-dots" title="Options">&#8942;</button>
+            <div class="campaign-item-dropdown">
+              <button data-action="rename">Edit Title</button>
+              <button data-action="delete" class="danger">Delete</button>
+            </div>
+          </div>
         `;
         div.querySelector(".campaign-item-info").addEventListener("click", () => switchCampaign(c.id));
-        div.querySelector(".campaign-item-delete").addEventListener("click", (e) => {
+        div.querySelector(".campaign-item-dots").addEventListener("click", (e) => {
           e.stopPropagation();
+          closeAllDropdowns();
+          div.querySelector(".campaign-item-dropdown").classList.toggle("open");
+        });
+        div.querySelector('[data-action="rename"]').addEventListener("click", (e) => {
+          e.stopPropagation();
+          closeAllDropdowns();
+          renameCampaign(c.id);
+        });
+        div.querySelector('[data-action="delete"]').addEventListener("click", (e) => {
+          e.stopPropagation();
+          closeAllDropdowns();
           deleteCampaign(c.id);
         });
         list.appendChild(div);
@@ -793,6 +843,23 @@
         }
       }
       renderCampaignList();
+    }
+
+    function closeAllDropdowns() {
+      document.querySelectorAll(".campaign-item-dropdown.open").forEach(d => d.classList.remove("open"));
+    }
+    document.addEventListener("click", closeAllDropdowns);
+
+    function renameCampaign(id) {
+      const campaigns = loadAllCampaigns();
+      const campaign = campaigns.find(c => c.id === id);
+      if (!campaign) return;
+      const newTitle = prompt("Edit blueprint title:", campaign.title);
+      if (newTitle !== null && newTitle.trim() !== "") {
+        campaign.title = newTitle.trim();
+        saveAllCampaigns(campaigns);
+        renderCampaignList();
+      }
     }
 
     function toggleSidebar() {
