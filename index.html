@@ -436,8 +436,8 @@
     }
     .bp-actions { display: flex; gap: 8px; }
     .btn-update {
-      background: #3D38B0;
-      color: #fff;
+      background: #7FFF00;
+      color: #1a1a1a;
       border: none;
       border-radius: 999px;
       padding: 9px 18px;
@@ -447,12 +447,12 @@
       cursor: pointer;
       transition: background 0.15s;
     }
-    .btn-update:hover { background: #4338CA; }
+    .btn-update:hover { background: #6FE600; }
     .btn-update:disabled { opacity: 0.5; cursor: default; }
 
     .btn-copy {
-      background: #3D38B0;
-      color: #fff;
+      background: #7FFF00;
+      color: #1a1a1a;
       border: none;
       border-radius: 999px;
       padding: 9px 18px;
@@ -463,7 +463,7 @@
       transition: background 0.15s;
       display: none;
     }
-    .btn-copy:hover { background: #4338CA; }
+    .btn-copy:hover { background: #6FE600; }
     .btn-copy.visible { display: inline-block; }
 
     .blueprint-body {
@@ -614,7 +614,7 @@
       <div class="panel-header">
         <span class="label" id="blueprintPanelTitle">Blueprint</span>
         <div class="bp-actions">
-          <button class="btn-update" id="updateBtn" onclick="updateBlueprint()">&#8635; Update</button>
+          <button class="btn-update" id="updateBtn" onclick="updateBlueprint()">Update</button>
           <button class="btn-copy" id="copyBtn" onclick="copyBlueprint()">Copy to Clipboard</button>
         </div>
       </div>
