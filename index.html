@@ -888,10 +888,13 @@
       overflow: hidden; flex-shrink: 0;
     }
     .avatar-current-preview img {
-      width: 100%; height: 100%; object-fit: cover;
+      width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
     }
     .avatar-current-preview .emoji-avatar {
       font-size: 1.6rem; line-height: 1;
+    }
+    .sidebar-avatar-preview img {
+      width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
     }
     .avatar-current-info {
       font-size: 0.85rem; color: #555;
@@ -1102,10 +1105,10 @@
         el.style.background = "#1c767b";
       } else if (avatar.type === "emoji") {
         el.innerHTML = `<span class="emoji-avatar">${avatar.value}</span>`;
-        el.style.background = "#F0EEFF";
+        el.style.background = "#1c767b";
       } else if (avatar.type === "upload") {
         el.innerHTML = `<img src="${avatar.value}" alt="avatar">`;
-        el.style.background = "transparent";
+        el.style.background = "#1c767b";
       }
     }
 
