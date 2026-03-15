@@ -111,14 +111,6 @@
       opacity: 0;
       pointer-events: none;
       border-right: none;
-      overflow: visible;
-    }
-    .sidebar.collapsed .sidebar-toggle-btn {
-      pointer-events: auto;
-      opacity: 1;
-    }
-    .sidebar.collapsed .sidebar-avatar-row {
-      overflow: visible;
     }
     .sidebar-header {
       display: none;
@@ -868,30 +860,28 @@
       background: rgba(255,255,255,0.12);
     }
     .sidebar-toggle-btn {
+      position: fixed;
+      top: 14px;
+      left: 222px;
+      z-index: 200;
       background: none;
       border: none;
       color: rgba(255,255,255,0.7);
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       cursor: pointer;
-      padding: 4px;
-      line-height: 1;
-      flex-shrink: 0;
-      transition: color 0.15s;
       width: 32px;
       height: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 101;
+      transition: left 0.25s ease, color 0.15s;
     }
     .sidebar-toggle-btn:hover { color: #fff; }
-    .sidebar.collapsed .sidebar-toggle-btn {
-      position: fixed;
-      top: 14px;
+    .sidebar-toggle-btn.shifted {
       left: 14px;
       color: #888;
     }
-    .sidebar.collapsed .sidebar-toggle-btn:hover { color: #333; }
+    .sidebar-toggle-btn.shifted:hover { color: #333; }
     .sidebar-avatar-preview {
       width: 32px; height: 32px;
       border-radius: 50%;
@@ -1128,7 +1118,6 @@
         <div class="sidebar-avatar-preview" id="sidebarAvatarPreview">You</div>
       </button>
       <span class="sidebar-avatar-name" id="sidebarAvatarName" onclick="editAvatarName()" title="Click to edit name">Your Avatar</span>
-      <button class="sidebar-toggle-btn" id="sidebarToggleBtn" onclick="toggleSidebar()" title="Toggle sidebar">&#9776;</button>
     </div>
     <div class="campaign-search-wrap">
       <input type="text" class="campaign-search" id="campaignSearch" placeholder="Search campaigns…" oninput="filterCampaigns()">
@@ -1148,6 +1137,7 @@
       </div>
     </div>
   </aside>
+  <button class="sidebar-toggle-btn" id="sidebarToggleBtn" onclick="toggleSidebar()" title="Toggle sidebar">&#9776;</button>
 
   <div class="app-body">
   <header class="app-header">
@@ -1845,6 +1835,7 @@
     function toggleSidebar() {
       const sidebar = $("#sidebar");
       sidebar.classList.toggle("collapsed");
+      $("#sidebarToggleBtn").classList.toggle("shifted", sidebar.classList.contains("collapsed"));
     }
 
     function showAbout() {
