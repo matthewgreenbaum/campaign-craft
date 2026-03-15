@@ -117,7 +117,7 @@
     }
     /* ---------- sidebar toggle ---------- */
     .sidebar-reopen {
-      display: none;
+      display: flex;
       position: fixed;
       top: 14px;
       left: 14px;
@@ -134,7 +134,6 @@
       transition: color 0.15s;
     }
     .sidebar-reopen:hover { color: #333; }
-    .sidebar-reopen.visible { display: flex; }
     .new-blueprint-item {
       display: flex;
       align-items: center;
@@ -1131,7 +1130,6 @@
         <div class="sidebar-avatar-preview" id="sidebarAvatarPreview">You</div>
       </button>
       <span class="sidebar-avatar-name" id="sidebarAvatarName" onclick="editAvatarName()" title="Click to edit name">Your Avatar</span>
-      <button class="sidebar-close-btn" onclick="toggleSidebar()" title="Close sidebar">&times;</button>
     </div>
     <div class="campaign-search-wrap">
       <input type="text" class="campaign-search" id="campaignSearch" placeholder="Search campaigns…" oninput="filterCampaigns()">
@@ -1849,8 +1847,6 @@
     function toggleSidebar() {
       const sidebar = $("#sidebar");
       sidebar.classList.toggle("collapsed");
-      const collapsed = sidebar.classList.contains("collapsed");
-      $("#sidebarReopen").classList.toggle("visible", collapsed);
     }
 
     function showAbout() {
