@@ -6,7 +6,7 @@
   <title>Campaign Blueprint</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -57,6 +57,14 @@
       letter-spacing: -0.02em;
       color: #3D38B0;
       line-height: 1.1;
+    }
+    .app-header .gradient-word {
+      background: linear-gradient(90deg, #3D38B0, #7B7BD0, #1c767b, #F97316, #EC4899, #7B7BD0, #3D38B0);
+      background-size: 400% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradient-shift 12s ease infinite;
     }
     @keyframes gradient-shift {
       0% { background-position: 0% 50%; }
@@ -556,15 +564,14 @@
     .blueprint-panel .panel-header .preview-badge {
       height: 36px;
       display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 0.95rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600; font-size: 0.75rem;
       flex-shrink: 0;
-      letter-spacing: 0.02em;
-      background: linear-gradient(90deg, #3D38B0, #7B7BD0, #1c767b, #F97316, #EC4899, #7B7BD0, #3D38B0);
-      background-size: 400% 100%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: gradient-shift 12s ease infinite;
+      letter-spacing: 0.04em;
+      color: #7B7BD0;
+      border: 1px solid #7B7BD0;
+      border-radius: 4px;
+      padding: 0 8px;
     }
     .blueprint-panel .panel-header .label {
       font-weight: 600;
@@ -724,7 +731,7 @@
   <div class="app-body">
   <header class="app-header">
     <h1>Campaign Blueprint</h1>
-    <p>AI-powered campaign strategy builder</p>
+    <p class="gradient-word">AI-powered campaign strategy builder</p>
     <button class="btn-new-blueprint" onclick="newCampaign()">+ New Campaign</button>
   </header>
 
