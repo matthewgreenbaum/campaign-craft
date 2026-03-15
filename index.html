@@ -446,7 +446,7 @@
       flex: 1;
       min-height: 0;
     }
-    .panels > .chat-panel { flex: 60; min-width: 200px; }
+    .panels > .chat-panel { flex: 60; min-width: 0; }
     .panels > .blueprint-panel { flex: 40; min-width: 200px; background: #EEF2FF; }
     @media (max-width: 820px) {
       body { flex-direction: column; }
@@ -604,6 +604,8 @@
     }
     .chat-input-bar textarea {
       flex: 1;
+      min-width: 0;
+      box-sizing: border-box;
       border: 1px solid #D8D5F2;
       border-radius: 10px;
       padding: 10px 14px;
@@ -1951,6 +1953,14 @@
 
       input.value = "";
       input.style.height = "auto";
+
+      // Auto-create a campaign if none exists yet
+      if (!currentCampaignId) {
+        currentCampaignId = createCampaignRecord();
+        renderCampaignList();
+        updateBlueprintPanelTitle();
+      }
+
       addMessage("user", text);
       conversationHistory.push({ role: "user", content: text });
 
