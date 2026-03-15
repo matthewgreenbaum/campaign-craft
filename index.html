@@ -757,37 +757,38 @@
       font-weight: 600;
       font-size: 0.95rem;
     }
-    .bp-actions { display: flex; gap: 8px; }
-    .btn-update {
-      background: transparent;
-      color: #3D38B0;
-      border: 2px solid #3D38B0;
-      border-radius: 999px;
-      padding: 8px 18px;
-      font-family: 'Open Sans', 'Inter', sans-serif;
-      font-weight: 600;
-      font-size: 0.82rem;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-    }
-    .btn-update:hover { background: #EEF2FF; }
-    .btn-update:disabled { opacity: 0.5; cursor: default; }
+    .bp-actions { display: flex; gap: 8px; align-items: center; }
 
-    .btn-copy {
+    .btn-copy-icon {
       background: transparent;
-      color: #3D38B0;
-      border: 2px solid #3D38B0;
-      border-radius: 999px;
-      padding: 8px 18px;
-      font-family: 'Open Sans', 'Inter', sans-serif;
-      font-weight: 600;
-      font-size: 0.82rem;
+      border: none;
+      color: #9B97D3;
       cursor: pointer;
-      transition: background 0.15s, color 0.15s;
+      padding: 6px;
+      border-radius: 6px;
+      transition: color 0.15s, background 0.15s;
       display: none;
+      line-height: 1;
     }
-    .btn-copy:hover { background: #EEF2FF; }
-    .btn-copy.visible { display: inline-block; }
+    .btn-copy-icon:hover { color: #3D38B0; background: #E8E6F8; }
+    .btn-copy-icon.visible { display: flex; align-items: center; justify-content: center; }
+    .btn-copy-icon svg { width: 18px; height: 18px; }
+    .btn-copy-icon .copy-check { display: none; }
+    .btn-copy-icon.copied .copy-icon { display: none; }
+    .btn-copy-icon.copied .copy-check { display: block; color: #16a34a; }
+
+    .bp-streaming-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #3D38B0;
+      display: none;
+      animation: bp-pulse 1.2s ease-in-out infinite;
+    }
+    .bp-streaming-dot.active { display: block; }
+    @keyframes bp-pulse {
+      0%, 100% { opacity: 0.3; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
 
     .blueprint-body {
       flex: 1;
@@ -1239,8 +1240,11 @@
           <span class="label" id="blueprintPanelTitle"></span>
         </div>
         <div class="bp-actions">
-          <button class="btn-update" id="updateBtn" onclick="updateBlueprint()">Update</button>
-          <button class="btn-copy" id="copyBtn" onclick="copyBlueprint()">&#128203; Copy</button>
+          <div class="bp-streaming-dot" id="bpStreamingDot"></div>
+          <button class="btn-copy-icon" id="copyBtn" onclick="copyBlueprint()" title="Copy blueprint">
+            <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <svg class="copy-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </button>
         </div>
       </div>
       <div class="blueprint-body">
@@ -2064,6 +2068,8 @@
         conversationHistory.push({ role: "assistant", content: reply });
         addMessage("assistant", reply);
         saveCurrent();
+        // Auto-stream blueprint in the background
+        streamBlueprint();
       }).catch(err => {
         addErrorMessage("Something went wrong: " + err.message);
       }).finally(() => {
@@ -2208,6 +2214,8 @@
         conversationHistory.push({ role: "assistant", content: reply });
         addMessage("assistant", reply);
         saveCurrent();
+        // Auto-stream blueprint in the background
+        streamBlueprint();
       } catch (err) {
         addErrorMessage("Something went wrong: " + err.message);
       } finally {
@@ -2229,20 +2237,38 @@
       });
     }
 
-    // ─── blueprint update ───
+    // ─── streaming blueprint update ───
     let rawBlueprintMarkdown = "";
+    let blueprintAbortController = null;
 
-    async function updateBlueprint() {
-      if (blueprintBusy) return;
+    // Minimum conversation turns before auto-generating a blueprint
+    const MIN_TURNS_FOR_BLUEPRINT = 4;
+
+    function shouldAutoBlueprint() {
+      // Count user messages (excluding the initial "Hello")
+      const userMsgs = conversationHistory.filter(m => m.role === "user" && m.content !== "Hello");
+      return userMsgs.length >= MIN_TURNS_FOR_BLUEPRINT;
+    }
+
+    async function streamBlueprint() {
       if (conversationHistory.length === 0) return;
+      if (!shouldAutoBlueprint()) return;
+
+      // Abort any in-flight blueprint stream
+      if (blueprintAbortController) {
+        blueprintAbortController.abort();
+        blueprintAbortController = null;
+        blueprintBusy = false;
+      }
+      blueprintAbortController = new AbortController();
 
       blueprintBusy = true;
-      $("#updateBtn").disabled = true;
       $("#bpPlaceholder").style.display = "none";
-      $("#bpContent").classList.remove("visible");
-      $("#bpSpinner").classList.add("visible");
+      $("#bpContent").innerHTML = "";
+      $("#bpContent").classList.add("visible");
+      $("#copyBtn").classList.remove("visible");
+      $("#bpStreamingDot").classList.add("active");
 
-      // Build a separate message list: full conversation + hidden instruction
       const bpMessages = [
         ...conversationHistory,
         {
@@ -2252,20 +2278,81 @@
       ];
 
       try {
-        const reply = await callAPI(bpMessages);
-        rawBlueprintMarkdown = reply;
-        $("#bpContent").innerHTML = renderMarkdown(reply);
-        $("#bpContent").classList.add("visible");
+        if (typeof CONFIG === "undefined" || !CONFIG.ANTHROPIC_API_KEY || CONFIG.ANTHROPIC_API_KEY.startsWith("your-")) {
+          throw new Error("API key not configured.");
+        }
+
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": CONFIG.ANTHROPIC_API_KEY,
+            "anthropic-version": "2023-06-01",
+            "anthropic-dangerous-direct-browser-access": "true",
+          },
+          body: JSON.stringify({
+            model: MODEL,
+            max_tokens: MAX_TOKENS,
+            stream: true,
+            system: SYSTEM_PROMPT,
+            messages: bpMessages,
+          }),
+          signal: blueprintAbortController.signal,
+        });
+
+        if (!res.ok) {
+          const body = await res.text();
+          throw new Error(`API error ${res.status}: ${body}`);
+        }
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+        rawBlueprintMarkdown = "";
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n");
+          buffer = lines.pop(); // keep incomplete line in buffer
+
+          for (const line of lines) {
+            if (line.startsWith("data: ")) {
+              const jsonStr = line.slice(6).trim();
+              if (jsonStr === "[DONE]") continue;
+              try {
+                const event = JSON.parse(jsonStr);
+                if (event.type === "content_block_delta" && event.delta && event.delta.text) {
+                  rawBlueprintMarkdown += event.delta.text;
+                  $("#bpContent").innerHTML = renderMarkdown(rawBlueprintMarkdown);
+                  // Auto-scroll the blueprint panel to bottom as content streams in
+                  const bpBody = $(".blueprint-body");
+                  bpBody.scrollTop = bpBody.scrollHeight;
+                }
+              } catch (e) {
+                // skip unparseable lines
+              }
+            }
+          }
+        }
+
         $("#copyBtn").classList.add("visible");
         saveCurrent();
       } catch (err) {
+        if (err.name === "AbortError") return; // intentional abort, ignore
         $("#bpContent").innerHTML = `<p style="color:#B33A3A">Failed to generate blueprint: ${err.message}</p>`;
-        $("#bpContent").classList.add("visible");
       } finally {
-        $("#bpSpinner").classList.remove("visible");
         blueprintBusy = false;
-        $("#updateBtn").disabled = false;
+        blueprintAbortController = null;
+        $("#bpStreamingDot").classList.remove("active");
       }
+    }
+
+    // Keep legacy function name for any existing references
+    async function updateBlueprint() {
+      return streamBlueprint();
     }
 
     // ─── copy ───
@@ -2273,8 +2360,8 @@
       try {
         await navigator.clipboard.writeText(rawBlueprintMarkdown);
         const btn = $("#copyBtn");
-        btn.innerHTML = "&#10003; Copied!";
-        setTimeout(() => { btn.innerHTML = "&#128203; Copy"; }, 2000);
+        btn.classList.add("copied");
+        setTimeout(() => { btn.classList.remove("copied"); }, 2000);
       } catch {
         alert("Copy failed — please select and copy manually.");
       }
