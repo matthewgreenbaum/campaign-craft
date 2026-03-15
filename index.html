@@ -168,21 +168,83 @@
     }
     .new-blueprint-item:hover .new-blueprint-text { color: #fff; }
 
+    /* ---------- campaign section label ---------- */
+    .campaign-section-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.4);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 10px 16px 4px;
+    }
+
+    /* ---------- campaign search ---------- */
+    .campaign-search-wrap {
+      padding: 0 8px 6px;
+      flex-shrink: 0;
+    }
+    .campaign-search {
+      width: 100%;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      padding: 7px 10px 7px 30px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.78rem;
+      outline: none;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .campaign-search::placeholder { color: rgba(255,255,255,0.4); }
+    .campaign-search:focus {
+      border-color: rgba(255,255,255,0.35);
+      background: rgba(255,255,255,0.15);
+    }
+    .campaign-search-wrap {
+      position: relative;
+    }
+    .campaign-search-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255,255,255,0.35);
+      font-size: 0.78rem;
+      pointer-events: none;
+      line-height: 1;
+    }
+
     .campaign-list {
       flex: 1;
       overflow-y: auto;
-      padding: 8px;
+      padding: 4px 8px 8px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.2) transparent;
+    }
+    .campaign-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    .campaign-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .campaign-list::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.18);
+      border-radius: 3px;
+    }
+    .campaign-list::-webkit-scrollbar-thumb:hover {
+      background: rgba(255,255,255,0.3);
     }
     .campaign-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 12px;
+      padding: 10px 12px 10px 14px;
       border-radius: 10px;
       cursor: pointer;
       transition: background 0.15s;
       margin-bottom: 0;
       position: relative;
+      border-left: 3px solid transparent;
     }
     .campaign-item + .campaign-item::before {
       content: '';
@@ -201,8 +263,17 @@
     .campaign-item.active + .campaign-item::before {
       display: none !important;
     }
-    .campaign-item:hover { background: rgba(255,255,255,0.08); }
-    .campaign-item.active { background: rgba(255,255,255,0.15); }
+    .campaign-item:hover { background: rgba(255,255,255,0.10); }
+    .campaign-item.active {
+      background: rgba(255,255,255,0.15);
+      border-left-color: #fff;
+    }
+    .campaign-item.drag-over {
+      border-top: 2px solid rgba(255,255,255,0.6);
+    }
+    .campaign-item.dragging {
+      opacity: 0.4;
+    }
     .campaign-item-info { flex: 1; min-width: 0; }
     .campaign-item-title {
       font-weight: 600;
@@ -932,6 +1003,64 @@
       transition: border-color 0.15s, color 0.15s;
     }
     .avatar-remove-btn:hover { border-color: #e53e3e; color: #e53e3e; }
+
+    /* ---------- delete confirmation dialog ---------- */
+    .confirm-modal-backdrop {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 10000;
+      align-items: center; justify-content: center;
+    }
+    .confirm-modal-backdrop.visible { display: flex; }
+    .confirm-modal {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      width: 360px; max-width: 90vw;
+      padding: 24px;
+      text-align: center;
+    }
+    .confirm-modal h3 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #3D38B0;
+      margin-bottom: 8px;
+    }
+    .confirm-modal p {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .confirm-modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .confirm-modal-actions button {
+      padding: 9px 22px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .confirm-modal-actions button:active { transform: scale(0.97); }
+    .confirm-cancel {
+      background: #F0F0F0;
+      border: none;
+      color: #555;
+    }
+    .confirm-cancel:hover { background: #E5E5E5; }
+    .confirm-delete {
+      background: #E53E3E;
+      border: none;
+      color: #fff;
+    }
+    .confirm-delete:hover { background: #C53030; }
   </style>
 </head>
 <body>
@@ -950,6 +1079,11 @@
         <span class="new-blueprint-text">New Campaign</span>
       </div>
     </div>
+    <div class="campaign-search-wrap">
+      <span class="campaign-search-icon">&#128269;</span>
+      <input type="text" class="campaign-search" id="campaignSearch" placeholder="Search campaigns…" oninput="filterCampaigns()">
+    </div>
+    <div class="campaign-section-label">Campaigns</div>
     <div class="campaign-list" id="campaignList">
       <div class="sidebar-empty" id="sidebarEmpty">No saved campaigns yet.<br/>Start chatting to create one.</div>
     </div>
@@ -1077,6 +1211,18 @@
       <div class="avatar-presets-grid" id="avatarPresetsGrid"></div>
 
       <button class="avatar-remove-btn" id="avatarRemoveBtn" onclick="removeAvatar()">Reset to default</button>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="confirm-modal-backdrop" id="deleteConfirmBackdrop" onclick="cancelDelete(event)">
+    <div class="confirm-modal" onclick="event.stopPropagation()">
+      <h3>Delete Campaign</h3>
+      <p id="deleteConfirmText">Are you sure you want to delete this campaign? This action cannot be undone.</p>
+      <div class="confirm-modal-actions">
+        <button class="confirm-cancel" onclick="cancelDelete()">Cancel</button>
+        <button class="confirm-delete" onclick="confirmDelete()">Delete</button>
+      </div>
     </div>
   </div>
 
@@ -1301,8 +1447,61 @@
       updateBlueprintPanelTitle();
     }
 
+    // ─── campaign ordering ───
+    const ORDER_STORAGE_KEY = "campaignOrder";
+
+    function loadCampaignOrder() {
+      try {
+        return JSON.parse(localStorage.getItem(ORDER_STORAGE_KEY)) || null;
+      } catch { return null; }
+    }
+
+    function saveCampaignOrder(ids) {
+      localStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify(ids));
+    }
+
+    function getOrderedCampaigns(campaigns) {
+      const order = loadCampaignOrder();
+      if (!order) {
+        // Default: sort by most recently updated
+        campaigns.sort((a, b) => b.updatedAt - a.updatedAt);
+        return campaigns;
+      }
+      // Sort by saved order; new campaigns (not in order) go to top
+      const orderMap = new Map(order.map((id, i) => [id, i]));
+      campaigns.sort((a, b) => {
+        const ai = orderMap.has(a.id) ? orderMap.get(a.id) : -1;
+        const bi = orderMap.has(b.id) ? orderMap.get(b.id) : -1;
+        if (ai === -1 && bi === -1) return b.updatedAt - a.updatedAt;
+        if (ai === -1) return -1;
+        if (bi === -1) return 1;
+        return ai - bi;
+      });
+      return campaigns;
+    }
+
+    // ─── search/filter ───
+    function filterCampaigns() {
+      const query = ($("#campaignSearch").value || "").toLowerCase().trim();
+      const items = $$("#campaignList .campaign-item");
+      let visibleCount = 0;
+      items.forEach(item => {
+        const title = item.querySelector(".campaign-item-title").textContent.toLowerCase();
+        const match = !query || title.includes(query);
+        item.style.display = match ? "" : "none";
+        if (match) visibleCount++;
+      });
+      // Show/hide empty state only when no search and truly empty
+      const empty = $("#sidebarEmpty");
+      if (!query && visibleCount === 0 && items.length === 0) {
+        empty.style.display = "block";
+      } else {
+        empty.style.display = "none";
+      }
+    }
+
     function renderCampaignList() {
-      const campaigns = loadAllCampaigns();
+      let campaigns = loadAllCampaigns();
       const list = $("#campaignList");
       const empty = $("#sidebarEmpty");
 
@@ -1315,12 +1514,13 @@
       }
       empty.style.display = "none";
 
-      // Sort by most recently updated
-      campaigns.sort((a, b) => b.updatedAt - a.updatedAt);
+      campaigns = getOrderedCampaigns(campaigns);
 
       campaigns.forEach(c => {
         const div = document.createElement("div");
         div.className = "campaign-item" + (c.id === currentCampaignId ? " active" : "");
+        div.dataset.campaignId = c.id;
+        div.draggable = true;
         div.innerHTML = `
           <div class="campaign-item-info">
             <div class="campaign-item-title">${escapeHTML(c.title)}</div>
@@ -1350,8 +1550,49 @@
           closeAllDropdowns();
           deleteCampaign(c.id);
         });
+
+        // Drag-to-reorder events
+        div.addEventListener("dragstart", (e) => {
+          e.dataTransfer.effectAllowed = "move";
+          e.dataTransfer.setData("text/plain", c.id);
+          requestAnimationFrame(() => div.classList.add("dragging"));
+        });
+        div.addEventListener("dragend", () => {
+          div.classList.remove("dragging");
+          list.querySelectorAll(".campaign-item").forEach(el => el.classList.remove("drag-over"));
+        });
+        div.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "move";
+          list.querySelectorAll(".campaign-item").forEach(el => el.classList.remove("drag-over"));
+          if (!div.classList.contains("dragging")) div.classList.add("drag-over");
+        });
+        div.addEventListener("dragleave", () => {
+          div.classList.remove("drag-over");
+        });
+        div.addEventListener("drop", (e) => {
+          e.preventDefault();
+          div.classList.remove("drag-over");
+          const draggedId = e.dataTransfer.getData("text/plain");
+          if (draggedId === c.id) return;
+          // Compute new order
+          const items = [...list.querySelectorAll(".campaign-item")];
+          const ids = items.map(el => el.dataset.campaignId);
+          const fromIdx = ids.indexOf(draggedId);
+          const toIdx = ids.indexOf(c.id);
+          if (fromIdx === -1 || toIdx === -1) return;
+          ids.splice(fromIdx, 1);
+          ids.splice(toIdx, 0, draggedId);
+          saveCampaignOrder(ids);
+          renderCampaignList();
+        });
+
         list.appendChild(div);
       });
+
+      // Re-apply search filter if active
+      const query = $("#campaignSearch").value;
+      if (query) filterCampaigns();
     }
 
     function escapeHTML(str) {
@@ -1447,13 +1688,28 @@
       updateBlueprintPanelTitle();
     }
 
+    let pendingDeleteId = null;
+
     function deleteCampaign(id) {
+      pendingDeleteId = id;
+      const campaigns = loadAllCampaigns();
+      const c = campaigns.find(c => c.id === id);
+      const name = c ? c.title : "this campaign";
+      $("#deleteConfirmText").textContent = `Are you sure you want to delete "${name}"? This action cannot be undone.`;
+      $("#deleteConfirmBackdrop").classList.add("visible");
+    }
+
+    function confirmDelete() {
+      if (!pendingDeleteId) return;
+      const id = pendingDeleteId;
+      pendingDeleteId = null;
+      $("#deleteConfirmBackdrop").classList.remove("visible");
+
       let campaigns = loadAllCampaigns();
       campaigns = campaigns.filter(c => c.id !== id);
       saveAllCampaigns(campaigns);
 
       if (id === currentCampaignId) {
-        // Switch to another or create new
         if (campaigns.length > 0) {
           switchCampaign(campaigns[0].id);
         } else {
@@ -1469,6 +1725,12 @@
         }
       }
       renderCampaignList();
+    }
+
+    function cancelDelete(e) {
+      if (e && e.target !== $("#deleteConfirmBackdrop")) return;
+      pendingDeleteId = null;
+      $("#deleteConfirmBackdrop").classList.remove("visible");
     }
 
     function closeAllDropdowns() {
