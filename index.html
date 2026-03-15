@@ -108,11 +108,7 @@
       border-right: none;
     }
     .sidebar-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 8px;
-      border-bottom: 1px solid rgba(255,255,255,0.15);
+      display: none;
     }
     /* ---------- sidebar toggle ---------- */
     .sidebar-reopen {
@@ -169,49 +165,59 @@
     .new-blueprint-item:hover .new-blueprint-text { color: #fff; }
 
     /* ---------- campaign section label ---------- */
+    .campaign-section-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px 4px 16px;
+      flex-shrink: 0;
+    }
     .campaign-section-label {
       font-size: 0.68rem;
       font-weight: 700;
       color: rgba(255,255,255,0.4);
       text-transform: uppercase;
       letter-spacing: 1px;
-      padding: 10px 16px 4px;
+    }
+    .campaign-add-btn {
+      width: 22px; height: 22px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 6px;
+      border: none;
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.7);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      line-height: 1;
+    }
+    .campaign-add-btn:hover {
+      background: rgba(255,255,255,0.22);
+      color: #fff;
     }
 
     /* ---------- campaign search ---------- */
     .campaign-search-wrap {
-      padding: 0 8px 6px;
+      padding: 0;
       flex-shrink: 0;
     }
     .campaign-search {
       width: 100%;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 8px;
-      padding: 7px 10px 7px 30px;
+      background: rgba(255,255,255,0.08);
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      border-radius: 0;
+      padding: 9px 14px;
       color: #fff;
       font-family: inherit;
       font-size: 0.78rem;
       outline: none;
-      transition: border-color 0.15s, background 0.15s;
+      transition: background 0.15s;
+      box-sizing: border-box;
     }
     .campaign-search::placeholder { color: rgba(255,255,255,0.4); }
     .campaign-search:focus {
-      border-color: rgba(255,255,255,0.35);
-      background: rgba(255,255,255,0.15);
-    }
-    .campaign-search-wrap {
-      position: relative;
-    }
-    .campaign-search-icon {
-      position: absolute;
-      left: 18px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: rgba(255,255,255,0.35);
-      font-size: 0.78rem;
-      pointer-events: none;
-      line-height: 1;
+      background: rgba(255,255,255,0.12);
     }
 
     .campaign-list {
@@ -1073,17 +1079,13 @@
       <span class="sidebar-avatar-name" id="sidebarAvatarName" onclick="editAvatarName()" title="Click to edit name">Your Avatar</span>
       <button class="sidebar-close-btn" onclick="toggleSidebar()" title="Close sidebar">&times;</button>
     </div>
-    <div class="sidebar-header">
-      <div class="new-blueprint-item" onclick="newCampaign()">
-        <span class="new-blueprint-icon">+</span>
-        <span class="new-blueprint-text">New Campaign</span>
-      </div>
-    </div>
     <div class="campaign-search-wrap">
-      <span class="campaign-search-icon">&#128269;</span>
       <input type="text" class="campaign-search" id="campaignSearch" placeholder="Search campaigns…" oninput="filterCampaigns()">
     </div>
-    <div class="campaign-section-label">Campaigns</div>
+    <div class="campaign-section-row">
+      <span class="campaign-section-label">Campaigns</span>
+      <button class="campaign-add-btn" onclick="newCampaign()" title="New Campaign">+</button>
+    </div>
     <div class="campaign-list" id="campaignList">
       <div class="sidebar-empty" id="sidebarEmpty">No saved campaigns yet.<br/>Start chatting to create one.</div>
     </div>
