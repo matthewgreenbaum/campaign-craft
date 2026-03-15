@@ -552,6 +552,10 @@
       display: flex; align-items: center; justify-content: center;
       font-weight: 700; font-size: 0.85rem;
       flex-shrink: 0;
+      overflow: hidden;
+    }
+    .avatar img, .msg-avatar img.bot-avatar-img {
+      width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
     }
     .panel-header .label { font-weight: 600; font-size: 0.95rem; }
 
@@ -1161,7 +1165,7 @@
     <!-- LEFT — Chat -->
     <section class="panel chat-panel">
       <div class="panel-header">
-        <div class="avatar">BA</div>
+        <div class="avatar" id="botAvatar"></div>
         <span class="label">Blueprint Agent</span>
       </div>
       <div class="messages" id="messages"></div>
@@ -1293,6 +1297,15 @@
     let chatBusy = false;
     let blueprintBusy = false;
     let currentCampaignId = null;
+
+    // ─── bot avatar (geodesic dome) ───
+    const BOT_AVATAR_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="g" cx="35%" cy="30%" r="65%"><stop offset="0%" stop-color="#5551db"/><stop offset="100%" stop-color="#312da0"/></radialGradient></defs><circle cx="50" cy="50" r="50" fill="url(#g)"/><polygon points="50,0 40,20 60,20" fill="rgba(255,255,255,0.1)"/><polygon points="50,0 21,10 40,20" fill="rgba(255,255,255,0.07)"/><polygon points="79,90 50,100 60,80" fill="rgba(0,0,0,0.1)"/><polygon points="50,100 21,90 40,80" fill="rgba(0,0,0,0.07)"/><g fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.3"><path d="M50,0L79,10M79,10L98,35M98,35L98,65M98,65L79,90M79,90L50,100M50,100L21,90M21,90L2,65M2,65L2,35M2,35L21,10M21,10L50,0M50,0L40,20M50,0L60,20M79,10L60,20M79,10L76,30M98,35L76,30M98,35L82,50M98,65L82,50M98,65L76,70M79,90L76,70M79,90L60,80M50,100L60,80M50,100L40,80M21,90L40,80M21,90L24,70M2,65L24,70M2,65L18,50M2,35L18,50M2,35L24,30M21,10L24,30M21,10L40,20M60,20L76,30M76,30L82,50M82,50L76,70M76,70L60,80M60,80L40,80M40,80L24,70M24,70L18,50M18,50L24,30M24,30L40,20M40,20L60,20M60,20L50,34M76,30L50,34M76,30L65,45M82,50L65,45M76,70L65,45M76,70L59,63M60,80L59,63M40,80L59,63M40,80L41,63M24,70L41,63M18,50L41,63M18,50L35,45M24,30L35,45M40,20L35,45M40,20L50,34M50,34L65,45M65,45L59,63M59,63L41,63M41,63L35,45M35,45L50,34"/></g></svg>`;
+
+    function getBotAvatarImg() {
+      const blob = new Blob([BOT_AVATAR_SVG], { type: "image/svg+xml" });
+      const url = URL.createObjectURL(blob);
+      return `<img src="${url}" alt="Blueprint Agent" class="bot-avatar-img">`;
+    }
 
     // ─── avatar persistence ───
     const AVATAR_STORAGE_KEY = "userAvatar";
@@ -1869,7 +1882,7 @@
       const avatarEl = document.createElement("div");
       avatarEl.className = "msg-avatar";
       if (role === "assistant") {
-        avatarEl.textContent = "BA";
+        avatarEl.innerHTML = getBotAvatarImg();
       } else {
         renderAvatarInto(avatarEl, loadAvatar());
       }
@@ -2152,6 +2165,10 @@
 
     // ─── init ───
     window.addEventListener("DOMContentLoaded", () => {
+      // Initialize bot avatar (geodesic dome)
+      const botAv = document.getElementById("botAvatar");
+      if (botAv) botAv.innerHTML = getBotAvatarImg();
+
       // Initialize avatar and display name
       refreshAllUserAvatars();
       refreshDisplayName();
