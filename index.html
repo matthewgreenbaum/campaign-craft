@@ -370,19 +370,24 @@
       gap: 8px;
     }
     .sidebar-about-icon {
-      width: 26px; height: 26px;
-      min-width: 26px; min-height: 26px;
-      display: flex; align-items: center; justify-content: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      min-width: 26px;
+      min-height: 26px;
       border-radius: 50%;
       border: none;
       background: rgba(255,255,255,0.15);
-      color: rgba(255,255,255,0.85);
+      color: #fff;
       font-family: 'DM Sans', 'Inter', sans-serif;
-      font-size: 0.85rem;
+      font-size: 14px;
       font-weight: 700;
       cursor: pointer;
       transition: background 0.15s, color 0.15s;
-      line-height: 1;
+      line-height: 26px;
+      text-align: center;
       flex-shrink: 0;
     }
     .sidebar-about-icon:hover {
@@ -1137,7 +1142,7 @@
     <div class="sidebar-footer">
       <hr />
       <div class="sidebar-about-row">
-        <button class="sidebar-about-icon" onclick="showAbout()" title="About">?</button>
+        <span class="sidebar-about-icon" onclick="showAbout()" title="About" role="button" tabindex="0">?</span>
         <button class="sidebar-about-link" onclick="showAbout()">About Campaign Blueprint</button>
       </div>
     </div>
