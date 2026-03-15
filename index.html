@@ -741,6 +741,8 @@
       padding: 2px 4px;
       border-radius: 4px;
       transition: background 0.15s;
+      flex: 1;
+      min-width: 0;
     }
     .sidebar-avatar-name:hover {
       background: rgba(255,255,255,0.12);
@@ -748,14 +750,18 @@
     .sidebar-close-btn {
       background: none;
       border: none;
-      color: rgba(255,255,255,0.5);
-      font-size: 1.8rem;
+      color: rgba(255,255,255,0.6);
+      font-size: 1.6rem;
       cursor: pointer;
-      padding: 0;
+      padding: 4px;
       line-height: 1;
-      margin-left: auto;
       flex-shrink: 0;
       transition: color 0.15s;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .sidebar-close-btn:hover { color: #fff; }
     .sidebar-avatar-preview {
