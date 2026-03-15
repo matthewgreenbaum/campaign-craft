@@ -33,33 +33,19 @@
 
     /* ---------- header ---------- */
     .app-header {
-      text-align: center;
-      padding: 40px 16px 20px;
-      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 10px 24px;
+      gap: 16px;
     }
-    .btn-new-blueprint {
-      position: absolute;
-      top: 20px;
-      right: 24px;
-      background: #3D38B0;
-      color: #fff;
-      border: none;
-      border-radius: 999px;
-      padding: 9px 18px;
-      font-family: 'Open Sans', 'Inter', sans-serif;
-      font-weight: 600;
-      font-size: 0.82rem;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .btn-new-blueprint:hover { background: #4338CA; }
     .app-header h1 {
       font-family: 'DM Sans', sans-serif;
-      font-size: 3.4rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
       color: #3D38B0;
-      line-height: 1.1;
+      line-height: 1;
+      white-space: nowrap;
     }
     .app-header .gradient-word {
       background: linear-gradient(90deg, #3D38B0, #7B7BD0, #1c767b, #F97316, #EC4899, #7B7BD0, #3D38B0);
@@ -68,19 +54,31 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
       animation: gradient-shift 12s ease infinite;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      white-space: nowrap;
     }
     @keyframes gradient-shift {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-    .app-header p {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 1.15rem;
-      color: #999;
-      margin-top: 10px;
-      font-weight: 500;
+    .btn-new-blueprint {
+      margin-left: auto;
+      background: #3D38B0;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 7px 16px;
+      font-family: 'Open Sans', 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
     }
+    .btn-new-blueprint:hover { background: #4338CA; }
 
     /* ---------- main layout ---------- */
     .main-layout {
@@ -1142,7 +1140,7 @@
   <div class="app-body">
   <header class="app-header">
     <h1>Campaign Blueprint</h1>
-    <p class="gradient-word">AI-powered campaign strategy builder</p>
+    <span class="gradient-word">AI-powered campaign strategy builder</span>
     <button class="btn-new-blueprint" onclick="newCampaign()">+ New Campaign</button>
   </header>
 
