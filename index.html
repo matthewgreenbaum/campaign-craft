@@ -10,14 +10,17 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html, body { height: 100%; }
+    html, body { height: 100%; overflow: hidden; }
     body {
       font-family: 'Open Sans', 'Inter', sans-serif;
       background: #FFFFFF;
       color: #3D38B0;
-      min-height: 100vh;
+      height: 100vh;
       display: flex;
       flex-direction: row;
+      overflow: hidden;
+      width: 100vw;
+      max-width: 100vw;
     }
     .app-body {
       display: flex;
