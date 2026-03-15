@@ -723,6 +723,191 @@
       font-size: 0.85rem;
     }
     .bp-spinner.visible { display: block; }
+
+    /* ---------- user avatar button (sidebar footer) ---------- */
+    .sidebar-avatar-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      padding: 8px 12px;
+      cursor: pointer;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 500;
+      transition: background 0.15s;
+      margin-bottom: 8px;
+    }
+    .sidebar-avatar-btn:hover { background: rgba(255,255,255,0.15); }
+    .sidebar-avatar-preview {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: #1c767b;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700; color: #fff;
+      overflow: hidden; flex-shrink: 0;
+    }
+    .sidebar-avatar-preview img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .sidebar-avatar-preview .emoji-avatar {
+      font-size: 1.2rem; line-height: 1;
+    }
+
+    /* ---------- chat message avatar images ---------- */
+    .msg-avatar img {
+      width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+    }
+    .msg-avatar .emoji-avatar {
+      font-size: 1.1rem; line-height: 1;
+    }
+
+    /* ---------- avatar picker modal ---------- */
+    .avatar-modal-backdrop {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 9999;
+      align-items: center; justify-content: center;
+    }
+    .avatar-modal-backdrop.visible { display: flex; }
+    .avatar-modal {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      width: 420px; max-width: 92vw;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 28px;
+      position: relative;
+    }
+    .avatar-modal h2 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #3D38B0;
+      margin-bottom: 6px;
+    }
+    .avatar-modal .avatar-modal-sub {
+      font-size: 0.82rem;
+      color: #888;
+      margin-bottom: 20px;
+    }
+    .avatar-modal-close {
+      position: absolute; top: 16px; right: 16px;
+      background: none; border: none;
+      font-size: 1.5rem; color: #999; cursor: pointer;
+      line-height: 1;
+    }
+    .avatar-modal-close:hover { color: #333; }
+
+    /* upload area */
+    .avatar-upload-area {
+      border: 2px dashed #D8D5F2;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      margin-bottom: 22px;
+    }
+    .avatar-upload-area:hover {
+      border-color: #3D38B0;
+      background: #F5F3FF;
+    }
+    .avatar-upload-area p {
+      font-size: 0.85rem; color: #666;
+      margin-top: 6px;
+    }
+    .avatar-upload-area .upload-icon {
+      font-size: 1.8rem; color: #3D38B0;
+    }
+    .avatar-upload-area .upload-label {
+      font-weight: 600; color: #3D38B0; font-size: 0.9rem;
+    }
+
+    /* preset grid */
+    .avatar-presets-label {
+      font-size: 0.82rem; font-weight: 600;
+      color: #666; text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+    .avatar-presets-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .avatar-preset-item {
+      aspect-ratio: 1;
+      border-radius: 14px;
+      border: 2px solid #EEE;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+      background: #FAFAFA;
+      gap: 4px;
+    }
+    .avatar-preset-item:hover {
+      border-color: #3D38B0;
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(61,56,176,0.15);
+    }
+    .avatar-preset-item.selected {
+      border-color: #3D38B0;
+      background: #F0EEFF;
+      box-shadow: 0 0 0 3px rgba(61,56,176,0.18);
+    }
+    .avatar-preset-item .preset-emoji {
+      font-size: 1.8rem; line-height: 1;
+    }
+    .avatar-preset-item .preset-name {
+      font-size: 0.65rem; color: #888;
+      font-weight: 500; text-align: center;
+    }
+
+    /* current avatar preview in modal */
+    .avatar-current-row {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 20px;
+      padding: 12px 14px;
+      background: #F5F3FF;
+      border-radius: 12px;
+    }
+    .avatar-current-preview {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: #1c767b;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.95rem; font-weight: 700; color: #fff;
+      overflow: hidden; flex-shrink: 0;
+    }
+    .avatar-current-preview img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .avatar-current-preview .emoji-avatar {
+      font-size: 1.6rem; line-height: 1;
+    }
+    .avatar-current-info {
+      font-size: 0.85rem; color: #555;
+    }
+    .avatar-current-info strong {
+      display: block; color: #3D38B0; font-size: 0.9rem;
+    }
+
+    .avatar-remove-btn {
+      background: none; border: 1px solid #ddd;
+      border-radius: 8px; padding: 6px 14px;
+      font-size: 0.78rem; color: #999; cursor: pointer;
+      margin-top: 14px; font-family: inherit;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .avatar-remove-btn:hover { border-color: #e53e3e; color: #e53e3e; }
   </style>
 </head>
 <body>
@@ -740,6 +925,10 @@
     </div>
     <div class="sidebar-footer">
       <hr />
+      <button class="sidebar-avatar-btn" onclick="openAvatarPicker()" title="Change your avatar">
+        <div class="sidebar-avatar-preview" id="sidebarAvatarPreview">You</div>
+        <span>Your Avatar</span>
+      </button>
       <button class="sidebar-about-link" onclick="showAbout()">About Campaign Blueprint</button>
     </div>
   </aside>
@@ -836,6 +1025,35 @@
 
   </div><!-- /.app-body -->
 
+  <!-- Avatar Picker Modal -->
+  <div class="avatar-modal-backdrop" id="avatarModalBackdrop" onclick="closeAvatarPicker(event)">
+    <div class="avatar-modal" onclick="event.stopPropagation()">
+      <button class="avatar-modal-close" onclick="closeAvatarPicker()">&times;</button>
+      <h2>Choose Your Avatar</h2>
+      <p class="avatar-modal-sub">Upload a photo or pick a preset</p>
+
+      <div class="avatar-current-row">
+        <div class="avatar-current-preview" id="avatarCurrentPreview">You</div>
+        <div class="avatar-current-info">
+          <strong>Current Avatar</strong>
+          <span id="avatarCurrentLabel">Default</span>
+        </div>
+      </div>
+
+      <div class="avatar-upload-area" id="avatarUploadArea" onclick="document.getElementById('avatarFileInput').click()">
+        <div class="upload-icon">&#128247;</div>
+        <div class="upload-label">Upload a photo</div>
+        <p>Click or drag &amp; drop &middot; JPG, PNG, GIF &middot; Max 2 MB</p>
+      </div>
+      <input type="file" id="avatarFileInput" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)">
+
+      <div class="avatar-presets-label">Or pick a preset</div>
+      <div class="avatar-presets-grid" id="avatarPresetsGrid"></div>
+
+      <button class="avatar-remove-btn" id="avatarRemoveBtn" onclick="removeAvatar()">Reset to default</button>
+    </div>
+  </div>
+
   <!-- API Configuration -->
   <script>
     const CONFIG = {
@@ -848,6 +1066,119 @@
     let chatBusy = false;
     let blueprintBusy = false;
     let currentCampaignId = null;
+
+    // ─── avatar persistence ───
+    const AVATAR_STORAGE_KEY = "userAvatar";
+
+    const AVATAR_PRESETS = [
+      { emoji: "🥑", name: "Avocado" },
+      { emoji: "🌼", name: "Poppy" },
+      { emoji: "☯️", name: "Yin Yang" },
+      { emoji: "🌍", name: "Earth" },
+      { emoji: "🔴", name: "Mars" },
+      { emoji: "☀️", name: "Sun" },
+      { emoji: "🚀", name: "Rocket" },
+      { emoji: "🦊", name: "Fox" },
+      { emoji: "🌊", name: "Wave" },
+      { emoji: "🎯", name: "Bullseye" },
+      { emoji: "🐻", name: "Bear" },
+      { emoji: "💎", name: "Gem" },
+    ];
+
+    // Avatar state: { type: "default" | "emoji" | "upload", value: string }
+    function loadAvatar() {
+      try {
+        return JSON.parse(localStorage.getItem(AVATAR_STORAGE_KEY)) || { type: "default" };
+      } catch { return { type: "default" }; }
+    }
+
+    function saveAvatar(avatar) {
+      localStorage.setItem(AVATAR_STORAGE_KEY, JSON.stringify(avatar));
+    }
+
+    function renderAvatarInto(el, avatar) {
+      if (!avatar || avatar.type === "default") {
+        el.innerHTML = "You";
+        el.style.background = "#1c767b";
+      } else if (avatar.type === "emoji") {
+        el.innerHTML = `<span class="emoji-avatar">${avatar.value}</span>`;
+        el.style.background = "#F0EEFF";
+      } else if (avatar.type === "upload") {
+        el.innerHTML = `<img src="${avatar.value}" alt="avatar">`;
+        el.style.background = "transparent";
+      }
+    }
+
+    function refreshAllUserAvatars() {
+      const avatar = loadAvatar();
+      // Sidebar preview
+      const sidebarPrev = document.getElementById("sidebarAvatarPreview");
+      if (sidebarPrev) renderAvatarInto(sidebarPrev, avatar);
+      // All chat message avatars for user
+      document.querySelectorAll(".msg-row.user .msg-avatar").forEach(el => {
+        renderAvatarInto(el, avatar);
+      });
+    }
+
+    function openAvatarPicker() {
+      const backdrop = document.getElementById("avatarModalBackdrop");
+      backdrop.classList.add("visible");
+      const avatar = loadAvatar();
+
+      // Render current preview
+      renderAvatarInto(document.getElementById("avatarCurrentPreview"), avatar);
+      const label = document.getElementById("avatarCurrentLabel");
+      if (avatar.type === "default") label.textContent = "Default";
+      else if (avatar.type === "emoji") label.textContent = AVATAR_PRESETS.find(p => p.emoji === avatar.value)?.name || "Preset";
+      else label.textContent = "Custom photo";
+
+      // Build presets grid
+      const grid = document.getElementById("avatarPresetsGrid");
+      grid.innerHTML = "";
+      AVATAR_PRESETS.forEach(p => {
+        const item = document.createElement("div");
+        item.className = "avatar-preset-item" + (avatar.type === "emoji" && avatar.value === p.emoji ? " selected" : "");
+        item.innerHTML = `<span class="preset-emoji">${p.emoji}</span><span class="preset-name">${p.name}</span>`;
+        item.addEventListener("click", () => selectPresetAvatar(p.emoji));
+        grid.appendChild(item);
+      });
+    }
+
+    function closeAvatarPicker(e) {
+      if (e && e.target !== document.getElementById("avatarModalBackdrop")) return;
+      document.getElementById("avatarModalBackdrop").classList.remove("visible");
+    }
+
+    function selectPresetAvatar(emoji) {
+      const avatar = { type: "emoji", value: emoji };
+      saveAvatar(avatar);
+      refreshAllUserAvatars();
+      openAvatarPicker(); // refresh modal state
+    }
+
+    function handleAvatarUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      if (file.size > 2 * 1024 * 1024) {
+        alert("Image must be under 2 MB.");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const avatar = { type: "upload", value: e.target.result };
+        saveAvatar(avatar);
+        refreshAllUserAvatars();
+        openAvatarPicker(); // refresh modal state
+      };
+      reader.readAsDataURL(file);
+      event.target.value = ""; // reset so same file can be re-selected
+    }
+
+    function removeAvatar() {
+      saveAvatar({ type: "default" });
+      refreshAllUserAvatars();
+      openAvatarPicker(); // refresh modal state
+    }
 
     // ─── campaign persistence ───
     const STORAGE_KEY = "campaignBlueprints";
@@ -1142,10 +1473,14 @@
       const row = document.createElement("div");
       row.className = `msg-row ${role}`;
 
-      const avatar = document.createElement("div");
-      avatar.className = "msg-avatar";
-      avatar.textContent = role === "assistant" ? "BA" : "You";
-      row.appendChild(avatar);
+      const avatarEl = document.createElement("div");
+      avatarEl.className = "msg-avatar";
+      if (role === "assistant") {
+        avatarEl.textContent = "BA";
+      } else {
+        renderAvatarInto(avatarEl, loadAvatar());
+      }
+      row.appendChild(avatarEl);
 
       const div = document.createElement("div");
       div.className = `msg ${role}`;
@@ -1416,6 +1751,30 @@
 
     // ─── init ───
     window.addEventListener("DOMContentLoaded", () => {
+      // Initialize avatar display
+      refreshAllUserAvatars();
+
+      // Drag-and-drop for avatar upload
+      const dropArea = document.getElementById("avatarUploadArea");
+      ["dragenter", "dragover"].forEach(evt => {
+        dropArea.addEventListener(evt, e => { e.preventDefault(); dropArea.style.borderColor = "#3D38B0"; dropArea.style.background = "#F5F3FF"; });
+      });
+      ["dragleave", "drop"].forEach(evt => {
+        dropArea.addEventListener(evt, e => { e.preventDefault(); dropArea.style.borderColor = ""; dropArea.style.background = ""; });
+      });
+      dropArea.addEventListener("drop", e => {
+        const file = e.dataTransfer.files[0];
+        if (!file || !file.type.startsWith("image/")) return;
+        if (file.size > 2 * 1024 * 1024) { alert("Image must be under 2 MB."); return; }
+        const reader = new FileReader();
+        reader.onload = ev => {
+          saveAvatar({ type: "upload", value: ev.target.result });
+          refreshAllUserAvatars();
+          if (document.getElementById("avatarModalBackdrop").classList.contains("visible")) openAvatarPicker();
+        };
+        reader.readAsDataURL(file);
+      });
+
       const campaigns = loadAllCampaigns();
       if (campaigns.length > 0) {
         // Resume most recent campaign
