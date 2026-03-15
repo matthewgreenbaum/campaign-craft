@@ -111,29 +111,19 @@
       opacity: 0;
       pointer-events: none;
       border-right: none;
+      overflow: visible;
+    }
+    .sidebar.collapsed .sidebar-toggle-btn {
+      pointer-events: auto;
+      opacity: 1;
+    }
+    .sidebar.collapsed .sidebar-avatar-row {
+      overflow: visible;
     }
     .sidebar-header {
       display: none;
     }
     /* ---------- sidebar toggle ---------- */
-    .sidebar-reopen {
-      display: flex;
-      position: fixed;
-      top: 14px;
-      left: 14px;
-      z-index: 100;
-      background: none;
-      border: none;
-      width: 40px;
-      height: 40px;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 2.2rem;
-      color: #888;
-      transition: color 0.15s;
-    }
-    .sidebar-reopen:hover { color: #333; }
     .new-blueprint-item {
       display: flex;
       align-items: center;
@@ -877,11 +867,11 @@
     .sidebar-avatar-name:hover {
       background: rgba(255,255,255,0.12);
     }
-    .sidebar-close-btn {
+    .sidebar-toggle-btn {
       background: none;
       border: none;
-      color: rgba(255,255,255,0.6);
-      font-size: 1.6rem;
+      color: rgba(255,255,255,0.7);
+      font-size: 1.4rem;
       cursor: pointer;
       padding: 4px;
       line-height: 1;
@@ -892,8 +882,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      z-index: 101;
     }
-    .sidebar-close-btn:hover { color: #fff; }
+    .sidebar-toggle-btn:hover { color: #fff; }
+    .sidebar.collapsed .sidebar-toggle-btn {
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      color: #888;
+    }
+    .sidebar.collapsed .sidebar-toggle-btn:hover { color: #333; }
     .sidebar-avatar-preview {
       width: 32px; height: 32px;
       border-radius: 50%;
@@ -1130,6 +1128,7 @@
         <div class="sidebar-avatar-preview" id="sidebarAvatarPreview">You</div>
       </button>
       <span class="sidebar-avatar-name" id="sidebarAvatarName" onclick="editAvatarName()" title="Click to edit name">Your Avatar</span>
+      <button class="sidebar-toggle-btn" id="sidebarToggleBtn" onclick="toggleSidebar()" title="Toggle sidebar">&#9776;</button>
     </div>
     <div class="campaign-search-wrap">
       <input type="text" class="campaign-search" id="campaignSearch" placeholder="Search campaigns…" oninput="filterCampaigns()">
@@ -1149,7 +1148,6 @@
       </div>
     </div>
   </aside>
-  <button class="sidebar-reopen" id="sidebarReopen" onclick="toggleSidebar()" title="Open sidebar">&#9776;</button>
 
   <div class="app-body">
   <header class="app-header">
