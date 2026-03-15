@@ -84,8 +84,10 @@
       display: flex;
       flex: 1;
       min-height: 0;
+      min-width: 0;
       padding: 12px 24px 24px;
       gap: 0;
+      overflow: hidden;
     }
 
     /* ---------- sidebar ---------- */
@@ -445,6 +447,8 @@
       gap: 0;
       flex: 1;
       min-height: 0;
+      min-width: 0;
+      overflow: hidden;
     }
     .panels > .chat-panel { flex: 60; min-width: 0; }
     .panels > .blueprint-panel { flex: 40; min-width: 200px; background: #EEF2FF; }
@@ -521,16 +525,19 @@
     .messages {
       flex: 1;
       overflow-y: auto;
+      overflow-x: hidden;
       padding: 20px;
       display: flex;
       flex-direction: column;
       gap: 14px;
+      min-width: 0;
     }
 
     .msg-row {
       display: flex;
       align-items: flex-start;
       gap: 10px;
+      min-width: 0;
     }
     .msg-row .msg-avatar {
       width: 32px; height: 32px;
@@ -555,6 +562,8 @@
       line-height: 1.55;
       white-space: pre-wrap;
       word-wrap: break-word;
+      overflow-wrap: break-word;
+      min-width: 0;
     }
     .msg.assistant {
       align-self: flex-start;
