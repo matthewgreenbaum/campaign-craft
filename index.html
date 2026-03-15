@@ -114,19 +114,6 @@
       padding: 10px 8px;
       border-bottom: 1px solid rgba(255,255,255,0.15);
     }
-    .sidebar-collapse {
-      background: none;
-      border: none;
-      color: rgba(255,255,255,0.5);
-      font-size: 1.4rem;
-      cursor: pointer;
-      padding: 4px 10px;
-      line-height: 1;
-      transition: color 0.15s;
-      flex-shrink: 0;
-    }
-    .sidebar-collapse:hover { color: #fff; }
-
     /* ---------- sidebar toggle ---------- */
     .sidebar-reopen {
       display: none;
@@ -758,6 +745,19 @@
     .sidebar-avatar-name:hover {
       background: rgba(255,255,255,0.12);
     }
+    .sidebar-close-btn {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.5);
+      font-size: 1.8rem;
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+      margin-left: auto;
+      flex-shrink: 0;
+      transition: color 0.15s;
+    }
+    .sidebar-close-btn:hover { color: #fff; }
     .sidebar-avatar-preview {
       width: 32px; height: 32px;
       border-radius: 50%;
@@ -936,13 +936,13 @@
         <div class="sidebar-avatar-preview" id="sidebarAvatarPreview">You</div>
       </button>
       <span class="sidebar-avatar-name" id="sidebarAvatarName" onclick="editAvatarName()" title="Click to edit name">Your Avatar</span>
+      <button class="sidebar-close-btn" onclick="toggleSidebar()" title="Close sidebar">&times;</button>
     </div>
     <div class="sidebar-header">
       <div class="new-blueprint-item" onclick="newCampaign()">
         <span class="new-blueprint-icon">+</span>
         <span class="new-blueprint-text">New Campaign</span>
       </div>
-      <button class="sidebar-collapse" onclick="toggleSidebar()" title="Collapse sidebar">&#x2190;</button>
     </div>
     <div class="campaign-list" id="campaignList">
       <div class="sidebar-empty" id="sidebarEmpty">No saved campaigns yet.<br/>Start chatting to create one.</div>
