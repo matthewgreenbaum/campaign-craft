@@ -47,7 +47,7 @@
       line-height: 1;
       white-space: nowrap;
     }
-    .app-header .gradient-word {
+    .gradient-word {
       background: linear-gradient(90deg, #3D38B0, #7B7BD0, #1c767b, #F97316, #EC4899, #7B7BD0, #3D38B0);
       background-size: 400% 100%;
       -webkit-background-clip: text;
@@ -1140,7 +1140,6 @@
   <div class="app-body">
   <header class="app-header">
     <h1>Campaign Blueprint</h1>
-    <span class="gradient-word">AI-powered campaign strategy builder</span>
     <button class="btn-new-blueprint" onclick="newCampaign()">+ New Campaign</button>
   </header>
 
@@ -1150,7 +1149,7 @@
     <section class="panel chat-panel">
       <div class="panel-header">
         <div class="avatar" id="botAvatar"></div>
-        <span class="label">AI Assistant</span>
+        <span class="label gradient-word">AI-powered campaign strategy builder</span>
       </div>
       <div class="messages" id="messages"></div>
       <div class="typing-indicator" id="typingIndicator">
