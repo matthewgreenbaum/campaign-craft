@@ -724,25 +724,40 @@
     }
     .bp-spinner.visible { display: block; }
 
-    /* ---------- user avatar button (sidebar footer) ---------- */
-    .sidebar-avatar-btn {
+    /* ---------- user avatar row (sidebar top) ---------- */
+    .sidebar-avatar-row {
       display: flex;
       align-items: center;
       gap: 10px;
-      width: 100%;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 10px;
-      padding: 8px 12px;
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+    .sidebar-avatar-btn {
+      background: none;
+      border: none;
+      padding: 0;
       cursor: pointer;
+      flex-shrink: 0;
+    }
+    .sidebar-avatar-btn:hover .sidebar-avatar-preview {
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.4);
+    }
+    .sidebar-avatar-name {
       color: #fff;
       font-family: inherit;
-      font-size: 0.82rem;
-      font-weight: 500;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      padding: 2px 4px;
+      border-radius: 4px;
       transition: background 0.15s;
-      margin-bottom: 8px;
     }
-    .sidebar-avatar-btn:hover { background: rgba(255,255,255,0.15); }
+    .sidebar-avatar-name:hover {
+      background: rgba(255,255,255,0.12);
+    }
     .sidebar-avatar-preview {
       width: 32px; height: 32px;
       border-radius: 50%;
@@ -916,6 +931,12 @@
 <body>
   <!-- SIDEBAR — Campaign History (full height) -->
   <aside class="sidebar" id="sidebar">
+    <div class="sidebar-avatar-row">
+      <button class="sidebar-avatar-btn" onclick="openAvatarPicker()" title="Change your avatar">
+        <div class="sidebar-avatar-preview" id="sidebarAvatarPreview">You</div>
+      </button>
+      <span class="sidebar-avatar-name" id="sidebarAvatarName" onclick="editAvatarName()" title="Click to edit name">Your Avatar</span>
+    </div>
     <div class="sidebar-header">
       <div class="new-blueprint-item" onclick="newCampaign()">
         <span class="new-blueprint-icon">+</span>
@@ -928,10 +949,6 @@
     </div>
     <div class="sidebar-footer">
       <hr />
-      <button class="sidebar-avatar-btn" onclick="openAvatarPicker()" title="Change your avatar">
-        <div class="sidebar-avatar-preview" id="sidebarAvatarPreview">You</div>
-        <span>Your Avatar</span>
-      </button>
       <button class="sidebar-about-link" onclick="showAbout()">About Campaign Blueprint</button>
     </div>
   </aside>
@@ -1181,6 +1198,56 @@
       saveAvatar({ type: "default" });
       refreshAllUserAvatars();
       openAvatarPicker(); // refresh modal state
+    }
+
+    // ─── avatar display name ───
+    const NAME_STORAGE_KEY = "userDisplayName";
+
+    function loadDisplayName() {
+      return localStorage.getItem(NAME_STORAGE_KEY) || "Your Avatar";
+    }
+
+    function saveDisplayName(name) {
+      localStorage.setItem(NAME_STORAGE_KEY, name);
+    }
+
+    function refreshDisplayName() {
+      const el = document.getElementById("sidebarAvatarName");
+      if (el) el.textContent = loadDisplayName();
+    }
+
+    function editAvatarName() {
+      const nameEl = document.getElementById("sidebarAvatarName");
+      const current = loadDisplayName();
+
+      const input = document.createElement("input");
+      input.type = "text";
+      input.value = current === "Your Avatar" ? "" : current;
+      input.placeholder = "Enter your name";
+      input.style.cssText = "background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:4px;color:#fff;font-family:inherit;font-size:0.88rem;font-weight:600;padding:2px 6px;outline:none;width:100%;";
+      nameEl.replaceWith(input);
+      input.focus();
+      input.select();
+
+      function commit() {
+        const val = input.value.trim();
+        const finalName = val || "Your Avatar";
+        saveDisplayName(finalName);
+
+        const span = document.createElement("span");
+        span.className = "sidebar-avatar-name";
+        span.id = "sidebarAvatarName";
+        span.title = "Click to edit name";
+        span.textContent = finalName;
+        span.addEventListener("click", editAvatarName);
+        input.replaceWith(span);
+      }
+
+      input.addEventListener("blur", commit);
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") { e.preventDefault(); input.blur(); }
+        if (e.key === "Escape") { input.value = current; input.blur(); }
+      });
     }
 
     // ─── campaign persistence ───
@@ -1754,8 +1821,9 @@
 
     // ─── init ───
     window.addEventListener("DOMContentLoaded", () => {
-      // Initialize avatar display
+      // Initialize avatar and display name
       refreshAllUserAvatars();
+      refreshDisplayName();
 
       // Drag-and-drop for avatar upload
       const dropArea = document.getElementById("avatarUploadArea");
