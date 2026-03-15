@@ -364,6 +364,29 @@
       border-top: 1px solid rgba(255,255,255,0.15);
       margin-bottom: 10px;
     }
+    .sidebar-about-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sidebar-about-icon {
+      width: 26px; height: 26px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.7);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .sidebar-about-icon:hover {
+      background: rgba(255,255,255,0.22);
+      color: #fff;
+    }
     .sidebar-about-link {
       background: none;
       border: none;
@@ -1111,7 +1134,10 @@
     </div>
     <div class="sidebar-footer">
       <hr />
-      <button class="sidebar-about-link" onclick="showAbout()">About Campaign Blueprint</button>
+      <div class="sidebar-about-row">
+        <button class="sidebar-about-icon" onclick="showAbout()" title="About">?</button>
+        <button class="sidebar-about-link" onclick="showAbout()">About Campaign Blueprint</button>
+      </div>
     </div>
   </aside>
   <button class="sidebar-reopen" id="sidebarReopen" onclick="toggleSidebar()" title="Open sidebar">&#9776;</button>
