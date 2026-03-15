@@ -501,9 +501,11 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 14px 20px;
-      min-height: 64px;
+      padding: 0 20px;
+      height: 64px;
+      flex-shrink: 0;
       border-bottom: 1px solid #D8D5F2;
+      box-sizing: border-box;
     }
     .avatar {
       width: 36px; height: 36px;
@@ -598,6 +600,7 @@
       gap: 8px;
       padding: 14px 16px;
       border-top: 1px solid #D8D5F2;
+      align-items: flex-end;
     }
     .chat-input-bar textarea {
       flex: 1;
@@ -619,6 +622,7 @@
       border: none;
       border-radius: 999px;
       padding: 0 20px;
+      height: 42px;
       font-family: 'Open Sans', 'Inter', sans-serif;
       font-weight: 600;
       font-size: 0.875rem;
@@ -634,11 +638,12 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 20px;
-      min-height: 64px;
+      padding: 0 20px;
+      height: 64px;
+      flex-shrink: 0;
       border-bottom: 1px solid #D8D5F2;
       gap: 10px;
-      flex-wrap: wrap;
+      box-sizing: border-box;
     }
     .blueprint-panel .panel-header .bp-title-group {
       display: flex;
@@ -1117,7 +1122,7 @@
         <span>●</span> <span>●</span> <span>●</span>
       </div>
       <div class="chat-input-bar">
-        <textarea id="userInput" rows="1" placeholder="Tell me about your campaign idea..." onkeydown="handleInputKey(event)"></textarea>
+        <textarea id="userInput" rows="3" placeholder="Tell me about your campaign idea..." onkeydown="handleInputKey(event)"></textarea>
         <button id="sendBtn" onclick="sendMessage()">Send</button>
       </div>
     </section>
