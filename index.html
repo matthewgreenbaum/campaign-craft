@@ -882,9 +882,9 @@
 
     /* Smooth transition when blueprint content updates */
     .bp-content {
-      transition: opacity 0.2s ease;
+      transition: opacity 0.3s ease;
     }
-    .bp-content.fading { opacity: 0.4; }
+    .bp-content.fading { opacity: 0.85; }
 
     .bp-content h1 {
       font-size: 1.35rem;
@@ -1343,6 +1343,7 @@
         <div class="bp-placeholder" id="bpPlaceholder">Your blueprint will appear here.<br />Start chatting to build your campaign.</div>
         <div class="bp-spinner" id="bpSpinner">Generating blueprint…</div>
         <div class="bp-content" id="bpContent"></div>
+        <div class="bp-content" id="bpBuffer" style="display:none !important;"></div>
       </div>
     </section>
     </div>
@@ -2424,6 +2425,7 @@
 
       blueprintBusy = true;
       const bpEl = $("#bpContent");
+      const bufferEl = $("#bpBuffer");
       const hadExistingContent = !!(bpEl.innerHTML && rawBlueprintMarkdown);
       const previousMarkdown = rawBlueprintMarkdown;
 
@@ -2431,6 +2433,9 @@
       $("#bpPlaceholder").style.display = "none";
       bpEl.classList.add("visible");
       $("#bpStreamingDot").classList.add("active");
+
+      // Clear hidden buffer for incoming content
+      bufferEl.innerHTML = "";
 
       const bpMessages = [
         ...conversationHistory,
@@ -2494,20 +2499,15 @@
                   // Check if this looks like actual blueprint content (has a markdown heading)
                   if (!blueprintConfirmed && /^#{1,3}\s/m.test(incomingMarkdown)) {
                     blueprintConfirmed = true;
-                    // Now that we know it's a real blueprint, fade existing content
+                    // Subtly indicate update in progress — but keep existing content fully visible
                     if (hadExistingContent) {
                       bpEl.classList.add("fading");
                     }
                   }
 
-                  // Only update the display if we've confirmed this is blueprint content
+                  // Stream into hidden buffer — existing content stays untouched
                   if (blueprintConfirmed) {
-                    bpEl.classList.remove("fading");
-                    rawBlueprintMarkdown = incomingMarkdown;
-                    bpEl.innerHTML = renderMarkdown(rawBlueprintMarkdown);
-                    // Auto-scroll the blueprint panel to bottom as content streams in
-                    const bpBody = $(".blueprint-body");
-                    bpBody.scrollTop = bpBody.scrollHeight;
+                    bufferEl.innerHTML = renderMarkdown(incomingMarkdown);
                   }
                 }
               } catch (e) {
@@ -2519,13 +2519,21 @@
 
         // Stream finished — decide what to keep
         if (blueprintConfirmed) {
-          // New blueprint is good, already displayed
+          // Swap buffer content into visible panel in one shot
           rawBlueprintMarkdown = incomingMarkdown;
+          bpEl.classList.remove("fading");
+          bpEl.innerHTML = bufferEl.innerHTML;
+          bpEl.classList.add("visible");
+          bufferEl.innerHTML = "";
           $("#copyBtn").classList.add("visible");
+          // Scroll to show new content at the bottom
+          const bpBody = $(".blueprint-body");
+          bpBody.scrollTop = bpBody.scrollHeight;
         } else if (hadExistingContent) {
           // Incoming content was NOT a real blueprint (just conversational text).
           // Keep the previous blueprint exactly as-is.
           rawBlueprintMarkdown = previousMarkdown;
+          bpEl.classList.remove("fading");
           bpEl.innerHTML = renderMarkdown(rawBlueprintMarkdown);
           $("#copyBtn").classList.add("visible");
         }
@@ -2533,10 +2541,15 @@
 
         saveCurrent();
       } catch (err) {
-        if (err.name === "AbortError") return; // intentional abort, ignore
+        if (err.name === "AbortError") {
+          bufferEl.innerHTML = "";
+          return;
+        }
         // On error, keep existing content if we had it
+        bufferEl.innerHTML = "";
         if (hadExistingContent) {
           rawBlueprintMarkdown = previousMarkdown;
+          bpEl.classList.remove("fading");
           bpEl.innerHTML = renderMarkdown(rawBlueprintMarkdown);
           $("#copyBtn").classList.add("visible");
         } else {
