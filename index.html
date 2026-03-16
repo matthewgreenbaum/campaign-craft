@@ -63,6 +63,15 @@
       font-weight: 500;
       white-space: nowrap;
     }
+    .msg .gradient-text {
+      background: linear-gradient(90deg, #3D38B0, #7B7BD0, #1c767b, #F97316, #EC4899, #7B7BD0, #3D38B0);
+      background-size: 400% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradient-shift 12s ease infinite;
+      font-weight: 700;
+    }
     @keyframes gradient-shift {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -2064,6 +2073,13 @@
       return { body, options, multiSelect };
     }
 
+    function applyGradientBranding(html) {
+      return html.replace(
+        /Campaign Strategy AI Assistant/g,
+        '<span class="gradient-text">Campaign Strategy AI Assistant</span>'
+      );
+    }
+
     function addMessage(role, text) {
       const row = document.createElement("div");
       row.className = `msg-row ${role}`;
@@ -2084,7 +2100,7 @@
         const parsed = extractOptions(text);
         if (parsed && parsed.options.length >= 2) {
           // Render body as markdown HTML
-          div.innerHTML = renderMarkdown(parsed.body);
+          div.innerHTML = applyGradientBranding(renderMarkdown(parsed.body));
           // Add clickable option buttons
           const btnContainer = document.createElement("div");
           btnContainer.className = "option-buttons";
@@ -2128,7 +2144,7 @@
           div.appendChild(btnContainer);
           div.appendChild(submitBtn);
         } else {
-          div.innerHTML = renderMarkdown(text);
+          div.innerHTML = applyGradientBranding(renderMarkdown(text));
         }
       } else {
         div.textContent = text;
