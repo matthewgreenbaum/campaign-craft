@@ -1407,54 +1407,17 @@
     let currentCampaignId = null;
 
     // ─── progress tracking ───
-    // Milestones mapped to conversation keywords the assistant asks about
-    const PROGRESS_MILESTONES = [
-      "campaign name",       // ~5%
-      "campaign concept",    // ~10%
-      "company",             // ~18%
-      "audience",            // ~25%
-      "business goal",       // ~33%
-      "core insight",        // ~42%
-      "hypothesis",          // ~50%
-      "timeline",            // ~58%
-      "sales motion",        // ~63%
-      "t-shirt",             // ~68%
-      "content needs",       // ~72%
-      "channel",             // ~76%
-      "design",              // ~80%
-      "messaging",           // ~83%
-      "sales enablement",    // ~86%
-      "ops",                 // ~89%
-      "localization",        // ~91%
-      "risk",                // ~94%
-      "kpi",                 // ~96%
-      "assessment",          // ~98%
-      "advancement",         // 100%
-    ];
+    // Simple turn-based progress: count completed Q&A exchanges.
+    // The conversation has roughly 21 questions; each user reply = one step forward.
+    const PROGRESS_TOTAL_STEPS = 21;
     let progressReached = 0;
 
     function updateProgress() {
-      // Scan conversation for milestone keywords in assistant messages
-      const assistantMsgs = conversationHistory
-        .filter(m => m.role === "assistant")
-        .map(m => m.content.toLowerCase())
-        .join(" ");
-      const userMsgs = conversationHistory
-        .filter(m => m.role === "user")
-        .map(m => m.content.toLowerCase())
-        .join(" ");
-      const allText = assistantMsgs + " " + userMsgs;
-
-      let reached = 0;
-      for (let i = 0; i < PROGRESS_MILESTONES.length; i++) {
-        if (allText.includes(PROGRESS_MILESTONES[i])) {
-          reached = i + 1;
-        }
-      }
+      // Count user messages (each one = answered a question)
+      const userTurns = conversationHistory.filter(m => m.role === "user").length;
       // Only move forward, never backward
-      if (reached > progressReached) progressReached = reached;
-
-      const pct = Math.round((progressReached / PROGRESS_MILESTONES.length) * 100);
+      if (userTurns > progressReached) progressReached = userTurns;
+      const pct = Math.min(100, Math.round((progressReached / PROGRESS_TOTAL_STEPS) * 100));
       const fill = document.getElementById("chatProgressFill");
       if (fill) fill.style.width = pct + "%";
     }
