@@ -37,6 +37,10 @@
       align-items: baseline;
       padding: 16px 24px;
       gap: 16px;
+      transition: padding-left 0.25s ease;
+    }
+    .sidebar.collapsed ~ .app-body .app-header {
+      padding-left: 56px;
     }
     .app-header h1 {
       font-family: 'DM Sans', sans-serif;
