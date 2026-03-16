@@ -1582,7 +1582,7 @@
 
       // Derive title from the campaign name (first user reply after "Hello")
       const firstReal = conversationHistory.find(m => m.role === "user" && m.content !== "Hello");
-      if (firstReal && campaigns[idx].title === "Untitled") {
+      if (firstReal && campaigns[idx].title === "Untitled Campaign") {
         // Clean up the response — strip quotes, leading numbers, etc.
         let name = firstReal.content.replace(/^["'""'']+|["'""'']+$/g, "").trim();
         // If it looks like a numbered option response (e.g. "1. Something"), strip the number
@@ -1770,7 +1770,7 @@
     function createCampaignRecord() {
       const campaign = {
         id: generateId(),
-        title: "Untitled",
+        title: "Untitled Campaign",
         createdAt: Date.now(),
         updatedAt: Date.now(),
         conversationHistory: [],
