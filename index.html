@@ -680,6 +680,42 @@
     .option-btn.selected:hover {
       background: #4338CA;
     }
+    /* --- card layout for long options --- */
+    .option-buttons.card-layout {
+      flex-direction: column;
+      gap: 6px;
+    }
+    .option-buttons.card-layout .option-btn {
+      border-radius: 10px;
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 0.82rem;
+      font-weight: 500;
+      line-height: 1.45;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .option-buttons.card-layout .option-btn .option-number {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #3D38B0;
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+    .option-buttons.card-layout .option-btn.selected .option-number {
+      background: #fff;
+      color: #3D38B0;
+    }
     .option-submit-btn {
       background: linear-gradient(90deg, #3D38B0, #7B7BD0, #1c767b, #F97316, #EC4899, #7B7BD0, #3D38B0);
       background-size: 400% 100%;
@@ -2073,13 +2109,24 @@
           div.innerHTML = applyGradientBranding(renderMarkdown(parsed.body));
           // Add clickable option buttons
           const btnContainer = document.createElement("div");
-          btnContainer.className = "option-buttons";
+          const hasLongOptions = parsed.options.some(o => o.length > 60);
+          btnContainer.className = "option-buttons" + (hasLongOptions ? " card-layout" : "");
           const selected = new Set();
 
           parsed.options.forEach((opt, idx) => {
             const btn = document.createElement("button");
             btn.className = "option-btn";
-            btn.textContent = opt;
+            if (hasLongOptions) {
+              const num = document.createElement("span");
+              num.className = "option-number";
+              num.textContent = idx + 1;
+              btn.appendChild(num);
+              const label = document.createElement("span");
+              label.textContent = opt;
+              btn.appendChild(label);
+            } else {
+              btn.textContent = opt;
+            }
             btn.addEventListener("click", () => {
               if (chatBusy) return;
               if (parsed.multiSelect) {
