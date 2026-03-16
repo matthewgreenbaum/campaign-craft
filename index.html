@@ -2293,23 +2293,20 @@
       blueprintAbortController = new AbortController();
 
       blueprintBusy = true;
-      $("#bpPlaceholder").style.display = "none";
       const bpEl = $("#bpContent");
-      // If there's existing content, fade it slightly instead of clearing
-      if (bpEl.innerHTML && rawBlueprintMarkdown) {
-        bpEl.classList.add("fading");
-      } else {
-        bpEl.innerHTML = "";
-      }
+      const hadExistingContent = !!(bpEl.innerHTML && rawBlueprintMarkdown);
+      const previousMarkdown = rawBlueprintMarkdown;
+
+      // Keep existing content fully visible — only show spinner dot
+      $("#bpPlaceholder").style.display = "none";
       bpEl.classList.add("visible");
-      $("#copyBtn").classList.remove("visible");
       $("#bpStreamingDot").classList.add("active");
 
       const bpMessages = [
         ...conversationHistory,
         {
           role: "user",
-          content: "Based on everything we've discussed so far, output ONLY the blueprint sections for which we have actually collected sufficient information through our conversation. Do NOT include sections we haven't discussed yet — no placeholders, no TBD sections, no skeleton outlines for future sections. For example, if we've only covered through Business Context & Strategic Alignment, output only: Campaign Concept Title, Executive Summary, and Business Context & Strategic Alignment. Stop there.\n\nFormatting rules:\n- Use a markdown # heading for the campaign title at the top.\n- Number each section sequentially using ## headings in the format: ## 1. Executive Summary, ## 2. Business Context & Strategic Alignment, ## 3. Core Insight, etc.\n- Use standard markdown bullet lists with '- ' (dash space) for all bullet points. NEVER use the • bullet character.\n- Use **bold** for key labels within bullets (e.g., - **Campaign Focus**: ...).\n- Each bullet point MUST be on its own line.",
+          content: "Based on everything we've discussed so far, output ONLY the blueprint sections for which we have actually collected sufficient information through our conversation. Do NOT include sections we haven't discussed yet — no placeholders, no TBD sections, no skeleton outlines for future sections. For example, if we've only covered through Business Context & Strategic Alignment, output only: Campaign Concept Title, Executive Summary, and Business Context & Strategic Alignment. Stop there.\n\nIMPORTANT: Output ONLY the formatted blueprint markdown. Do NOT include any conversational text, questions, commentary, or requests for more information. If you don't have enough info for a section, simply omit that section entirely. Never mix conversation with blueprint output.\n\nFormatting rules:\n- Use a markdown # heading for the campaign title at the top.\n- Number each section sequentially using ## headings in the format: ## 1. Executive Summary, ## 2. Business Context & Strategic Alignment, ## 3. Core Insight, etc.\n- Use standard markdown bullet lists with '- ' (dash space) for all bullet points. NEVER use the • bullet character.\n- Use **bold** for key labels within bullets (e.g., - **Campaign Focus**: ...).\n- Each bullet point MUST be on its own line.",
         },
       ];
 
@@ -2344,8 +2341,8 @@
         const reader = res.body.getReader();
         const decoder = new TextDecoder();
         let buffer = "";
-        rawBlueprintMarkdown = "";
-        let firstChunk = true;
+        let incomingMarkdown = "";
+        let blueprintConfirmed = false; // has the incoming content proven to be a real blueprint?
 
         while (true) {
           const { done, value } = await reader.read();
@@ -2362,17 +2359,26 @@
               try {
                 const event = JSON.parse(jsonStr);
                 if (event.type === "content_block_delta" && event.delta && event.delta.text) {
-                  rawBlueprintMarkdown += event.delta.text;
-                  const bpEl = $("#bpContent");
-                  // On first real content, remove fade and clear old content
-                  if (firstChunk) {
-                    firstChunk = false;
-                    bpEl.classList.remove("fading");
+                  incomingMarkdown += event.delta.text;
+
+                  // Check if this looks like actual blueprint content (has a markdown heading)
+                  if (!blueprintConfirmed && /^#{1,3}\s/m.test(incomingMarkdown)) {
+                    blueprintConfirmed = true;
+                    // Now that we know it's a real blueprint, fade existing content
+                    if (hadExistingContent) {
+                      bpEl.classList.add("fading");
+                    }
                   }
-                  bpEl.innerHTML = renderMarkdown(rawBlueprintMarkdown);
-                  // Auto-scroll the blueprint panel to bottom as content streams in
-                  const bpBody = $(".blueprint-body");
-                  bpBody.scrollTop = bpBody.scrollHeight;
+
+                  // Only update the display if we've confirmed this is blueprint content
+                  if (blueprintConfirmed) {
+                    bpEl.classList.remove("fading");
+                    rawBlueprintMarkdown = incomingMarkdown;
+                    bpEl.innerHTML = renderMarkdown(rawBlueprintMarkdown);
+                    // Auto-scroll the blueprint panel to bottom as content streams in
+                    const bpBody = $(".blueprint-body");
+                    bpBody.scrollTop = bpBody.scrollHeight;
+                  }
                 }
               } catch (e) {
                 // skip unparseable lines
@@ -2381,11 +2387,31 @@
           }
         }
 
-        $("#copyBtn").classList.add("visible");
+        // Stream finished — decide what to keep
+        if (blueprintConfirmed) {
+          // New blueprint is good, already displayed
+          rawBlueprintMarkdown = incomingMarkdown;
+          $("#copyBtn").classList.add("visible");
+        } else if (hadExistingContent) {
+          // Incoming content was NOT a real blueprint (just conversational text).
+          // Keep the previous blueprint exactly as-is.
+          rawBlueprintMarkdown = previousMarkdown;
+          bpEl.innerHTML = renderMarkdown(rawBlueprintMarkdown);
+          $("#copyBtn").classList.add("visible");
+        }
+        // else: no existing content and no valid blueprint — leave panel empty
+
         saveCurrent();
       } catch (err) {
         if (err.name === "AbortError") return; // intentional abort, ignore
-        $("#bpContent").innerHTML = `<p style="color:#B33A3A">Failed to generate blueprint: ${err.message}</p>`;
+        // On error, keep existing content if we had it
+        if (hadExistingContent) {
+          rawBlueprintMarkdown = previousMarkdown;
+          bpEl.innerHTML = renderMarkdown(rawBlueprintMarkdown);
+          $("#copyBtn").classList.add("visible");
+        } else {
+          $("#bpContent").innerHTML = `<p style="color:#B33A3A">Failed to generate blueprint: ${err.message}</p>`;
+        }
       } finally {
         blueprintBusy = false;
         blueprintAbortController = null;
