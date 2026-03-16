@@ -1571,7 +1571,7 @@
       if (!currentCampaignId) { el.textContent = ""; return; }
       const campaigns = loadAllCampaigns();
       const c = campaigns.find(c => c.id === currentCampaignId);
-      el.textContent = c ? c.title + " Blueprint" : "";
+      el.textContent = c ? c.title : "";
     }
 
     function saveCurrent() {
