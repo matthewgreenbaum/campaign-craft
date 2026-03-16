@@ -812,64 +812,85 @@
     .bp-content { display: none; }
     .bp-content.visible { display: block; }
 
+    /* Smooth transition when blueprint content updates */
+    .bp-content {
+      transition: opacity 0.2s ease;
+    }
+    .bp-content.fading { opacity: 0.4; }
+
     .bp-content h1 {
       font-size: 1.35rem;
       font-weight: 700;
-      margin: 0 0 18px;
-      padding-bottom: 10px;
+      margin: 0 0 20px;
+      padding-bottom: 12px;
       border-bottom: 2px solid #3D38B0;
-      color: #3D38B0;
+      color: #1E1B4B;
+      letter-spacing: -0.01em;
     }
     .bp-content h2 {
-      font-size: 1.05rem;
-      font-weight: 600;
-      margin: 24px 0 10px;
-      padding: 5px 12px;
+      font-size: 1.0rem;
+      font-weight: 700;
+      margin: 28px 0 12px;
+      padding: 8px 14px;
       background: #EEF2FF;
       border-left: 4px solid #3D38B0;
       border-radius: 0 6px 6px 0;
-      color: #3D38B0;
+      color: #1E1B4B;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      font-size: 0.85rem;
     }
     .bp-content h3 {
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 600;
-      margin: 18px 0 8px;
-      color: #3D38B0;
+      margin: 20px 0 8px;
+      color: #1E1B4B;
     }
     .bp-content p {
-      font-size: 0.9rem;
-      line-height: 1.6;
-      margin: 0 0 10px;
-      color: #333;
+      font-size: 0.88rem;
+      line-height: 1.65;
+      margin: 0 0 12px;
+      color: #1E1B4B;
     }
     .bp-content ul, .bp-content ol {
-      margin: 0 0 12px 20px;
-      font-size: 0.9rem;
-      line-height: 1.6;
-      color: #333;
+      margin: 4px 0 16px 18px;
+      padding: 0;
+      font-size: 0.88rem;
+      line-height: 1.65;
+      color: #1E1B4B;
     }
-    .bp-content li { margin-bottom: 4px; }
+    .bp-content ul { list-style-type: disc; }
+    .bp-content ul ul { list-style-type: circle; margin-top: 2px; margin-bottom: 2px; }
+    .bp-content li {
+      margin-bottom: 3px;
+      padding-left: 2px;
+    }
+    .bp-content li::marker {
+      color: #3D38B0;
+    }
     .bp-content table {
       width: 100%;
       border-collapse: collapse;
-      margin: 12px 0;
-      font-size: 0.85rem;
+      margin: 16px 0;
+      font-size: 0.84rem;
     }
     .bp-content th, .bp-content td {
-      padding: 8px 12px;
+      padding: 10px 14px;
       border: 1px solid #D8D5F2;
       text-align: left;
+      color: #1E1B4B;
     }
     .bp-content th {
-      background: #F5F5F3;
+      background: #EEF2FF;
       font-weight: 600;
+      color: #1E1B4B;
     }
     .bp-content hr {
       border: none;
       border-top: 1px solid #D8D5F2;
-      margin: 20px 0;
+      margin: 24px 0;
     }
-    .bp-content strong { font-weight: 600; }
+    .bp-content strong { font-weight: 600; color: #1E1B4B; }
     .bp-content em { font-style: italic; }
     .bp-content code {
       background: #F5F5F3;
@@ -2268,8 +2289,14 @@
 
       blueprintBusy = true;
       $("#bpPlaceholder").style.display = "none";
-      $("#bpContent").innerHTML = "";
-      $("#bpContent").classList.add("visible");
+      const bpEl = $("#bpContent");
+      // If there's existing content, fade it slightly instead of clearing
+      if (bpEl.innerHTML && rawBlueprintMarkdown) {
+        bpEl.classList.add("fading");
+      } else {
+        bpEl.innerHTML = "";
+      }
+      bpEl.classList.add("visible");
       $("#copyBtn").classList.remove("visible");
       $("#bpStreamingDot").classList.add("active");
 
@@ -2313,6 +2340,7 @@
         const decoder = new TextDecoder();
         let buffer = "";
         rawBlueprintMarkdown = "";
+        let firstChunk = true;
 
         while (true) {
           const { done, value } = await reader.read();
@@ -2330,7 +2358,13 @@
                 const event = JSON.parse(jsonStr);
                 if (event.type === "content_block_delta" && event.delta && event.delta.text) {
                   rawBlueprintMarkdown += event.delta.text;
-                  $("#bpContent").innerHTML = renderMarkdown(rawBlueprintMarkdown);
+                  const bpEl = $("#bpContent");
+                  // On first real content, remove fade and clear old content
+                  if (firstChunk) {
+                    firstChunk = false;
+                    bpEl.classList.remove("fading");
+                  }
+                  bpEl.innerHTML = renderMarkdown(rawBlueprintMarkdown);
                   // Auto-scroll the blueprint panel to bottom as content streams in
                   const bpBody = $(".blueprint-body");
                   bpBody.scrollTop = bpBody.scrollHeight;
@@ -2351,6 +2385,7 @@
         blueprintBusy = false;
         blueprintAbortController = null;
         $("#bpStreamingDot").classList.remove("active");
+        $("#bpContent").classList.remove("fading");
       }
     }
 
