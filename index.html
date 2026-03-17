@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Campaign Blueprint</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -356,47 +357,32 @@
       border-top: 1px solid rgba(255,255,255,0.15);
       margin-bottom: 10px;
     }
-    .sidebar-about-row {
+    .sidebar-footer-title {
+      color: rgba(255,255,255,0.45);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+    .sidebar-footer-links {
       display: flex;
-      align-items: center;
-      gap: 8px;
+      flex-direction: column;
+      gap: 2px;
     }
-    .sidebar-about-icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 26px;
-      height: 26px;
-      min-width: 26px;
-      min-height: 26px;
-      border-radius: 50%;
-      border: none;
-      background: rgba(255,255,255,0.15);
-      color: #fff;
-      font-family: 'DM Sans', 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-      line-height: 26px;
-      text-align: center;
-      flex-shrink: 0;
-    }
-    .sidebar-about-icon:hover {
-      background: rgba(255,255,255,0.22);
-      color: #fff;
-    }
-    .sidebar-about-link {
+    .sidebar-footer-link {
       background: none;
       border: none;
-      color: rgba(255,255,255,0.5);
+      color: rgba(255,255,255,0.55);
       font-family: 'Open Sans', 'Inter', sans-serif;
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       cursor: pointer;
-      padding: 0;
+      padding: 4px 0;
+      text-align: left;
       transition: color 0.15s;
     }
-    .sidebar-about-link:hover { color: rgba(255,255,255,0.85); }
+    .sidebar-footer-link:hover { color: rgba(255,255,255,0.9); }
 
     /* ---------- about overlay ---------- */
     .about-overlay {
@@ -465,6 +451,126 @@
       border-top: 1px solid #E5E7EB;
       margin: 28px 0;
     }
+
+    /* ---------- process steps ---------- */
+    .process-steps {
+      margin-top: 20px;
+    }
+    .process-step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 14px 0;
+      border-bottom: 1px solid #E5E7EB;
+    }
+    .process-step:last-child { border-bottom: none; }
+    .process-step-num {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      border-radius: 50%;
+      background: #3D38B0;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .process-step-content strong {
+      color: #3D38B0;
+      font-size: 0.95rem;
+    }
+    .process-step-content p {
+      margin-top: 2px;
+      font-size: 0.88rem;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    /* ---------- suggestions form ---------- */
+    .suggestions-form {
+      margin-top: 20px;
+      max-width: 520px;
+    }
+    .suggestion-label {
+      display: block;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: #3D38B0;
+      margin-bottom: 6px;
+      margin-top: 16px;
+    }
+    .suggestion-label:first-child { margin-top: 0; }
+    .suggestion-select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1.5px solid #D1D5DB;
+      border-radius: 8px;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 0.88rem;
+      color: #333;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .suggestion-select:focus { border-color: #3D38B0; }
+    .suggestion-textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid #D1D5DB;
+      border-radius: 8px;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 0.88rem;
+      color: #333;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .suggestion-textarea:focus { border-color: #3D38B0; }
+    .suggestion-submit-btn {
+      margin-top: 14px;
+      background: #3D38B0;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 28px;
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .suggestion-submit-btn:hover { background: #4338CA; }
+    .suggestion-thanks {
+      margin-top: 12px;
+      color: #16a34a;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    /* ---------- google docs export ---------- */
+    .btn-export-gdocs {
+      display: none;
+      align-items: center;
+      gap: 5px;
+      background: none;
+      border: 1.5px solid #D1D5DB;
+      border-radius: 8px;
+      padding: 4px 10px;
+      cursor: pointer;
+      color: #666;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+    }
+    .btn-export-gdocs:hover { border-color: #3D38B0; color: #3D38B0; background: #EEF2FF; }
+    .btn-export-gdocs.visible { display: flex; }
+    .btn-export-gdocs svg { width: 16px; height: 16px; }
+    .gdocs-label { white-space: nowrap; }
 
     /* ---------- panels container ---------- */
     .panels {
@@ -856,6 +962,31 @@
     @keyframes bp-pulse {
       0%, 100% { opacity: 0.3; transform: scale(0.8); }
       50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* ---------- confetti ---------- */
+    .confetti-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9999;
+      overflow: hidden;
+    }
+    .confetti-piece {
+      position: absolute;
+      top: -10px;
+      width: 10px;
+      height: 10px;
+      opacity: 0;
+      animation: confetti-fall 2.5s ease-out forwards;
+    }
+    @keyframes confetti-fall {
+      0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+      80% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(100vh) rotate(720deg) scale(0.5); }
     }
 
     .blueprint-body {
@@ -1285,13 +1416,15 @@
     </div>
     <div class="sidebar-footer">
       <hr />
-      <div class="sidebar-about-row">
-        <span class="sidebar-about-icon" onclick="showAbout()" title="About" role="button" tabindex="0">?</span>
-        <button class="sidebar-about-link" onclick="showAbout()">About Campaign Blueprint</button>
+      <div class="sidebar-footer-title">About Campaign Blueprint</div>
+      <div class="sidebar-footer-links">
+        <button class="sidebar-footer-link" onclick="showAboutPage('faq')">FAQ</button>
+        <button class="sidebar-footer-link" onclick="showAboutPage('process')">The Process</button>
+        <button class="sidebar-footer-link" onclick="showAboutPage('suggestions')">Suggestions</button>
       </div>
     </div>
   </aside>
-  <button class="sidebar-toggle-btn" id="sidebarToggleBtn" onclick="toggleSidebar()" title="Toggle sidebar">&#9776;</button>
+  <button class="sidebar-toggle-btn" id="sidebarToggleBtn" onclick="toggleSidebar()" title="Toggle sidebar">&#xAB;</button>
 
   <div class="app-body">
   <header class="app-header">
@@ -1337,6 +1470,10 @@
             <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             <svg class="copy-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </button>
+          <button class="btn-export-gdocs" id="exportGDocsBtn" onclick="exportToGoogleDocs()" title="Export to Google Docs">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <span class="gdocs-label">Google Docs</span>
+          </button>
         </div>
       </div>
       <div class="blueprint-body">
@@ -1353,39 +1490,170 @@
   <div class="about-overlay" id="aboutOverlay">
     <button class="about-close" onclick="hideAbout()" title="Close">&times;</button>
     <div class="about-body">
-      <h1>Campaign Blueprint</h1>
-      <p class="about-tagline">AI-powered B2B campaign strategy builder</p>
+      <!-- FAQ Page -->
+      <div class="about-page" id="aboutPageFaq" style="display:none;">
+        <h1>Frequently Asked Questions</h1>
+        <p class="about-tagline">Everything you need to know about Campaign Blueprint</p>
 
-      <p>The Campaign Blueprint agent is an AI-powered B2B marketing tool that transforms structured campaign ideas into executive-ready strategic blueprints. Acting as a combination of a strategic consultant, VP-level marketer, and collaborative partner, it helps marketers refine hypotheses, assess business impact, uncover risks, and define KPIs &mdash; all while maintaining a warm, professional, and approachable tone.</p>
+        <h2>What is Campaign Blueprint?</h2>
+        <p>Campaign Blueprint is an AI-powered tool that transforms your campaign ideas into executive-ready strategic blueprints. It acts as your strategic consultant, VP-level marketer, and collaborative partner &mdash; all rolled into one.</p>
 
-      <p>The agent produces a clear, copy-paste-ready blueprint formatted for Google Docs, making it easy to share with leadership, align cross-functional teams, and move promising campaign ideas from concept to execution quickly and confidently.</p>
+        <h2>Who is this for?</h2>
+        <p>B2B marketers leading integrated campaigns, whether at startups or enterprise technology companies. It's ideal for anyone who needs a structured, repeatable approach to building and pitching campaign strategies.</p>
 
-      <hr />
+        <h2>How long does it take to complete a blueprint?</h2>
+        <p>A typical session takes 15&ndash;25 minutes. The AI guides you through each section one question at a time, so you can move at your own pace.</p>
 
-      <h2>Key Capabilities</h2>
-      <ul>
-        <li>Acts as a <strong>strategic consultant</strong>, asking sharp questions to uncover gaps in the idea.</li>
-        <li>Functions as a <strong>VP-level marketer</strong>, pressure-testing alignment with business objectives and pipeline/adoption impact.</li>
-        <li>Serves as a <strong>collaborative partner</strong>, refining ideas constructively and maintaining a warm, professional, and sometimes witty tone.</li>
-        <li>Produces <strong>hybrid outputs</strong>: narrative context plus structured inputs (e.g., dropdowns, checklists) for clarity without stifling creativity.</li>
-        <li>Provides <strong>strategic quality assessment</strong> to evaluate alignment, impact potential, and execution readiness.</li>
-        <li>Includes an <strong>Advancement Decision</strong> that clearly indicates whether a campaign idea should move forward, be refined, or reworked.</li>
-        <li>Outputs a <strong>copy-paste-ready blueprint</strong> formatted for Google Docs, making it easy to share, document, or distribute internally.</li>
-      </ul>
+        <h2>Can I come back and finish later?</h2>
+        <p>Yes! Your progress is automatically saved. Just select your campaign from the sidebar to pick up where you left off.</p>
 
-      <h2>Purpose &amp; Value</h2>
-      <ul>
-        <li>Helps marketers think 360&deg; about a campaign &mdash; from hypothesis and audience insights to KPIs, risks, and required assets.</li>
-        <li>Ensures every campaign idea is strategically sound, aligned to business goals, and executable before significant resources are invested.</li>
-        <li>Accelerates cross-functional alignment by providing a clear, structured, and professional artifact for leadership discussion.</li>
-        <li>Reduces iterative friction and keeps the team focused on execution-ready ideas rather than endless ideation loops.</li>
-      </ul>
+        <h2>What happens at the end?</h2>
+        <p>You'll receive a complete strategic blueprint with an executive summary, core insight, hypothesis, audience context, needs assessment, risk analysis, KPIs, and an advancement recommendation. You can copy it or export to Google Docs.</p>
 
-      <h2>Ideal Users</h2>
-      <ul>
-        <li>B2B marketers leading integrated campaigns, whether at startups or enterprise technology companies.</li>
-        <li>Teams needing a structured, repeatable approach to pitching ideas and aligning cross-functional stakeholders.</li>
-      </ul>
+        <h2>Will the AI make up data or metrics?</h2>
+        <p>No. The AI never fabricates company priorities, metrics, or impact estimates. It will ask you for numbers or offer to help you forecast &mdash; but it won't invent them.</p>
+
+        <h2>Can I skip questions?</h2>
+        <p>The flow is designed to collect the minimum inputs needed for a rigorous blueprint. While you can't skip strategic sections, the AI won't over-probe &mdash; brief answers are perfectly fine.</p>
+
+        <h2>Is my data stored or shared?</h2>
+        <p>Your campaigns are saved locally in your browser. No campaign data is stored on any server beyond the AI conversation itself.</p>
+      </div>
+
+      <!-- Process Page -->
+      <div class="about-page" id="aboutPageProcess" style="display:none;">
+        <h1>The Process</h1>
+        <p class="about-tagline">A transparent look at how your blueprint gets built</p>
+
+        <p>Campaign Blueprint follows a structured, step-by-step conversation. Here's exactly what the AI will walk you through:</p>
+
+        <div class="process-steps">
+          <div class="process-step">
+            <div class="process-step-num">1</div>
+            <div class="process-step-content">
+              <strong>Campaign Name</strong>
+              <p>Give your campaign a working title, or skip and name it later.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="process-step-num">2</div>
+            <div class="process-step-content">
+              <strong>Campaign Concept</strong>
+              <p>Share the high-level elevator pitch &mdash; what's the big idea?</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="process-step-num">3</div>
+            <div class="process-step-content">
+              <strong>Company &amp; Product Context</strong>
+              <p>Tell us about your company, product, and how it helps your audience.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="process-step-num">4</div>
+            <div class="process-step-content">
+              <strong>Target Audience &amp; Sales Motion</strong>
+              <p>Define your ICP, personas, and which sales motions apply (SMB, Mid-Market, Enterprise, etc.).</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="process-step-num">5</div>
+            <div class="process-step-content">
+              <strong>Business Goal &amp; Impact Type</strong>
+              <p>What's the primary business objective? Pipeline, adoption, retention, positioning?</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="process-step-num">6</div>
+            <div class="process-step-content">
+              <strong>Core Insight</strong>
+              <p>Identify the specific truth about your audience or market that this campaign is built on. The AI can suggest options or you can write your own.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="process-step-num">7</div>
+            <div class="process-step-content">
+              <strong>Hypothesis</strong>
+              <p>Structure your campaign hypothesis: If we [action] for [persona], then [outcome] because [insight]. The AI helps with forecasting.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="process-step-num">8</div>
+            <div class="process-step-content">
+              <strong>Timeline</strong>
+              <p>Set rough timing &mdash; expected duration and key milestones.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="process-step-num">9</div>
+            <div class="process-step-content">
+              <strong>Scope &amp; Size</strong>
+              <p>T-shirt size your campaign (S/M/L/XL) based on channels, content, teams, and duration.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="process-step-num">10</div>
+            <div class="process-step-content">
+              <strong>Needs Assessment</strong>
+              <p>Walk through content needs, channel mix, design requirements, messaging, sales enablement, ops dependencies, and localization.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="process-step-num">11</div>
+            <div class="process-step-content">
+              <strong>Blind Spots &amp; Assumptions</strong>
+              <p>The AI proactively surfaces risks and blind spots you might have missed &mdash; this is the coaching moment.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="process-step-num">12</div>
+            <div class="process-step-content">
+              <strong>KPIs &amp; Timeline</strong>
+              <p>Define primary and secondary KPIs, plus key milestones and review points.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="process-step-num">13</div>
+            <div class="process-step-content">
+              <strong>Strategic Quality Assessment</strong>
+              <p>The AI evaluates alignment, impact potential, and readiness &mdash; then you react and discuss.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <div class="process-step-num">14</div>
+            <div class="process-step-content">
+              <strong>Advancement Decision</strong>
+              <p>Final recommendation: Move forward, refine, or rework. Plus leadership pitch prep tips.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Suggestions Page -->
+      <div class="about-page" id="aboutPageSuggestions" style="display:none;">
+        <h1>Suggestions</h1>
+        <p class="about-tagline">Help us make Campaign Blueprint better</p>
+
+        <p>Have an idea for a new feature, improvement, or something that's not working quite right? We'd love to hear it.</p>
+
+        <div class="suggestions-form">
+          <label for="suggestionType" class="suggestion-label">What kind of suggestion is this?</label>
+          <select id="suggestionType" class="suggestion-select">
+            <option value="feature">New Feature</option>
+            <option value="improvement">Improvement</option>
+            <option value="bug">Bug Report</option>
+            <option value="other">Other</option>
+          </select>
+
+          <label for="suggestionText" class="suggestion-label">Your suggestion</label>
+          <textarea id="suggestionText" class="suggestion-textarea" rows="6" placeholder="Describe your idea, suggestion, or issue..."></textarea>
+
+          <button class="suggestion-submit-btn" onclick="submitSuggestion()">Submit Suggestion</button>
+          <div class="suggestion-thanks" id="suggestionThanks" style="display:none;">
+            Thanks for your feedback! We'll review your suggestion.
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1449,6 +1717,29 @@
     // Section-based progress: tracks completed sections via AI directives.
     const PROGRESS_TOTAL_SECTIONS = 25;
     let completedSections = new Set();
+
+    function launchConfetti() {
+      const container = document.createElement("div");
+      container.className = "confetti-container";
+      document.body.appendChild(container);
+      const colors = ["#3D38B0", "#7B7BD0", "#F97316", "#EC4899", "#16a34a", "#facc15", "#06b6d4"];
+      const shapes = ["square", "circle"];
+      for (let i = 0; i < 80; i++) {
+        const piece = document.createElement("div");
+        piece.className = "confetti-piece";
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const shape = shapes[Math.floor(Math.random() * shapes.length)];
+        piece.style.left = Math.random() * 100 + "vw";
+        piece.style.background = color;
+        piece.style.borderRadius = shape === "circle" ? "50%" : "2px";
+        piece.style.width = (6 + Math.random() * 8) + "px";
+        piece.style.height = (6 + Math.random() * 8) + "px";
+        piece.style.animationDelay = (Math.random() * 0.8) + "s";
+        piece.style.animationDuration = (1.8 + Math.random() * 1.2) + "s";
+        container.appendChild(piece);
+      }
+      setTimeout(() => container.remove(), 4000);
+    }
 
     function updateProgress() {
       const pct = Math.min(100, Math.round((completedSections.size / PROGRESS_TOTAL_SECTIONS) * 100));
@@ -1687,7 +1978,9 @@
       // Extract section progress
       const sectionMatches = reply.matchAll(/<!--SECTION_COMPLETE:(\d+)-->/g);
       for (const m of sectionMatches) {
-        completedSections.add(parseInt(m[1]));
+        const sec = parseInt(m[1]);
+        completedSections.add(sec);
+        if (sec === 25) setTimeout(launchConfetti, 500);
       }
       updateProgress();
       // Strip all directives from the displayed reply
@@ -1912,7 +2205,7 @@
       $("#bpContent").innerHTML = "";
       $("#bpContent").classList.remove("visible");
       $("#bpPlaceholder").style.display = "";
-      $("#copyBtn").classList.remove("visible");
+      $("#copyBtn").classList.remove("visible"); $("#exportGDocsBtn").classList.remove("visible");
       const fill = document.getElementById("chatProgressFill");
       if (fill) fill.style.width = "0%";
 
@@ -1954,12 +2247,12 @@
         $("#bpPlaceholder").style.display = "none";
         $("#bpContent").innerHTML = renderMarkdown(rawBlueprintMarkdown);
         $("#bpContent").classList.add("visible");
-        $("#copyBtn").classList.add("visible");
+        $("#copyBtn").classList.add("visible"); $("#exportGDocsBtn").classList.add("visible");
       } else {
         $("#bpContent").innerHTML = "";
         $("#bpContent").classList.remove("visible");
         $("#bpPlaceholder").style.display = "";
-        $("#copyBtn").classList.remove("visible");
+        $("#copyBtn").classList.remove("visible"); $("#exportGDocsBtn").classList.remove("visible");
       }
 
       renderCampaignList();
@@ -1999,7 +2292,7 @@
           $("#bpContent").innerHTML = "";
           $("#bpContent").classList.remove("visible");
           $("#bpPlaceholder").style.display = "";
-          $("#copyBtn").classList.remove("visible");
+          $("#copyBtn").classList.remove("visible"); $("#exportGDocsBtn").classList.remove("visible");
           updateBlueprintPanelTitle();
         }
       }
@@ -2060,17 +2353,37 @@
     function toggleSidebar() {
       const sidebar = $("#sidebar");
       sidebar.classList.toggle("collapsed");
-      $("#sidebarToggleBtn").classList.toggle("shifted", sidebar.classList.contains("collapsed"));
+      const btn = $("#sidebarToggleBtn");
+      const isCollapsed = sidebar.classList.contains("collapsed");
+      btn.classList.toggle("shifted", isCollapsed);
+      btn.innerHTML = isCollapsed ? "\u00BB" : "\u00AB";
     }
 
-    function showAbout() {
+    function showAboutPage(page) {
+      const pages = document.querySelectorAll(".about-page");
+      pages.forEach(p => p.style.display = "none");
+      const target = document.getElementById("aboutPage" + page.charAt(0).toUpperCase() + page.slice(1));
+      if (target) target.style.display = "block";
       $("#aboutOverlay").classList.add("visible");
     }
+    function showAbout() { showAboutPage("faq"); }
     function hideAbout() {
       $("#aboutOverlay").classList.remove("visible");
     }
+    function submitSuggestion() {
+      const type = $("#suggestionType").value;
+      const text = $("#suggestionText").value.trim();
+      if (!text) { alert("Please enter your suggestion."); return; }
+      // Store suggestions in localStorage
+      const suggestions = JSON.parse(localStorage.getItem("blueprintSuggestions") || "[]");
+      suggestions.push({ type, text, date: new Date().toISOString() });
+      localStorage.setItem("blueprintSuggestions", JSON.stringify(suggestions));
+      $("#suggestionText").value = "";
+      $("#suggestionThanks").style.display = "block";
+      setTimeout(() => { $("#suggestionThanks").style.display = "none"; }, 3000);
+    }
 
-    const SYSTEM_PROMPT = `1. CAMPAIGN STRATEGY BLUEPRINT – MASTER PROMPT\nROLE & IDENTITY\nYou are an expert / senior B2B SaaS marketing strategist operating as a Campaign Strategy AI Assistant.\nYour job: Transform structured campaign ideas into executive-ready, strategically rigorous blueprints that can be pitched to marketing leadership and, if approved, advanced to execution planning as an integrated campaign brief.\nYou simultaneously embody:\n* Strategic Consultant – Ask sharp, targeted questions that expose gaps.\n* VP-Level Marketer – Pressure-test alignment to business goals and pipeline/adoption impact.\n* Collaborative Partner & Coach – Refine ideas constructively. Never dismiss. Never condescend. Improve thinking. You are the user's most trusted B2B marketing partner AND a coach who pushes them to sharpen their thinking. Use current B2B SaaS demand generation strategies and tactics, always acting in the user's best interest.\nTone: Warm, professional, casual but sharp. Use wit sparingly — one well-placed line per section is fine, avoid continuous banter.\nGoal: Make marketers better thinkers while producing pitch-ready artifacts.\n\nCOACHING & PRESSURE-TESTING\n* You are a strategic partner AND a coach. Your job is not just to collect inputs — it's to make the user's campaign stronger.\n* ONLY pressure-test on the SPECIFIC section the user just answered. Never probe ahead into topics that have their own dedicated question later in the flow.\n* Pressure-testing is ONLY appropriate on these sections, and ONLY after the user has formally answered that section's question:\n  - Target Audience / Persona — challenge specificity of the segment\n  - Primary Business Goal — challenge whether the goal is measurable or differentiated\n  - Core Insight — challenge whether it's truly specific and defensible\n  - Hypothesis — challenge whether the logic holds and metrics are realistic\n* Do NOT pressure-test Campaign Name, Campaign Concept, Company Context, Timeline, or any Needs Assessment inputs (content, channels, design, messaging, etc.). For those, just acknowledge and move on.\n* When you DO pressure-test, keep it to ONE sentence or question focused ONLY on that section's topic. Do not bring up audience when collecting the concept. Do not bring up messaging when collecting the goal. Stay in your lane.\n* If the user pushes back or says their answer is final, accept it gracefully and move on immediately.\n\nRESPONSE LENGTH RULES\n* Keep each response SHORT — aim for 2–4 sentences of commentary max before asking your question or presenting options.\n* Never write long narrative paragraphs when collecting inputs. Save detailed analysis for the final blueprint.\n* When presenting numbered options, give ONLY a brief 1-sentence lead-in, then the options. Do not explain each option unless the user asks.\n* Do not recap, summarize, or reflect back what the user said at length. A brief acknowledgment (one sentence) is enough before moving to the next question.\n* Your responses should feel like a quick chat message, not an essay. If your response would take more than 15 seconds to read, it is too long.\n\nSECTION TRANSITION FORMATTING\n* When you move on to a new topic or section of the conversation (e.g., moving from concept to audience, or from audience to business goal), visually signal the transition by wrapping the key topic keyword in bold blue text using this exact HTML: <span style="color:#3D38B0;font-weight:700">keyword</span>.\n* Examples:\n  - "Now let's talk about your <span style="color:#3D38B0;font-weight:700">target audience</span>."\n  - "Next up — the <span style="color:#3D38B0;font-weight:700">business goal</span> for this campaign."\n  - "Let's nail down the <span style="color:#3D38B0;font-weight:700">core insight</span> behind this campaign."\n* Only use this for the main topic keyword when transitioning to a new section. Do not overuse it within the same section or for minor follow-ups.\n\nSUGGESTION MODE FOR OPEN-ENDED STRATEGIC QUESTIONS\n* For Core Insight and Hypothesis questions specifically, do NOT ask the user as a fully open-ended question.\n* Instead, first ask: "Would you like me to suggest a few options based on what you've told me, or would you prefer to write your own?" Present this as two clickable options:\n  1. Suggest a few options\n  2. I'll write my own\n* If the user chooses suggestions, generate 3–5 concrete, specific options based on everything collected so far. Present them as numbered options so they render as clickable buttons. Make each option meaningfully different — not just rewording of the same idea.\n* If the user chooses to write their own, proceed with the open-ended question as normal.\n* For Core Insight suggestions: Each should be a specific, defensible truth about the audience, market, or buying behavior — not generic marketing statements.\n* For Hypothesis suggestions: Each should follow the structured formula: "If we [action] for [persona] in [context], then [measurable outcome] because [insight]." Make them concrete and distinct. IMPORTANT: Do NOT include specific numbers (e.g., revenue figures, pipeline amounts, percentages) in the suggestions — use descriptive placeholders like [X% increase], [$ pipeline], or [target metric] instead. Numbers will be filled in after the user chooses how they want to handle estimates.\n\nCOLD START / OPENING PROTOCOL\n1. Begin every conversation with a short, warm greeting (1–2 sentences max). Introduce yourself and ask them to give this campaign a name — something like "First things first — let's give this campaign a name! What should we call it? And if you don't have one yet, no worries — we can come back to this later." Then present these as numbered options at the end of your message:\n  1. I have a name — let me type it\n  2. Skip for now\nThis MUST be the very first question you ask. Do not ask for anything else in this first message.\n2. Once the user provides a campaign name OR chooses to skip, acknowledge it briefly and move on to collecting minimum viable inputs ONE QUESTION AT A TIME. If they skip or say they don't know, use "Untitled Campaign" as the working title, reassure them that naming can happen anytime, and proceed immediately to the next question.\n\nIMPORTANT — CAMPAIGN TITLE DIRECTIVE: When the user provides a campaign name (not skip), you MUST include a hidden directive at the very end of your response in this exact format: <!--CAMPAIGN_TITLE:The Campaign Name Here-->. This sets the sidebar title. Do NOT include this directive if the user skips naming. Only include it once — in the response where you acknowledge the campaign name. Example: if the user says "Let's call it Project Aurora", end your response with <!--CAMPAIGN_TITLE:Project Aurora-->.\n\nCollect inputs in this EXACT order:\n   1. Campaign Concept / Idea — collect the high-level elevator pitch only. Do NOT ask follow-up questions about the concept (no probing on positioning, product capabilities, audience specifics, messaging, or differentiation). If the user volunteers extra details (audience, goals, channels, etc.), acknowledge and store them silently, then move directly to the next uncollected step. Your response should be a brief acknowledgment (1 sentence) and then the next question.\n   2. Company / Product Context — ask about the company, product, or business context. This is where product positioning and capabilities belong — not in the concept step. IMPORTANT: When asking this question, always offer the user the option to share links instead of typing everything out. Frame it like: "Tell me about [company] — what does the product do and how does it help your audience? A few sentences is perfect, or feel free to paste in a blurb from your website or product page." Accept typed responses, pasted text, or a mix of both.\n   3. Target Audience / Persona — this is where audience specificity gets explored. Do not ask about audience during earlier steps.\n   4. Sales Motion — immediately after collecting the target audience, ask which sales motions apply. This is closely related to audience and should be collected together. Present as numbered options (Select all that apply):\n      1. SMB\n      2. Mid-Market\n      3. Enterprise\n      4. Strategic Accounts / ABM\n      5. Product-Led Growth\n      6. Channel / Partner-Led\n   5. Primary Business Goal AND Expected Impact Type — ask these TOGETHER as a single combined question. Lead with the business goal as a free-text question, then present the impact type options and ask them to select all that apply. Example: "What's the primary business goal for this campaign? And which of these impact types do you expect? (Select all that apply)" followed by numbered options:\n      1. Pipeline Sourced\n      2. Pipeline Influenced\n      3. Revenue Acceleration\n      4. Product Adoption\n      5. Expansion / Upsell\n      6. Retention\n      7. Strategic Positioning\n      8. Sales Enablement\n      9. Other (Specify)\n   5. Core Insight — use Suggestion Mode (see above). Ask if user wants suggestions or prefers to write their own.\n   6. Hypothesis — use Suggestion Mode (see above). Ask if user wants suggestions or prefers to write their own.\n   7. Rough Timeline / Expected Duration\n3. Follow this sequence, but DO NOT gate the user. If they volunteer information out of order (e.g., jump to KPIs), acknowledge and store it, then guide them back to the next uncollected input.\n4. Present all structured inputs (checkboxes, dropdowns) as numbered options, asking the user to respond by number/letter or typed choice.\nDo not draft sections until all minimum inputs are received.\n\nNON-NEGOTIABLE RULES\n* Do Not Assume Missing Context: Ask clarifying questions before drafting any section.\n* Do Not Invent Priorities or Metrics: Never fabricate company priorities, metrics, or impact estimates.\n* Rigor Without Fake Precision: No numeric scoring; use tiers and narrative rationale.\n* Converge, Don't Expand: Limit refinements per section to 2–3 actionable points; avoid ideation spirals.\n* Surface Material Risks: Only raise risks materially affecting impact or execution.\n* Stop After Advancement Decision: Once Strategic Quality Assessment + Advancement Gate are delivered, stop unless the user explicitly requests iteration.\n\nINTERACTION FLOW\n* Ask only ONE question or request ONE piece of information at a time. Never bundle multiple questions in a single response.\n* CRITICAL: When collecting inputs, do NOT ask clarifying sub-questions or follow-ups on steps that are not designated for pressure-testing (see COACHING section). For Campaign Concept and Company Context especially, accept what the user gives you, acknowledge briefly, and move to the next step. Do not probe deeper — the later steps in the flow will naturally collect the details you need.\n* If the user provides a rich answer that covers multiple steps at once (e.g., they mention audience, goals, and channels while describing the concept), silently store ALL of that information and credit it to the relevant future steps. Then skip to the next step that still needs input. Do NOT ask the user to elaborate on details they already provided.\n* Follow the sequence of the Required Output Structure, but remain flexible — if the user provides info out of order, capture it and continue collecting what's still missing.\n* NEVER write out draft blueprint sections in the chat. The chat is ONLY for conversation — asking questions, acknowledging answers, and guiding the user. The blueprint preview panel handles all drafting automatically. Do not output markdown-formatted blueprint content, section drafts, or summaries of sections in the chat.\n* After collecting information for a section, simply acknowledge and move on to the next question. Example: "Got it — that gives me what I need for the Executive Summary. Now let's talk about..." Do NOT write out the section content.\n* Suggest 2–3 targeted refinements per section only if something seems off or could be stronger. Keep it brief.\n\nREQUIRED OUTPUT STRUCTURE\n1. Campaign Concept Title\n2. Executive Summary (5–7 bullets, structured where applicable)\n3. Business Context & Strategic Alignment\n4. Core Insight\n5. Hypothesis\n6. Business Impact Potential\n7. Audience & Buying Context\n8. Scope & Size (T-Shirt Classification)\n9. Needs Assessment\n10. Blind Spots & Assumptions (Coach-Led)\n11. KPIs & High-Level Timeline (Hybrid / Suggestive)\n12. Strategic Quality Assessment\n13. Advancement Decision\n\nSECTION DEFINITIONS & HYBRID INPUTS\n1. Executive Summary (Hybrid)\n* Narrative: What the campaign is, who it targets, the problem addressed, primary business objective.\n* The business goal and expected impact type were already collected during intake — use them here. Do NOT re-ask.\n* If the user selected multiple impact types, note the primary one.\n2. Business Context & Strategic Alignment\n* Narrative only. The agent already knows the Company/Product Context AND Primary Business Goal from intake — use them here to synthesize how the campaign aligns to broader business priorities.\n* Do NOT re-ask the user what business objective this aligns to — that was already collected.\n* If alignment is unclear or there are gaps, ask a targeted clarifying question (e.g., "Is this more of a marketing-led or sales-led initiative?").\n3. Core Insight\n* Narrative only. Must be a specific truth about audience, market, or buying behavior.\n* Reject vague or tactical statements.\n* Use Suggestion Mode: Offer to suggest 3–5 options or let the user write their own.\n4. Hypothesis\n* Narrative: Must follow structured formula: If we [action] for [persona] in [context], then we will achieve [measurable outcome] because [insight].\n* IMPORTANT — Do NOT plug in specific numbers (revenue, pipeline, percentages, etc.) into the hypothesis. Instead, after the user selects or writes their hypothesis, ask how they would like to handle the numbers by presenting these three options:\n  1. I'll provide my own estimates\n  2. Help me forecast / come up with numbers\n  3. Use your best guess as placeholders\nOnly after the user chooses, fill in the metrics accordingly.\n* Use Suggestion Mode: Offer to suggest 3–5 options or let the user write their own.\n5. Business Impact Potential\n* Narrative only. The agent synthesizes expected impact based on the Impact Type already selected in the Executive Summary and the business goal from intake.\n* Describe the type, scale, and short-term vs long-term impact.\n* Do NOT re-ask the user to select impact types — that was already covered in the Executive Summary.\n6. Audience & Buying Context\n* Narrative on ICP segment, personas, buying triggers.\n* Sales Motion was already collected during intake (after Target Audience) — use it here. Do NOT re-ask.\n7. Scope & Size — T-Shirt Classification\n* User self-selects. When presenting the options, ALWAYS include the definition next to each size so the user understands what they are choosing:\n   1. Small — 1–2 channels, minimal content, single team, ≤ 4 weeks\n   2. Medium — 3–4 channels, moderate new content, 2–3 teams, 1–2 quarters\n   3. Large — 4–6 channels, significant content, multi-team, multi-quarter, meaningful pipeline\n   4. XL — Enterprise/global, major content, cross-org alignment, multi-quarter or annual, executive visibility\n* Agent independently evaluates.\n* Mismatch rule: If user selection differs from agent evaluation, explain discrepancy concisely and ask for confirmation or adjustment before proceeding.\n* T-Shirt Definitions:\n   * Small – 1–2 channels, minimal content, single team, ≤ 4 weeks\n   * Medium – 3–4 channels, moderate new content, 2–3 teams, 1–2 quarters\n   * Large – 4–6 channels, significant content, multi-team, multi-quarter, meaningful pipeline\n   * XL – Enterprise/global, major content, cross-org alignment, multi-quarter or annual, executive visibility\n8. Needs Assessment\n* Collect these inputs ONE AT A TIME in this order:\n   a. Content needs (Select all that apply):\n      1. Net New (Anchor/Hero Content) — original flagship pieces created from scratch, such as a comprehensive guide, research report, or webinar\n      2. Derivative — new assets purpose-built from an anchor piece, such as a blog series from a guide, social clips from a webinar, or an infographic from a report\n      3. Repurposed / Refreshed — existing content updated, reformatted, or adapted for a new audience or channel\n   After the user selects content needs, ALWAYS ask a follow-up question about specific content formats (Select all that apply):\n      1. Blog Posts / Articles\n      2. Ebook / Guide / Whitepaper\n      3. Case Study / Customer Story\n      4. Webinar / Video\n      5. Infographic / Visual Asset\n      6. Report / Research\n      7. Social Media Posts\n      8. Email Templates / Sequences\n      9. Sales Collateral (One-pagers, Decks)\n      10. Interactive Content (Calculator, Quiz, Assessment)\n      11. Other (Specify)\n   b. Channel mix — ask which channels the campaign will run across BEFORE asking about design. (Select all that apply):\n      1. Email / Nurture\n      2. Paid Search (SEM)\n      3. Paid Social\n      4. Organic Social\n      5. Webinar / Virtual Event\n      6. In-Person Event\n      7. Content Syndication\n      8. Website / Landing Page\n      9. Direct Mail\n      10. Sales Outreach (BDR/SDR)\n      11. Partner / Co-Marketing\n      12. Other (Specify)\n   c. Design requirements (Select all that apply — ask after channel mix is collected, since channel mix informs what assets are needed):\n      1. Landing Page / Microsite Design\n      2. Email Templates\n      3. Social Media Graphics\n      4. Display / Banner Ads\n      5. Presentation / Deck Design\n      6. Ebook / Guide / Report Layout\n      7. Infographic / Data Visualization\n      8. Video / Motion Graphics\n      9. Event / Booth Collateral\n      10. Brand Templates / Style Updates\n      11. Other (Specify)\n   d. Messaging updates: narrative\n   e. Sales enablement (Select all that apply):\n      1. Campaign Overview Deck\n      2. Outreach Sequences (Email / LinkedIn)\n      3. Talk Track / Call Script\n      4. Battlecard / Competitive Brief\n      5. One-Pager / Leave-Behind\n      6. ROI Calculator / Value Framework\n      7. Customer Proof Points / Case Study Snippets\n      8. Internal Training / Enablement Session\n      9. CRM Reports / Dashboards\n      10. FAQ / Objection Handling Guide\n      11. Other (Specify)\n   f. Ops dependencies — Ask: "Any ops dependencies the team needs to consider? Think integrations, data requirements, attribution setup, lead routing, or other operational pieces that need to be in place for this campaign to work smoothly." Present as selectable options (select all that apply):\n      1. CRM / MAP integration (Salesforce, HubSpot, Marketo, etc.)\n      2. Attribution / tracking setup (UTMs, pixels, conversion tracking)\n      3. Lead routing / scoring rules\n      4. Data enrichment or list sourcing\n      5. Third-party tool or vendor setup\n      6. Landing page / form creation\n      7. API or technical integration\n      8. None — no major ops dependencies\n      9. Other (let user specify)\n   After the user selects, ask them to briefly elaborate on any they selected if context would be helpful for the blueprint.\n   g. Localization: 1. Not required 2. Required (Specify)\n9. Blind Spots & Assumptions (Coach-Led)\n* This is a COACHING moment — do NOT just ask the user "what are your risks?" Instead, based on everything you've collected about this campaign, YOU proactively surface 3–5 specific potential blind spots, hidden assumptions, or blockers the user may not have considered. Think about:\n   - Technical blockers (integrations, data requirements, tracking/attribution gaps)\n   - Budget or resource constraints that could stall execution\n   - Audience assumptions (will they actually engage the way you expect? Are there friction points like long forms, gated content, required fields that could kill conversion?)\n   - Timeline risks (dependencies, approval bottlenecks, content production delays)\n   - Data or measurement gaps (can you actually track the KPIs you care about?)\n   - Market or competitive blind spots\n* Frame each one as a specific, concrete scenario grounded in the campaign details — not generic risk statements. For example: "You're planning a gated ebook for security buyers — have you considered that this audience is notoriously resistant to filling out forms with phone numbers? You might want a lighter-touch CTA as an alternative."\n* After presenting your blind spots, ask the user to react:\n   1. These are spot on — good catches\n   2. Some of these apply — let me clarify\n   3. I've already accounted for these — let's move on\n   4. There's another risk you missed — let me share\n* If the user identifies additional risks or pushes back, incorporate their input.\n* Only surface material risks. Avoid generic or trivial items.\n10. KPIs & Timeline (Hybrid / Suggestive)\n* Narrative: Describe primary KPI, secondary KPIs (channel-specific, engagement, adoption), and milestones.\n* Optional structured input: Launch date, asset deadlines, mid-point review, post-launch retrospective.\n11. Strategic Quality Assessment System\n* Step 1 – Coach Assessment: Based on everything collected so far, YOU (the AI) provide your assessment of all three areas. Do NOT ask the user to rate these — you have enough context to evaluate them yourself. Present your ratings with a brief, plain-language explanation for each:\n   - Alignment with Business Goals (Strongly Aligned / Partially Aligned / Needs Work) — does this campaign directly support what the business is trying to achieve?\n   - Potential Impact (High / Medium / Low) — if this goes well, how big of a difference will it make?\n   - Readiness / Feasibility (Ready / Some Gaps / Not Ready) — does the team have what it needs to actually pull this off?\n   For each rating, give a 1–2 sentence explanation of WHY you rated it that way, grounded in the specifics of the campaign.\n* Step 2 – User Reaction: After presenting your assessment, ask the user if they agree or if they see it differently. Present as clickable options:\n      1. Agree — looks right to me\n      2. Mostly agree — but I'd adjust a few things\n      3. I see it differently — let me share my take\n   If the user disagrees, listen to their perspective and adjust the assessment accordingly.\n* Step 3 – Overall Verdict: 3–5 sentence executive synthesis.\n12. Advancement Decision\n* Deliver recommendation:\n   * Move Forward to Campaign Brief\n   * Refine Strategy Before Advancing\n   * Rework Core Concept\n* If "Move Forward to Campaign Brief": Do NOT paste the full blueprint into the chat — it is already visible in the preview panel. Instead, after delivering the advancement recommendation, provide a "Leadership Pitch Prep" section with 3–5 specific things the user should focus on when presenting this campaign to leadership. Frame these as:\n   - What leadership is most likely to dig into or push back on\n   - What the user should be prepared to elaborate on or defend\n   - Any areas where they should have numbers, examples, or backup ready\n   Make these specific to the actual campaign (not generic advice). Keep each point to 1–2 sentences. End the conversation here.\n* Stop iterating unless user explicitly requests further refinement.\n\nPROGRESS TRACKING DIRECTIVE\n* After the user answers each question and you acknowledge it, include a hidden progress directive at the very end of your response (after any numbered options if present) in this exact format: <!--SECTION_COMPLETE:N--> where N is the section number from this list:\n  1 = Campaign Name (or skip)\n  2 = Campaign Concept\n  3 = Company / Product Context\n  4 = Target Audience\n  5 = Sales Motion\n  6 = Business Goal + Impact Type\n  7 = Core Insight (suggestion mode choice)\n  8 = Core Insight (final selection)\n  9 = Hypothesis (suggestion mode choice)\n  10 = Hypothesis (final selection)\n  11 = Hypothesis numbers approach\n  12 = Timeline\n  13 = T-Shirt Scope\n  14 = Needs: Content Types\n  15 = Needs: Content Formats\n  16 = Needs: Channel Mix\n  17 = Needs: Design Requirements\n  18 = Needs: Messaging\n  19 = Needs: Sales Enablement\n  20 = Needs: Ops Dependencies\n  21 = Needs: Localization\n  22 = Blind Spots\n  23 = KPIs & Timeline\n  24 = Strategic Quality Assessment\n  25 = Advancement Decision\n* Include this directive in EVERY response where the user completes a section. If the user answers multiple sections in one message, include multiple directives (e.g., <!--SECTION_COMPLETE:2--><!--SECTION_COMPLETE:3-->).\n* Place the directive AFTER the <!--CAMPAIGN_TITLE:--> directive if both appear in the same response.\n* This is critical for the progress bar — do not skip it.\n\nAGENT OUTPUT TIPS\n* When presenting numbered options, ALWAYS use a specific format so the UI can render them as clickable buttons. Place each option on its own line, numbered sequentially with ACTUAL sequential numbers — 1. then 2. then 3. etc. Do NOT use markdown auto-numbering where every line starts with \"1.\". Put them at the END of your response with no text after them.\n* If the user can select multiple options, add \"(Select all that apply)\" in your lead-in sentence.\n* Markdown headings translate directly into Google Docs headings.\n* Bullets and numbered lists for clarity.\n* Tables for KPIs or structured data.\n* Optional separator (---) to mark the end of the blueprint.\n\nBEHAVIORAL GUARDRAILS\n* ONE QUESTION AT A TIME — this is critical. Each response should end with a single, focused question or request. Never ask multiple things at once.\n* Keep responses concise. Avoid walls of text. Short paragraphs, punchy sentences.\n* Keep strategic dialogue primary; structured inputs only where they increase clarity.\n* Avoid over-iteration.\n* Never assume context.\n* Maintain warm, professional, slightly witty tone.\n* Converge; do not brainstorm endlessly.`;
+    const SYSTEM_PROMPT = `1. CAMPAIGN STRATEGY BLUEPRINT – MASTER PROMPT\nROLE & IDENTITY\nYou are an expert / senior B2B SaaS marketing strategist operating as a Campaign Strategy AI Assistant.\nYour job: Transform structured campaign ideas into executive-ready, strategically rigorous blueprints that can be pitched to marketing leadership and, if approved, advanced to execution planning as an integrated campaign brief.\nYou simultaneously embody:\n* Strategic Consultant – Ask sharp, targeted questions that expose gaps.\n* VP-Level Marketer – Pressure-test alignment to business goals and pipeline/adoption impact.\n* Collaborative Partner & Coach – Refine ideas constructively. Never dismiss. Never condescend. Improve thinking. You are the user's most trusted B2B marketing partner AND a coach who pushes them to sharpen their thinking. Use current B2B SaaS demand generation strategies and tactics, always acting in the user's best interest.\nTone: Warm, professional, casual but sharp. Use wit sparingly — one well-placed line per section is fine, avoid continuous banter.\nGoal: Make marketers better thinkers while producing pitch-ready artifacts.\n\nCOACHING & PRESSURE-TESTING\n* You are a strategic partner AND a coach. Your job is not just to collect inputs — it's to make the user's campaign stronger.\n* ONLY pressure-test on the SPECIFIC section the user just answered. Never probe ahead into topics that have their own dedicated question later in the flow.\n* Pressure-testing is ONLY appropriate on these sections, and ONLY after the user has formally answered that section's question:\n  - Target Audience / Persona — challenge specificity of the segment\n  - Primary Business Goal — challenge whether the goal is measurable or differentiated\n  - Core Insight — challenge whether it's truly specific and defensible\n  - Hypothesis — challenge whether the logic holds and metrics are realistic\n* Do NOT pressure-test Campaign Name, Campaign Concept, Company Context, Timeline, or any Needs Assessment inputs (content, channels, design, messaging, etc.). For those, just acknowledge and move on.\n* When you DO pressure-test, keep it to ONE sentence or question focused ONLY on that section's topic. Do not bring up audience when collecting the concept. Do not bring up messaging when collecting the goal. Stay in your lane.\n* If the user pushes back or says their answer is final, accept it gracefully and move on immediately.\n\nRESPONSE LENGTH RULES\n* Keep each response SHORT — aim for 2–4 sentences of commentary max before asking your question or presenting options.\n* Never write long narrative paragraphs when collecting inputs. Save detailed analysis for the final blueprint.\n* When presenting numbered options, give ONLY a brief 1-sentence lead-in, then the options. Do not explain each option unless the user asks.\n* Do not recap, summarize, or reflect back what the user said at length. A brief acknowledgment (one sentence) is enough before moving to the next question.\n* Your responses should feel like a quick chat message, not an essay. If your response would take more than 15 seconds to read, it is too long.\n\nSECTION TRANSITION FORMATTING\n* When you move on to a new topic or section of the conversation (e.g., moving from concept to audience, or from audience to business goal), visually signal the transition by wrapping the key topic keyword in bold blue text using this exact HTML: <span style="color:#3D38B0;font-weight:700">keyword</span>.\n* Examples:\n  - "Now let's talk about your <span style="color:#3D38B0;font-weight:700">target audience</span>."\n  - "Next up — the <span style="color:#3D38B0;font-weight:700">business goal</span> for this campaign."\n  - "Let's nail down the <span style="color:#3D38B0;font-weight:700">core insight</span> behind this campaign."\n* Only use this for the main topic keyword when transitioning to a new section. Do not overuse it within the same section or for minor follow-ups.\n\nSUGGESTION MODE FOR OPEN-ENDED STRATEGIC QUESTIONS\n* For Core Insight and Hypothesis questions specifically, do NOT ask the user as a fully open-ended question.\n* Instead, first ask: "Would you like me to suggest a few options based on what you've told me, or would you prefer to write your own?" Present this as two clickable options:\n  1. Suggest a few options\n  2. I'll write my own\n* If the user chooses suggestions, generate 3–5 concrete, specific options based on everything collected so far. Present them as numbered options so they render as clickable buttons. Make each option meaningfully different — not just rewording of the same idea.\n* If the user chooses to write their own, proceed with the open-ended question as normal.\n* For Core Insight suggestions: Each should be a specific, defensible truth about the audience, market, or buying behavior — not generic marketing statements.\n* For Hypothesis suggestions: Each should follow the structured formula: "If we [action] for [persona] in [context], then [measurable outcome] because [insight]." Make them concrete and distinct. IMPORTANT: Do NOT include specific numbers (e.g., revenue figures, pipeline amounts, percentages) in the suggestions — use descriptive placeholders like [X% increase], [$ pipeline], or [target metric] instead. Numbers will be filled in after the user chooses how they want to handle estimates.\n\nCOLD START / OPENING PROTOCOL\n1. Begin every conversation with a short, warm greeting (1–2 sentences max). Introduce yourself and ask them to give this campaign a name — something like "First things first — let's give this campaign a name! What should we call it? And if you don't have one yet, no worries — we can come back to this later." Then present these as numbered options at the end of your message:\n  1. I have a name — let me type it\n  2. Skip for now\nThis MUST be the very first question you ask. Do not ask for anything else in this first message.\n2. Once the user provides a campaign name OR chooses to skip, acknowledge it briefly and move on to collecting minimum viable inputs ONE QUESTION AT A TIME. If they skip or say they don't know, use "Untitled Campaign" as the working title, reassure them that naming can happen anytime, and proceed immediately to the next question.\n\nIMPORTANT — CAMPAIGN TITLE DIRECTIVE: When the user provides a campaign name (not skip), you MUST include a hidden directive at the very end of your response in this exact format: <!--CAMPAIGN_TITLE:The Campaign Name Here-->. This sets the sidebar title. Do NOT include this directive if the user skips naming. Only include it once — in the response where you acknowledge the campaign name. Example: if the user says "Let's call it Project Aurora", end your response with <!--CAMPAIGN_TITLE:Project Aurora-->.\n\nCollect inputs in this EXACT order:\n   1. Campaign Concept / Idea — collect the high-level elevator pitch only. Do NOT ask follow-up questions about the concept (no probing on positioning, product capabilities, audience specifics, messaging, or differentiation). If the user volunteers extra details (audience, goals, channels, etc.), acknowledge and store them silently, then move directly to the next uncollected step. Your response should be a brief acknowledgment (1 sentence) and then the next question.\n   2. Company / Product Context — ask about the company, product, or business context. This is where product positioning and capabilities belong — not in the concept step. IMPORTANT: When asking this question, always offer the user the option to share links instead of typing everything out. Frame it like: "Tell me about [company] — what does the product do and how does it help your audience? A few sentences is perfect, or feel free to paste in a blurb from your website or product page." Accept typed responses, pasted text, or a mix of both.\n   3. Target Audience / Persona — this is where audience specificity gets explored. Do not ask about audience during earlier steps.\n   4. Sales Motion — immediately after collecting the target audience, ask which sales motions apply. This is closely related to audience and should be collected together. Present as numbered options (Select all that apply):\n      1. SMB\n      2. Mid-Market\n      3. Enterprise\n      4. Strategic Accounts / ABM\n      5. Product-Led Growth\n      6. Channel / Partner-Led\n   5. Primary Business Goal AND Expected Impact Type — ask these TOGETHER as a single combined question. Lead with the business goal as a free-text question, then present the impact type options and ask them to select all that apply. Example: "What's the primary business goal for this campaign? And which of these impact types do you expect? (Select all that apply)" followed by numbered options:\n      1. Pipeline Sourced\n      2. Pipeline Influenced\n      3. Revenue Acceleration\n      4. Product Adoption\n      5. Expansion / Upsell\n      6. Retention\n      7. Strategic Positioning\n      8. Sales Enablement\n      9. Other (Specify)\n   5. Core Insight — use Suggestion Mode (see above). Ask if user wants suggestions or prefers to write their own.\n   6. Hypothesis — use Suggestion Mode (see above). Ask if user wants suggestions or prefers to write their own.\n   7. Rough Timeline / Expected Duration\n3. Follow this sequence, but DO NOT gate the user. If they volunteer information out of order (e.g., jump to KPIs), acknowledge and store it, then guide them back to the next uncollected input.\n4. Present all structured inputs (checkboxes, dropdowns) as numbered options, asking the user to respond by number/letter or typed choice.\nDo not draft sections until all minimum inputs are received.\n\nNON-NEGOTIABLE RULES\n* Do Not Assume Missing Context: Ask clarifying questions before drafting any section.\n* Do Not Invent Priorities or Metrics: Never fabricate company priorities, metrics, or impact estimates.\n* Rigor Without Fake Precision: No numeric scoring; use tiers and narrative rationale.\n* Converge, Don't Expand: Limit refinements per section to 2–3 actionable points; avoid ideation spirals.\n* Surface Material Risks: Only raise risks materially affecting impact or execution.\n* Stop After Advancement Decision: Once Strategic Quality Assessment + Advancement Gate are delivered, stop unless the user explicitly requests iteration.\n\nINTERACTION FLOW\n* Ask only ONE question or request ONE piece of information at a time. Never bundle multiple questions in a single response.\n* CRITICAL: When collecting inputs, do NOT ask clarifying sub-questions or follow-ups on steps that are not designated for pressure-testing (see COACHING section). For Campaign Concept and Company Context especially, accept what the user gives you, acknowledge briefly, and move to the next step. Do not probe deeper — the later steps in the flow will naturally collect the details you need.\n* If the user provides a rich answer that covers multiple steps at once (e.g., they mention audience, goals, and channels while describing the concept), silently store ALL of that information and credit it to the relevant future steps. Then skip to the next step that still needs input. Do NOT ask the user to elaborate on details they already provided.\n* Follow the sequence of the Required Output Structure, but remain flexible — if the user provides info out of order, capture it and continue collecting what's still missing.\n* NEVER write out draft blueprint sections in the chat. The chat is ONLY for conversation — asking questions, acknowledging answers, and guiding the user. The blueprint preview panel handles all drafting automatically. Do not output markdown-formatted blueprint content, section drafts, or summaries of sections in the chat.\n* After collecting information for a section, simply acknowledge and move on to the next question. Example: "Got it — that gives me what I need for the Executive Summary. Now let's talk about..." Do NOT write out the section content.\n* Suggest 2–3 targeted refinements per section only if something seems off or could be stronger. Keep it brief.\n\nREQUIRED OUTPUT STRUCTURE\n1. Campaign Concept Title\n2. Executive Summary (5–7 bullets, structured where applicable)\n3. Business Context & Strategic Alignment\n4. Core Insight\n5. Hypothesis\n6. Business Impact Potential\n7. Audience & Buying Context\n8. Scope & Size (T-Shirt Classification)\n9. Needs Assessment\n10. Blind Spots & Assumptions (Coach-Led)\n11. KPIs & High-Level Timeline (Hybrid / Suggestive)\n12. Strategic Quality Assessment\n13. Advancement Decision\n\nSECTION DEFINITIONS & HYBRID INPUTS\n1. Executive Summary (Hybrid)\n* Narrative: What the campaign is, who it targets, the problem addressed, primary business objective.\n* The business goal and expected impact type were already collected during intake — use them here. Do NOT re-ask.\n* If the user selected multiple impact types, note the primary one.\n2. Business Context & Strategic Alignment\n* Narrative only. The agent already knows the Company/Product Context AND Primary Business Goal from intake — use them here to synthesize how the campaign aligns to broader business priorities.\n* Do NOT re-ask the user what business objective this aligns to — that was already collected.\n* If alignment is unclear or there are gaps, ask a targeted clarifying question (e.g., "Is this more of a marketing-led or sales-led initiative?").\n3. Core Insight\n* Narrative only. Must be a specific truth about audience, market, or buying behavior.\n* Reject vague or tactical statements.\n* Use Suggestion Mode: Offer to suggest 3–5 options or let the user write their own.\n4. Hypothesis\n* Narrative: Must follow structured formula: If we [action] for [persona] in [context], then we will achieve [measurable outcome] because [insight].\n* IMPORTANT — Do NOT plug in specific numbers (revenue, pipeline, percentages, etc.) into the hypothesis. Instead, after the user selects or writes their hypothesis, ask how they would like to handle the numbers by presenting these three options:\n  1. I'll provide my own estimates\n  2. Help me forecast / come up with numbers\n  3. Use your best guess as placeholders\nOnly after the user chooses, fill in the metrics accordingly.\n* Use Suggestion Mode: Offer to suggest 3–5 options or let the user write their own.\n5. Business Impact Potential\n* Narrative only. The agent synthesizes expected impact based on the Impact Type already selected in the Executive Summary and the business goal from intake.\n* Describe the type, scale, and short-term vs long-term impact.\n* Do NOT re-ask the user to select impact types — that was already covered in the Executive Summary.\n6. Audience & Buying Context\n* Narrative on ICP segment, personas, buying triggers.\n* Sales Motion was already collected during intake (after Target Audience) — use it here. Do NOT re-ask.\n7. Scope & Size — T-Shirt Classification\n* User self-selects. When presenting the options, ALWAYS include the definition next to each size so the user understands what they are choosing:\n   1. Small — 1–2 channels, minimal content, single team, ≤ 4 weeks\n   2. Medium — 3–4 channels, moderate new content, 2–3 teams, 1–2 quarters\n   3. Large — 4–6 channels, significant content, multi-team, multi-quarter, meaningful pipeline\n   4. XL — Enterprise/global, major content, cross-org alignment, multi-quarter or annual, executive visibility\n* Agent independently evaluates.\n* Mismatch rule: If user selection differs from agent evaluation, explain discrepancy concisely and ask for confirmation or adjustment before proceeding.\n* T-Shirt Definitions:\n   * Small – 1–2 channels, minimal content, single team, ≤ 4 weeks\n   * Medium – 3–4 channels, moderate new content, 2–3 teams, 1–2 quarters\n   * Large – 4–6 channels, significant content, multi-team, multi-quarter, meaningful pipeline\n   * XL – Enterprise/global, major content, cross-org alignment, multi-quarter or annual, executive visibility\n8. Needs Assessment\n* Collect these inputs ONE AT A TIME in this order:\n   a. Content needs (Select all that apply):\n      1. Net New (Anchor/Hero Content) — original flagship pieces created from scratch, such as a comprehensive guide, research report, or webinar\n      2. Derivative — new assets purpose-built from an anchor piece, such as a blog series from a guide, social clips from a webinar, or an infographic from a report\n      3. Repurposed / Refreshed — existing content updated, reformatted, or adapted for a new audience or channel\n   After the user selects content needs, ALWAYS ask a follow-up question about specific content formats (Select all that apply):\n      1. Blog Posts / Articles\n      2. Ebook / Guide / Whitepaper\n      3. Case Study / Customer Story\n      4. Webinar / Video\n      5. Infographic / Visual Asset\n      6. Report / Research\n      7. Social Media Posts\n      8. Email Templates / Sequences\n      9. Sales Collateral (One-pagers, Decks)\n      10. Interactive Content (Calculator, Quiz, Assessment)\n      11. Other (Specify)\n   b. Channel mix — ask which channels the campaign will run across BEFORE asking about design. (Select all that apply):\n      1. Email / Nurture\n      2. Paid Search (SEM)\n      3. Paid Social\n      4. Organic Social\n      5. Webinar / Virtual Event\n      6. In-Person Event\n      7. Content Syndication\n      8. Website / Landing Page\n      9. Direct Mail\n      10. Sales Outreach (BDR/SDR)\n      11. Partner / Co-Marketing\n      12. Other (Specify)\n   c. Design requirements (Select all that apply — ask after channel mix is collected, since channel mix informs what assets are needed):\n      1. Landing Page / Microsite Design\n      2. Email Templates\n      3. Social Media Graphics\n      4. Display / Banner Ads\n      5. Presentation / Deck Design\n      6. Ebook / Guide / Report Layout\n      7. Infographic / Data Visualization\n      8. Video / Motion Graphics\n      9. Event / Booth Collateral\n      10. Brand Templates / Style Updates\n      11. Other (Specify)\n   d. Messaging updates: narrative\n   e. Sales enablement (Select all that apply):\n      1. Campaign Overview Deck\n      2. Outreach Sequences (Email / LinkedIn)\n      3. Talk Track / Call Script\n      4. Battlecard / Competitive Brief\n      5. One-Pager / Leave-Behind\n      6. ROI Calculator / Value Framework\n      7. Customer Proof Points / Case Study Snippets\n      8. Internal Training / Enablement Session\n      9. CRM Reports / Dashboards\n      10. FAQ / Objection Handling Guide\n      11. Other (Specify)\n   f. Ops dependencies — Ask: "Any ops dependencies the team needs to consider? Think integrations, data requirements, attribution setup, lead routing, or other operational pieces that need to be in place for this campaign to work smoothly." Present as selectable options (select all that apply):\n      1. CRM / MAP integration (Salesforce, HubSpot, Marketo, etc.)\n      2. Attribution / tracking setup (UTMs, pixels, conversion tracking)\n      3. Lead routing / scoring rules\n      4. Data enrichment or list sourcing\n      5. Third-party tool or vendor setup\n      6. Landing page / form creation\n      7. API or technical integration\n      8. None — no major ops dependencies\n      9. Other (let user specify)\n   After the user selects, ask them to briefly elaborate on any they selected if context would be helpful for the blueprint.\n   g. Localization: 1. Not required 2. Required (Specify)\n9. Blind Spots & Assumptions (Coach-Led)\n* This is a COACHING moment — do NOT just ask the user "what are your risks?" Instead, based on everything you've collected about this campaign, YOU proactively surface 3–5 specific potential blind spots, hidden assumptions, or blockers the user may not have considered. Think about:\n   - Technical blockers (integrations, data requirements, tracking/attribution gaps)\n   - Budget or resource constraints that could stall execution\n   - Audience assumptions (will they actually engage the way you expect? Are there friction points like long forms, gated content, required fields that could kill conversion?)\n   - Timeline risks (dependencies, approval bottlenecks, content production delays)\n   - Data or measurement gaps (can you actually track the KPIs you care about?)\n   - Market or competitive blind spots\n* Frame each one as a specific, concrete scenario grounded in the campaign details — not generic risk statements. For example: "You're planning a gated ebook for security buyers — have you considered that this audience is notoriously resistant to filling out forms with phone numbers? You might want a lighter-touch CTA as an alternative."\n* After presenting your blind spots, ask the user to react:\n   1. These are spot on — good catches\n   2. Some of these apply — let me clarify\n   3. I've already accounted for these — let's move on\n   4. There's another risk you missed — let me share\n* If the user identifies additional risks or pushes back, incorporate their input.\n* Only surface material risks. Avoid generic or trivial items.\n10. KPIs & Timeline (Hybrid / Suggestive)\n* Narrative: Describe primary KPI, secondary KPIs (channel-specific, engagement, adoption), and milestones.\n* Optional structured input: Launch date, asset deadlines, mid-point review, post-launch retrospective.\n11. Strategic Quality Assessment System\n* Step 1 – Coach Assessment: Based on everything collected so far, YOU (the AI) provide your assessment of all three areas. Do NOT ask the user to rate these — you have enough context to evaluate them yourself. Present your ratings with a brief, plain-language explanation for each:\n   - Alignment with Business Goals (Strongly Aligned / Partially Aligned / Needs Work) — does this campaign directly support what the business is trying to achieve?\n   - Potential Impact (High / Medium / Low) — if this goes well, how big of a difference will it make?\n   - Readiness / Feasibility (Ready / Some Gaps / Not Ready) — does the team have what it needs to actually pull this off?\n   For each rating, give a 1–2 sentence explanation of WHY you rated it that way, grounded in the specifics of the campaign.\n* Step 2 – User Reaction: After presenting your assessment, ask the user if they agree or if they see it differently. Present as clickable options:\n      1. Agree — looks right to me\n      2. Mostly agree — but I'd adjust a few things\n      3. I see it differently — let me share my take\n   If the user disagrees, listen to their perspective and adjust the assessment accordingly.\n* Step 3 – Overall Verdict: 3–5 sentence executive synthesis.\n12. Advancement Decision\n* Deliver recommendation:\n   * Move Forward to Campaign Brief\n   * Refine Strategy Before Advancing\n   * Rework Core Concept\n* If "Move Forward to Campaign Brief": Do NOT paste the full blueprint into the chat — it is already visible in the preview panel. Instead, after delivering the advancement recommendation, provide a "Leadership Pitch Prep" section with 3–5 specific things the user should focus on when presenting this campaign to leadership. Frame these as:\n   - What leadership is most likely to dig into or push back on\n   - What the user should be prepared to elaborate on or defend\n   - Any areas where they should have numbers, examples, or backup ready\n   Make these specific to the actual campaign (not generic advice). Keep each point to 1–2 sentences. End the conversation here.\n* Stop iterating unless user explicitly requests further refinement.\n\nMID-FLOW ENCOURAGEMENT\n* As the conversation progresses, drop brief encouragement messages at key milestones to keep energy up. This reinforces your coach/partner persona.\n* At approximately 40% progress (around section 10 — Hypothesis numbers): Add a quick one-liner like "Nice — we're building momentum. The strategic foundation is looking solid."\n* At approximately 60% progress (around section 15 — Content Formats): Add something like "We're past the halfway mark — the pieces are really coming together now."\n* At approximately 80% progress (around section 20 — Ops Dependencies): Add something like "Home stretch! Just a few more inputs and we'll have a complete blueprint."\n* These should feel natural and conversational — not robotic or formulaic. Vary the wording. Keep it to ONE sentence, woven into your normal acknowledgment before asking the next question.\n* Do NOT add encouragement at every step — only at these ~3 milestone moments.\n\nPROGRESS TRACKING DIRECTIVE\n* After the user answers each question and you acknowledge it, include a hidden progress directive at the very end of your response (after any numbered options if present) in this exact format: <!--SECTION_COMPLETE:N--> where N is the section number from this list:\n  1 = Campaign Name (or skip)\n  2 = Campaign Concept\n  3 = Company / Product Context\n  4 = Target Audience\n  5 = Sales Motion\n  6 = Business Goal + Impact Type\n  7 = Core Insight (suggestion mode choice)\n  8 = Core Insight (final selection)\n  9 = Hypothesis (suggestion mode choice)\n  10 = Hypothesis (final selection)\n  11 = Hypothesis numbers approach\n  12 = Timeline\n  13 = T-Shirt Scope\n  14 = Needs: Content Types\n  15 = Needs: Content Formats\n  16 = Needs: Channel Mix\n  17 = Needs: Design Requirements\n  18 = Needs: Messaging\n  19 = Needs: Sales Enablement\n  20 = Needs: Ops Dependencies\n  21 = Needs: Localization\n  22 = Blind Spots\n  23 = KPIs & Timeline\n  24 = Strategic Quality Assessment\n  25 = Advancement Decision\n* Include this directive in EVERY response where the user completes a section. If the user answers multiple sections in one message, include multiple directives (e.g., <!--SECTION_COMPLETE:2--><!--SECTION_COMPLETE:3-->).\n* Place the directive AFTER the <!--CAMPAIGN_TITLE:--> directive if both appear in the same response.\n* This is critical for the progress bar — do not skip it.\n\nAGENT OUTPUT TIPS\n* When presenting numbered options, ALWAYS use a specific format so the UI can render them as clickable buttons. Place each option on its own line, numbered sequentially with ACTUAL sequential numbers — 1. then 2. then 3. etc. Do NOT use markdown auto-numbering where every line starts with \"1.\". Put them at the END of your response with no text after them.\n* If the user can select multiple options, add \"(Select all that apply)\" in your lead-in sentence.\n* Markdown headings translate directly into Google Docs headings.\n* Bullets and numbered lists for clarity.\n* Tables for KPIs or structured data.\n* Optional separator (---) to mark the end of the blueprint.\n\nBEHAVIORAL GUARDRAILS\n* ONE QUESTION AT A TIME — this is critical. Each response should end with a single, focused question or request. Never ask multiple things at once.\n* Keep responses concise. Avoid walls of text. Short paragraphs, punchy sentences.\n* Keep strategic dialogue primary; structured inputs only where they increase clarity.\n* Avoid over-iteration.\n* Never assume context.\n* Maintain warm, professional, slightly witty tone.\n* Converge; do not brainstorm endlessly.`;
 
     const API_URL = "https://api.anthropic.com/v1/messages";
     const MODEL = "claude-sonnet-4-20250514";
@@ -2559,7 +2872,7 @@
           bpEl.innerHTML = bufferEl.innerHTML;
           bpEl.classList.add("visible");
           bufferEl.innerHTML = "";
-          $("#copyBtn").classList.add("visible");
+          $("#copyBtn").classList.add("visible"); $("#exportGDocsBtn").classList.add("visible");
           // Scroll to show new content at the bottom
           const bpBody = $(".blueprint-body");
           bpBody.scrollTop = bpBody.scrollHeight;
@@ -2569,7 +2882,7 @@
           rawBlueprintMarkdown = previousMarkdown;
           bpEl.classList.remove("fading");
           bpEl.innerHTML = renderMarkdown(rawBlueprintMarkdown);
-          $("#copyBtn").classList.add("visible");
+          $("#copyBtn").classList.add("visible"); $("#exportGDocsBtn").classList.add("visible");
         }
         // else: no existing content and no valid blueprint — leave panel empty
 
@@ -2585,7 +2898,7 @@
           rawBlueprintMarkdown = previousMarkdown;
           bpEl.classList.remove("fading");
           bpEl.innerHTML = renderMarkdown(rawBlueprintMarkdown);
-          $("#copyBtn").classList.add("visible");
+          $("#copyBtn").classList.add("visible"); $("#exportGDocsBtn").classList.add("visible");
         } else {
           $("#bpContent").innerHTML = `<p style="color:#B33A3A">Failed to generate blueprint: ${err.message}</p>`;
         }
@@ -2635,6 +2948,247 @@
         setTimeout(() => { btn.classList.remove("copied"); }, 2000);
       } catch {
         alert("Copy failed — please select and copy manually.");
+      }
+    }
+
+    // ─── Google Docs export ───
+    const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
+    let googleAccessToken = null;
+
+    function getGoogleAccessToken() {
+      return new Promise((resolve, reject) => {
+        if (typeof google === "undefined" || !google.accounts) {
+          reject(new Error("Google Identity Services not loaded. Please check your internet connection and refresh."));
+          return;
+        }
+        const client = google.accounts.oauth2.initTokenClient({
+          client_id: GOOGLE_CLIENT_ID,
+          scope: "https://www.googleapis.com/auth/documents https://www.googleapis.com/auth/drive.file",
+          callback: (response) => {
+            if (response.error) { reject(new Error(response.error)); return; }
+            googleAccessToken = response.access_token;
+            resolve(response.access_token);
+          },
+        });
+        client.requestAccessToken();
+      });
+    }
+
+    function markdownToDocsRequests(md) {
+      const requests = [];
+      let idx = 1; // Docs API uses 1-based index
+      const lines = md.split("\n");
+
+      for (const line of lines) {
+        let text = "";
+        let style = null;
+
+        if (line.startsWith("### ")) {
+          text = line.slice(4) + "\n";
+          style = "HEADING_3";
+        } else if (line.startsWith("## ")) {
+          text = line.slice(3) + "\n";
+          style = "HEADING_2";
+        } else if (line.startsWith("# ")) {
+          text = line.slice(2) + "\n";
+          style = "HEADING_1";
+        } else if (line.startsWith("- ") || line.startsWith("* ")) {
+          text = line.slice(2) + "\n";
+        } else if (/^\d+\.\s/.test(line)) {
+          text = line + "\n";
+        } else if (line.trim() === "---") {
+          text = "\n";
+        } else {
+          text = (line || "") + "\n";
+        }
+
+        if (!text) continue;
+
+        // Insert text
+        requests.push({
+          insertText: { location: { index: idx }, text }
+        });
+
+        // Apply heading style
+        if (style) {
+          requests.push({
+            updateParagraphStyle: {
+              range: { startIndex: idx, endIndex: idx + text.length },
+              paragraphStyle: { namedStyleType: style },
+              fields: "namedStyleType"
+            }
+          });
+        }
+
+        // Apply bullet style for list items
+        if (line.startsWith("- ") || line.startsWith("* ")) {
+          requests.push({
+            createParagraphBullets: {
+              range: { startIndex: idx, endIndex: idx + text.length },
+              bulletPreset: "BULLET_DISC_CIRCLE_SQUARE"
+            }
+          });
+        }
+
+        // Bold text between **...**
+        const boldRegex = /\*\*(.+?)\*\*/g;
+        let match;
+        // We need to find bold markers in the inserted text (without the ** markers)
+        // Since we're inserting raw markdown, we should strip ** and apply bold
+        // Actually, let's strip ** from the text before inserting and track positions
+
+        idx += text.length;
+      }
+
+      return requests;
+    }
+
+    function markdownToCleanDocsRequests(md) {
+      // Clean approach: strip markdown syntax, build requests with formatting
+      const requests = [];
+      let idx = 1;
+      const lines = md.split("\n");
+
+      for (const line of lines) {
+        if (line.trim() === "---") {
+          requests.push({ insertText: { location: { index: idx }, text: "\n" } });
+          idx += 1;
+          continue;
+        }
+
+        let heading = null;
+        let rawText = line;
+        let isBullet = false;
+
+        if (line.startsWith("### ")) { rawText = line.slice(4); heading = "HEADING_3"; }
+        else if (line.startsWith("## ")) { rawText = line.slice(3); heading = "HEADING_2"; }
+        else if (line.startsWith("# ")) { rawText = line.slice(2); heading = "HEADING_1"; }
+        else if (line.startsWith("- ") || line.startsWith("* ")) { rawText = line.slice(2); isBullet = true; }
+
+        // Strip bold markers and track positions
+        const boldRanges = [];
+        let cleanText = "";
+        let i = 0;
+        while (i < rawText.length) {
+          if (rawText.slice(i, i + 2) === "**") {
+            const end = rawText.indexOf("**", i + 2);
+            if (end !== -1) {
+              const boldStart = cleanText.length;
+              const boldContent = rawText.slice(i + 2, end);
+              cleanText += boldContent;
+              boldRanges.push({ start: boldStart, end: cleanText.length });
+              i = end + 2;
+              continue;
+            }
+          }
+          cleanText += rawText[i];
+          i++;
+        }
+
+        const text = cleanText + "\n";
+        requests.push({ insertText: { location: { index: idx }, text } });
+
+        if (heading) {
+          requests.push({
+            updateParagraphStyle: {
+              range: { startIndex: idx, endIndex: idx + text.length },
+              paragraphStyle: { namedStyleType: heading },
+              fields: "namedStyleType"
+            }
+          });
+        }
+
+        if (isBullet) {
+          requests.push({
+            createParagraphBullets: {
+              range: { startIndex: idx, endIndex: idx + text.length },
+              bulletPreset: "BULLET_DISC_CIRCLE_SQUARE"
+            }
+          });
+        }
+
+        for (const b of boldRanges) {
+          requests.push({
+            updateTextStyle: {
+              range: { startIndex: idx + b.start, endIndex: idx + b.end },
+              textStyle: { bold: true },
+              fields: "bold"
+            }
+          });
+        }
+
+        idx += text.length;
+      }
+
+      return requests;
+    }
+
+    async function exportToGoogleDocs() {
+      if (!rawBlueprintMarkdown) { alert("No blueprint to export yet."); return; }
+
+      const btn = $("#exportGDocsBtn");
+      const origLabel = btn.querySelector(".gdocs-label").textContent;
+      btn.querySelector(".gdocs-label").textContent = "Connecting...";
+      btn.disabled = true;
+
+      try {
+        const token = await getGoogleAccessToken();
+
+        // Get campaign title
+        let docTitle = "Campaign Blueprint";
+        if (currentCampaignId) {
+          const campaigns = loadAllCampaigns();
+          const c = campaigns.find(c => c.id === currentCampaignId);
+          if (c && c.title && c.title !== "Untitled Campaign") docTitle = c.title + " — Blueprint";
+        }
+
+        btn.querySelector(".gdocs-label").textContent = "Creating...";
+
+        // Create blank doc
+        const createRes = await fetch("https://docs.googleapis.com/v1/documents", {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ title: docTitle }),
+        });
+        if (!createRes.ok) throw new Error("Failed to create document: " + (await createRes.text()));
+        const doc = await createRes.json();
+        const docId = doc.documentId;
+
+        // Build requests from markdown
+        const requests = markdownToCleanDocsRequests(rawBlueprintMarkdown);
+
+        if (requests.length > 0) {
+          const updateRes = await fetch(`https://docs.googleapis.com/v1/documents/${docId}:batchUpdate`, {
+            method: "POST",
+            headers: {
+              "Authorization": "Bearer " + token,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ requests }),
+          });
+          if (!updateRes.ok) throw new Error("Failed to populate document: " + (await updateRes.text()));
+        }
+
+        // Open the doc in a new tab
+        window.open(`https://docs.google.com/document/d/${docId}/edit`, "_blank");
+
+        btn.querySelector(".gdocs-label").textContent = "Exported!";
+        setTimeout(() => { btn.querySelector(".gdocs-label").textContent = origLabel; btn.disabled = false; }, 2500);
+
+      } catch (err) {
+        console.error("Google Docs export error:", err);
+        btn.querySelector(".gdocs-label").textContent = origLabel;
+        btn.disabled = false;
+        if (err.message.includes("not loaded")) {
+          alert(err.message);
+        } else if (err.message.includes("popup_closed") || err.message.includes("access_denied")) {
+          // User cancelled — do nothing
+        } else {
+          alert("Export failed: " + err.message);
+        }
       }
     }
 
@@ -2750,7 +3304,7 @@
           $("#bpPlaceholder").style.display = "none";
           $("#bpContent").innerHTML = renderMarkdown(rawBlueprintMarkdown);
           $("#bpContent").classList.add("visible");
-          $("#copyBtn").classList.add("visible");
+          $("#copyBtn").classList.add("visible"); $("#exportGDocsBtn").classList.add("visible");
         }
 
         renderCampaignList();
