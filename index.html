@@ -2378,6 +2378,7 @@
       $("#messages").innerHTML = "";
       conversationHistory.forEach(m => {
         if (m.role === "user" && m.content === "Hello") return; // skip hidden init
+        if (m.role === "user" && m.isOptionResponse) return; // skip button selections
         const display = m.role === "assistant" ? stripDirectives(m.content) : m.content;
         addMessage(m.role, display);
       });
@@ -2723,8 +2724,9 @@
         updateBlueprintPanelTitle();
       }
 
-      addMessage("user", text);
-      conversationHistory.push({ role: "user", content: text });
+      // Don't echo button selections as a user chat bubble — the highlighted
+      // button already shows what was picked. Still send to the API.
+      conversationHistory.push({ role: "user", content: text, isOptionResponse: true });
 
       chatBusy = true;
       $("#sendBtn").disabled = true;
@@ -2851,7 +2853,7 @@
           model: MODEL,
           max_tokens: maxTokens || MAX_TOKENS,
           system: SYSTEM_PROMPT,
-          messages: messages,
+          messages: messages.map(m => ({ role: m.role, content: m.content })),
         }),
       });
 
