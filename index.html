@@ -2513,7 +2513,9 @@
       let bpMatch;
       while ((bpMatch = bpRegex.exec(reply)) !== null) {
         const secNum = parseInt(bpMatch[1]);
-        const secContent = bpMatch[2].trim();
+        // Strip chat-style blue spans — they're for chat transitions, not blueprint content
+        let secContent = bpMatch[2].trim()
+          .replace(/<span\s+style="[^"]*">(.*?)<\/span>/gi, "$1");
         if (secContent) {
           mergeBlueprintSection(secNum, secContent);
         }
