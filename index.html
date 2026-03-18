@@ -2217,15 +2217,9 @@
       // needs audience + sales motion, Business Impact needs goals, etc.).
       // So we show a generic building shimmer — no specific section names that
       // would imply data has been collected that hasn't.
-      const html = `<div class="bp-thinking-section">
-        <div class="bp-thinking-header" style="color: var(--text-muted); font-style: italic;">
-          <span class="bp-thinking-number"><span class="bp-thinking-dots"><span></span><span></span><span></span></span></span>
+      const html = `<div class="bp-thinking-section" style="animation: none;">
+        <div class="bp-thinking-header" style="color: #B0C4DE; border-left-color: #B0C4DE; background: #F7F9FC;">
           Building your blueprint…
-        </div>
-        <div class="bp-thinking-shimmer">
-          <div class="bp-shimmer-line"></div>
-          <div class="bp-shimmer-line"></div>
-          <div class="bp-shimmer-line"></div>
         </div>
       </div>`;
 
