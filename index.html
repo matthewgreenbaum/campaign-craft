@@ -2127,24 +2127,24 @@
     // Blueprint skeleton layout — maps phases to sections in display order.
     // Each section has its canonical number, name, and description for the skeleton.
     const BLUEPRINT_LAYOUT = [
-      { phase: "Phase 1: Foundation", sections: [
+      { phase: "1. Foundation", sections: [
         { num: 2, name: "Campaign Concept", desc: "Elevator pitch — what you're doing and why it matters to your audience" },
       ]},
-      { phase: "Phase 2: Strategy", sections: [
+      { phase: "2. Strategy", sections: [
         { num: 3, name: "Target Audience & Sales Motion", desc: "Who you're reaching and how you sell to them" },
         { num: 4, name: "Business Goal & Impact Type", desc: "What business outcome this campaign drives" },
         { num: 5, name: "KPIs & Measurement", desc: "How you'll know it's working" },
       ]},
-      { phase: "Phase 3: Insight & Thesis", sections: [
+      { phase: "3. Insight & Thesis", sections: [
         { num: 6, name: "Core Insight", desc: "The audience truth that makes this campaign resonate" },
         { num: 7, name: "Hypothesis", desc: "If we [action] for [persona], then [outcome] because [insight]" },
       ]},
-      { phase: "Phase 4: Planning & Requirements", sections: [
+      { phase: "4. Planning & Requirements", sections: [
         { num: 8, name: "Scope & Size", desc: "T-shirt size based on channels, content, teams, and duration" },
         { num: 9, name: "Timeline", desc: "Expected duration and key milestones" },
         { num: 10, name: "Needs Assessment", desc: "Content, channels, creative, sales enablement, ops, and team dependencies" },
       ]},
-      { phase: "Phase 5: Stress Test", sections: [
+      { phase: "5. Stress Test", sections: [
         { num: 11, name: "Blind Spots & Assumptions", desc: "Risks and blind spots you might have missed" },
         { num: 12, name: "Strategic Quality Assessment", desc: "Alignment, impact potential, and readiness evaluation" },
       ]},
@@ -3233,11 +3233,11 @@
     // is being collected at each stage.
     function getActiveBlueprintPhase() {
       const maxProgress = completedSections.size > 0 ? Math.max(...completedSections) : 0;
-      if (maxProgress <= 3)  return "Phase 1: Foundation";
-      if (maxProgress <= 7)  return "Phase 2: Strategy";
-      if (maxProgress <= 12) return "Phase 3: Insight & Thesis";
-      if (maxProgress <= 22) return "Phase 4: Planning & Requirements";
-      return "Phase 5: Stress Test";
+      if (maxProgress <= 3)  return "1. Foundation";
+      if (maxProgress <= 7)  return "2. Strategy";
+      if (maxProgress <= 12) return "3. Insight & Thesis";
+      if (maxProgress <= 22) return "4. Planning & Requirements";
+      return "5. Stress Test";
     }
 
     function renderBlueprintWithPhases(md) {
