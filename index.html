@@ -2067,6 +2067,7 @@
     const PROGRESS_TOTAL_SECTIONS = 25;
     let completedSections = new Set();
     let rawBlueprintMarkdown = ""; // raw markdown of the current blueprint
+    let blueprintPendingRerun = false; // queued re-run after current stream finishes
 
     function launchConfetti() {
       const container = document.createElement("div");
@@ -3377,12 +3378,15 @@
       if (conversationHistory.length === 0) return;
       if (!shouldAutoBlueprint()) return;
 
-      // Abort any in-flight blueprint stream
-      if (blueprintAbortController) {
-        blueprintAbortController.abort();
-        blueprintAbortController = null;
-        blueprintBusy = false;
+      // If a blueprint is already streaming, queue a re-run instead of aborting.
+      // This ensures at least one blueprint call always completes — fixing a race
+      // condition where rapid user responses would repeatedly abort in-progress
+      // streams, leaving the preview empty.
+      if (blueprintBusy) {
+        blueprintPendingRerun = true;
+        return;
       }
+      blueprintPendingRerun = false;
       blueprintAbortController = new AbortController();
 
       blueprintBusy = true;
@@ -3512,6 +3516,12 @@
         blueprintAbortController = null;
         $("#bpStreamingDot").classList.remove("active");
         $("#bpContent").classList.remove("fading");
+
+        // If new messages arrived while we were streaming, re-run with latest context
+        if (blueprintPendingRerun) {
+          blueprintPendingRerun = false;
+          streamBlueprint();
+        }
       }
     }
 
