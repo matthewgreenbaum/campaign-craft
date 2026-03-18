@@ -1352,6 +1352,14 @@
       color: #B0ADC8;
       background: #F5F4FA;
       border-left-color: #D0CEE8;
+      margin-bottom: 4px;
+    }
+    .bp-section-desc {
+      font-size: 0.78rem;
+      color: #B0ADC8;
+      font-style: italic;
+      margin: 0 0 8px 18px;
+      line-height: 1.4;
     }
 
     /* ---------- ACTIVE PHASE PULSE ---------- */
@@ -2102,52 +2110,47 @@
 
     // Blueprint section names in order (matches the numbered ## headings in the output)
     const BP_SECTION_NAMES = [
-      "Executive Summary",
-      "Business Context & Strategic Alignment",
-      "Core Insight",
-      "Hypothesis",
-      "Business Impact Potential",
-      "Audience & Buying Context",
-      "Scope & Size",
-      "Needs Assessment",
-      "Blind Spots & Assumptions",
-      "KPIs & High-Level Timeline",
-      "Strategic Quality Assessment",
-      "Advancement Decision",
+      "Executive Summary",         // 1
+      "Campaign Concept",          // 2
+      "Target Audience & Sales Motion", // 3
+      "Business Goal & Impact Type",    // 4
+      "KPIs & Measurement",        // 5
+      "Core Insight",              // 6
+      "Hypothesis",                // 7
+      "Scope & Size",              // 8
+      "Timeline",                  // 9
+      "Needs Assessment",          // 10
+      "Blind Spots & Assumptions", // 11
+      "Strategic Quality Assessment", // 12
     ];
 
     // Blueprint skeleton layout — maps phases to sections in display order.
-    // Each section has its canonical number and full name.
+    // Each section has its canonical number, name, and description for the skeleton.
     const BLUEPRINT_LAYOUT = [
       { phase: "Phase 1: Foundation", sections: [
-        { num: 1, name: "Executive Summary" },
-        { num: 2, name: "Business Context & Strategic Alignment" },
-      ]},
-      { phase: "Phase 3: Insight & Thesis", sections: [
-        { num: 3, name: "Core Insight" },
-        { num: 4, name: "Hypothesis" },
+        { num: 2, name: "Campaign Concept", desc: "Elevator pitch — what you're doing and why it matters to your audience" },
       ]},
       { phase: "Phase 2: Strategy", sections: [
-        { num: 5, name: "Business Impact Potential" },
-        { num: 6, name: "Audience & Buying Context" },
+        { num: 3, name: "Target Audience & Sales Motion", desc: "Who you're reaching and how you sell to them" },
+        { num: 4, name: "Business Goal & Impact Type", desc: "What business outcome this campaign drives" },
+        { num: 5, name: "KPIs & Measurement", desc: "How you'll know it's working" },
+      ]},
+      { phase: "Phase 3: Insight & Thesis", sections: [
+        { num: 6, name: "Core Insight", desc: "The audience truth that makes this campaign resonate" },
+        { num: 7, name: "Hypothesis", desc: "If we [action] for [persona], then [outcome] because [insight]" },
       ]},
       { phase: "Phase 4: Planning & Requirements", sections: [
-        { num: 7, name: "Scope & Size" },
-        { num: 8, name: "Needs Assessment" },
+        { num: 8, name: "Scope & Size", desc: "T-shirt size based on channels, content, teams, and duration" },
+        { num: 9, name: "Timeline", desc: "Expected duration and key milestones" },
+        { num: 10, name: "Needs Assessment", desc: "Content, channels, creative, sales enablement, ops, and team dependencies" },
       ]},
       { phase: "Phase 5: Stress Test", sections: [
-        { num: 9, name: "Blind Spots & Assumptions" },
-      ]},
-      { phase: "Phase 2: Strategy", phaseSuffix: " (cont.)", sections: [
-        { num: 10, name: "KPIs & High-Level Timeline" },
-      ]},
-      { phase: "Phase 5: Stress Test", phaseSuffix: " (cont.)", sections: [
-        { num: 11, name: "Strategic Quality Assessment" },
-      ]},
-      { phase: "Phase 6: Decision", sections: [
-        { num: 12, name: "Advancement Decision" },
+        { num: 11, name: "Blind Spots & Assumptions", desc: "Risks and blind spots you might have missed" },
+        { num: 12, name: "Strategic Quality Assessment", desc: "Alignment, impact potential, and readiness evaluation" },
       ]},
     ];
+    // Executive Summary (section 1) is a synthesis section displayed at the top
+    // of the blueprint but generated last, after all other sections have data.
 
     // Parse blueprint markdown into { title, sections: { num: contentHtml } }
     function parseBlueprintSections(md) {
@@ -3226,15 +3229,15 @@
     // The active conversation phase gets a pulsing dot.
 
     // Determine which blueprint phase is "active" based on conversation progress.
+    // Conversation sections (1-25) map to blueprint phases based on what data
+    // is being collected at each stage.
     function getActiveBlueprintPhase() {
       const maxProgress = completedSections.size > 0 ? Math.max(...completedSections) : 0;
-      // Map conversation progress to the blueprint phase being worked on
       if (maxProgress <= 3)  return "Phase 1: Foundation";
       if (maxProgress <= 7)  return "Phase 2: Strategy";
       if (maxProgress <= 12) return "Phase 3: Insight & Thesis";
       if (maxProgress <= 22) return "Phase 4: Planning & Requirements";
-      if (maxProgress <= 24) return "Phase 5: Stress Test";
-      return "Phase 6: Decision";
+      return "Phase 5: Stress Test";
     }
 
     function renderBlueprintWithPhases(md) {
@@ -3247,15 +3250,17 @@
         html += `<h1>${parsed.title}</h1>`;
       }
 
-      const renderedPhases = new Set();
+      // Executive Summary (section 1) at top — synthesis section, populated last
+      if (parsed.sections[1]) {
+        html += renderMarkdown(parsed.sections[1]);
+      } else {
+        html += `<div class="bp-section-empty"><h2>1. Executive Summary</h2><p class="bp-section-desc">Auto-generated synthesis once all key sections are complete</p></div>`;
+      }
+
       for (const group of BLUEPRINT_LAYOUT) {
-        // Phase header — deduplicate phases that appear multiple times (e.g. Strategy, Stress Test)
-        const phaseKey = group.phase;
-        const phaseLabel = group.phaseSuffix ? group.phase + group.phaseSuffix : group.phase;
-        const isActive = phaseKey === activePhase && !renderedPhases.has(phaseKey);
+        const isActive = group.phase === activePhase;
         const activeClass = isActive ? " bp-phase-active" : "";
-        html += `<div class="bp-phase-header${activeClass}">${phaseLabel}</div>`;
-        renderedPhases.add(phaseKey);
+        html += `<div class="bp-phase-header${activeClass}">${group.phase}</div>`;
 
         // Sections within this phase
         for (const sec of group.sections) {
@@ -3263,8 +3268,8 @@
             // Render populated section — parse its markdown to HTML
             html += renderMarkdown(parsed.sections[sec.num]);
           } else {
-            // Empty section — show muted header only
-            html += `<div class="bp-section-empty"><h2>${sec.num}. ${sec.name}</h2></div>`;
+            // Empty section — show muted header with description
+            html += `<div class="bp-section-empty"><h2>${sec.num}. ${sec.name}</h2><p class="bp-section-desc">${sec.desc}</p></div>`;
           }
         }
       }
@@ -3399,7 +3404,7 @@
         ...conversationHistory.map(m => ({ role: m.role, content: m.content })),
         {
           role: "user",
-          content: "Based on everything we've discussed so far, output ONLY the blueprint sections for which we have actually collected sufficient information through our conversation. Do NOT include sections we haven't discussed yet — no placeholders, no TBD sections, no skeleton outlines for future sections.\n\nThe full list of blueprint sections with their CANONICAL numbers is:\n1. Executive Summary\n2. Business Context & Strategic Alignment\n3. Core Insight\n4. Hypothesis\n5. Business Impact Potential\n6. Audience & Buying Context\n7. Scope & Size (T-Shirt Classification)\n8. Needs Assessment\n9. Blind Spots & Assumptions\n10. KPIs & High-Level Timeline\n11. Strategic Quality Assessment\n12. Advancement Decision\n\nFor each section where we have discussed and collected sufficient information in the conversation, include that section in the output. If a section has not been discussed yet, omit it entirely.\n\nCRITICAL DATA-READINESS RULES — which sections to include:\n- Sections 1 (Executive Summary) and 2 (Business Context) are SYNTHESIS sections. Do NOT include them until Core Insight AND Hypothesis have been discussed.\n- Section 6 (Audience & Buying Context): Do NOT include until the user has EXPLICITLY stated who the target audience is AND the sales motion or business segment. Company/product information alone is NOT enough to populate this section. The user must have directly answered questions about their target audience and go-to-market approach.\n- Section 5 (Business Impact Potential) and Section 10 (KPIs): Do NOT include until the user has explicitly discussed business goals and success metrics.\n- For all other sections: only include if the user has directly provided the relevant information in conversation.\n\nIMPORTANT: Output ONLY the formatted blueprint markdown. Do NOT include any conversational text, questions, commentary, or requests for more information. If you don't have enough info for a section, simply omit that section entirely. Never mix conversation with blueprint output.\n\nFormatting rules:\n- Use a markdown # heading for the campaign title at the top.\n- ALWAYS use the CANONICAL section number in headings, even if earlier sections are omitted. For example, if only Audience is ready, output ## 6. Audience & Buying Context (NOT ## 1.).\n- Use standard markdown bullet lists with '- ' (dash space) for all bullet points. NEVER use the • bullet character.\n- Use **bold** for key labels within bullets (e.g., - **Campaign Focus**: ...).\n- Each bullet point MUST be on its own line.\n\nSPECIAL FORMATTING for Section 11 (Strategic Quality Assessment):\nFor the three assessment dimensions (Alignment with Business Goals, Potential Impact, Readiness / Feasibility), you MUST use scorecard directives instead of plain bullets. Output each as:\n<!--SCORECARD:Dimension Name|Tier Label|1-2 sentence rationale|color-->\nColor mapping: Strongly Aligned/High/Ready→green, Partially Aligned/Medium/Some Gaps→amber, Needs Work/Low/Not Ready→red\nOutput all three scorecard directives consecutively. You may include the Overall Verdict as regular markdown text after the scorecards.",
+          content: "Based on everything we've discussed so far, output ONLY the blueprint sections for which we have actually collected sufficient information through our conversation. Do NOT include sections we haven't discussed yet — no placeholders, no TBD sections, no skeleton outlines for future sections.\n\nThe full list of blueprint sections with their CANONICAL numbers is:\n1. Executive Summary\n2. Campaign Concept\n3. Target Audience & Sales Motion\n4. Business Goal & Impact Type\n5. KPIs & Measurement\n6. Core Insight\n7. Hypothesis\n8. Scope & Size\n9. Timeline\n10. Needs Assessment\n11. Blind Spots & Assumptions\n12. Strategic Quality Assessment\n\nFor each section where we have discussed and collected sufficient information in the conversation, include that section in the output. If a section has not been discussed yet, omit it entirely.\n\nSECTION DESCRIPTIONS:\n- Section 2 (Campaign Concept): The elevator pitch — what you're doing, the product/solution context, and why it matters to your audience. Combine campaign focus with product positioning.\n- Section 3 (Target Audience & Sales Motion): Who you're reaching and how you sell to them — persona, segment, and go-to-market motion.\n- Section 4 (Business Goal & Impact Type): The business outcome this campaign is designed to drive.\n- Section 5 (KPIs & Measurement): How success will be measured — key metrics and targets.\n- Section 6 (Core Insight): The audience truth that makes this campaign resonate.\n- Section 7 (Hypothesis): Structured as: If we [action] for [persona], then [outcome] because [insight].\n- Section 8 (Scope & Size): T-shirt size (S/M/L/XL) based on channels, content, teams, and duration.\n- Section 9 (Timeline): Expected duration, phases, and key milestones.\n- Section 10 (Needs Assessment): Content needs, channel mix, creative requirements, sales enablement, ops dependencies, team dependencies, and localization.\n- Section 11 (Blind Spots & Assumptions): Risks, blind spots, and untested assumptions the user might have missed.\n- Section 12 (Strategic Quality Assessment): Alignment, impact potential, and readiness evaluation with scorecards.\n\nCRITICAL DATA-READINESS RULES — which sections to include:\n- Section 1 (Executive Summary) is a SYNTHESIS section. Do NOT include it until Core Insight AND Hypothesis have been discussed.\n- Section 3 (Target Audience & Sales Motion): Do NOT include until the user has EXPLICITLY stated who the target audience is AND the sales motion or business segment.\n- Section 4 (Business Goal & Impact Type) and Section 5 (KPIs & Measurement): Do NOT include until the user has explicitly discussed business goals and success metrics.\n- For all other sections: only include if the user has directly provided the relevant information in conversation.\n\nIMPORTANT: Output ONLY the formatted blueprint markdown. Do NOT include any conversational text, questions, commentary, or requests for more information. If you don't have enough info for a section, simply omit that section entirely. Never mix conversation with blueprint output.\n\nFormatting rules:\n- Use a markdown # heading for the campaign title at the top.\n- ALWAYS use the CANONICAL section number in headings, even if earlier sections are omitted. For example, if only Target Audience is ready, output ## 3. Target Audience & Sales Motion (NOT ## 1.).\n- Use standard markdown bullet lists with '- ' (dash space) for all bullet points. NEVER use the • bullet character.\n- Use **bold** for key labels within bullets (e.g., - **Campaign Focus**: ...).\n- Each bullet point MUST be on its own line.\n\nSPECIAL FORMATTING for Section 12 (Strategic Quality Assessment):\nFor the three assessment dimensions (Alignment with Business Goals, Potential Impact, Readiness / Feasibility), you MUST use scorecard directives instead of plain bullets. Output each as:\n<!--SCORECARD:Dimension Name|Tier Label|1-2 sentence rationale|color-->\nColor mapping: Strongly Aligned/High/Ready→green, Partially Aligned/Medium/Some Gaps→amber, Needs Work/Low/Not Ready→red\nOutput all three scorecard directives consecutively. You may include the Overall Verdict as regular markdown text after the scorecards.",
         },
       ];
 
