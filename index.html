@@ -830,18 +830,17 @@
     /* ---------- BLUEPRINT PHASE HEADERS ---------- */
     .bp-phase-header {
       font-family: 'DM Sans', sans-serif;
-      font-size: 0.78rem;
-      font-weight: 700;
+      font-size: 0.68rem;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #3D38B0;
-      background: rgba(61, 56, 176, 0.05);
-      border-left: 3px solid #3D38B0;
-      padding: 7px 14px;
-      margin: 28px 0 12px;
-      border-radius: 0 6px 6px 0;
+      letter-spacing: 0.12em;
+      color: #8A86B8;
+      padding: 0 0 6px;
+      margin: 32px 0 8px;
+      border-top: 1px solid #E8E6F0;
+      padding-top: 16px;
     }
-    .bp-phase-header:first-child { margin-top: 0; }
+    .bp-phase-header:first-child { margin-top: 0; border-top: none; padding-top: 0; }
     .avatar {
       width: 36px; height: 36px;
       border-radius: 50%;
@@ -1201,45 +1200,42 @@
     .bp-content.fading { opacity: 0.85; }
 
     .bp-content h1 {
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       font-weight: 700;
-      margin: 0 0 20px;
-      padding-bottom: 12px;
-      border-bottom: 2px solid #3D38B0;
+      margin: 0 0 24px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #D8D5F2;
       color: #1A1A1A;
       letter-spacing: -0.01em;
+      line-height: 1.3;
     }
     .bp-content h2 {
-      font-size: 0.85rem;
+      font-size: 0.92rem;
       font-weight: 700;
-      margin: 28px 0 12px;
-      padding: 6px 12px;
-      margin-left: 14px;
-      background: #F5F4FA;
-      border-left: 2px dotted #A09CC7;
-      border-radius: 0 5px 5px 0;
-      color: #44406A;
+      margin: 24px 0 10px;
+      padding: 0;
+      color: #2D2A4A;
       text-transform: uppercase;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.04em;
     }
     .bp-content h3 {
-      font-size: 0.92rem;
+      font-size: 0.88rem;
       font-weight: 600;
-      margin: 20px 0 8px;
-      color: #1A1A1A;
+      margin: 18px 0 6px;
+      color: #3A3760;
     }
     .bp-content p {
       font-size: 0.88rem;
-      line-height: 1.65;
-      margin: 0 0 12px;
-      color: #1A1A1A;
+      line-height: 1.7;
+      margin: 0 0 14px;
+      color: #2C2C2C;
     }
     .bp-content ul, .bp-content ol {
       margin: 4px 0 16px 18px;
       padding: 0;
       font-size: 0.88rem;
-      line-height: 1.65;
-      color: #1A1A1A;
+      line-height: 1.7;
+      color: #2C2C2C;
     }
     .bp-content ul { list-style-type: disc; }
     .bp-content ul ul { list-style-type: circle; margin-top: 2px; margin-bottom: 2px; }
@@ -1263,9 +1259,9 @@
       color: #1A1A1A;
     }
     .bp-content th {
-      background: #EEF2FF;
+      background: #F7F6FB;
       font-weight: 600;
-      color: #1A1A1A;
+      color: #2D2A4A;
     }
     .bp-content hr {
       border: none;
@@ -1349,16 +1345,14 @@
     /* ---------- THINKING INDICATOR (next section placeholder) ---------- */
     /* ---------- EMPTY BLUEPRINT SECTIONS ---------- */
     .bp-section-empty h2 {
-      color: #B0ADC8;
-      background: #F0EFF5;
-      border-left-color: #D0CEE8;
-      margin-bottom: 4px;
+      color: #C0BDDA;
+      margin-bottom: 2px;
     }
     .bp-section-desc {
       font-size: 0.78rem;
       color: #B0ADC8;
       font-style: italic;
-      margin: 0 0 8px 32px;
+      margin: 0 0 8px 0;
       line-height: 1.4;
     }
 
@@ -3534,7 +3528,7 @@
           renderMarkdown(rawBlueprintMarkdown)
             // Inline styles on headings for paste targets that strip classes
             .replace(/<h1>/g, '<h1 style="font-size: 18pt; font-weight: 700; margin: 0 0 12px; padding-bottom: 8px; border-bottom: 2px solid #3D38B0; color: #1A1A1A;">')
-            .replace(/<h2>/g, '<h2 style="font-size: 12pt; font-weight: 700; margin: 20px 0 8px; padding: 6px 10px; margin-left: 14px; background: #F5F4FA; border-left: 2px dotted #A09CC7; color: #44406A; text-transform: uppercase; letter-spacing: 0.03em;">')
+            .replace(/<h2>/g, '<h2 style="font-size: 11pt; font-weight: 700; margin: 22px 0 8px; padding: 0; color: #2D2A4A; text-transform: uppercase; letter-spacing: 0.04em;">')
             .replace(/<h3>/g, '<h3 style="font-size: 11pt; font-weight: 600; margin: 16px 0 6px; color: #1A1A1A;">')
             .replace(/<p>/g, '<p style="margin: 0 0 10px; color: #1A1A1A;">')
             .replace(/<ul>/g, '<ul style="margin: 4px 0 14px 18px; padding: 0; color: #1A1A1A;">')
