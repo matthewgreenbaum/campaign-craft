@@ -789,7 +789,7 @@
       transition: color 0.3s, opacity 0.3s;
       cursor: default;
     }
-    .phase-step.completed { color: #1c767b; }
+    .phase-step.completed { color: #2a9da4; }
     .phase-step.active { color: #3D38B0; }
     .phase-step-icon {
       width: 18px;
@@ -807,8 +807,8 @@
       transition: all 0.3s;
     }
     .phase-step.completed .phase-step-icon {
-      background: #1c767b;
-      border-color: #1c767b;
+      background: #2a9da4;
+      border-color: #2a9da4;
       color: #fff;
     }
     .phase-step.active .phase-step-icon {
@@ -825,7 +825,7 @@
       margin: 0 4px;
       transition: background 0.3s;
     }
-    .phase-step-connector.completed { background: #1c767b; }
+    .phase-step-connector.completed { background: #2a9da4; }
 
     /* ---------- BLUEPRINT PHASE HEADERS ---------- */
     .bp-phase-header {
@@ -1279,6 +1279,82 @@
       padding: 2px 6px;
       border-radius: 4px;
       font-size: 0.82rem;
+    }
+
+    /* ---------- THINKING INDICATOR (next section placeholder) ---------- */
+    .bp-thinking-section {
+      margin-top: 28px;
+      animation: bp-thinking-fadein 0.4s ease;
+    }
+    @keyframes bp-thinking-fadein {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .bp-thinking-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #B0ADC8;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      padding: 8px 14px;
+      background: #F5F4FA;
+      border-left: 4px solid #D0CEE8;
+      border-radius: 0 6px 6px 0;
+    }
+    .bp-thinking-number {
+      display: inline-flex;
+      align-items: center;
+      gap: 1px;
+      min-width: 1.2em;
+    }
+    .bp-thinking-dots {
+      display: inline-flex;
+      gap: 2px;
+      margin-left: 2px;
+    }
+    .bp-thinking-dots span {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #B0ADC8;
+      animation: bp-dot-pulse 1.4s ease-in-out infinite;
+    }
+    .bp-thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .bp-thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bp-dot-pulse {
+      0%, 80%, 100% { opacity: 0.25; transform: scale(0.8); }
+      40% { opacity: 1; transform: scale(1.1); }
+    }
+    .bp-thinking-shimmer {
+      padding: 12px 14px 8px;
+    }
+    .bp-shimmer-line {
+      height: 10px;
+      border-radius: 5px;
+      background: linear-gradient(90deg, #EEEDF5 25%, #F8F7FC 50%, #EEEDF5 75%);
+      background-size: 200% 100%;
+      animation: bp-shimmer 1.8s ease-in-out infinite;
+      margin-bottom: 10px;
+    }
+    .bp-shimmer-line:nth-child(1) { width: 85%; }
+    .bp-shimmer-line:nth-child(2) { width: 60%; }
+    .bp-shimmer-line:nth-child(3) { width: 72%; animation-delay: 0.2s; }
+    @keyframes bp-shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Fade-in for newly populated sections */
+    .bp-section-new {
+      animation: bp-section-appear 0.5s ease;
+    }
+    @keyframes bp-section-appear {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* spinner for blueprint update */
@@ -3002,7 +3078,24 @@
       { phase: "Phase 6: Decision",             headings: ["Advancement"] },
     ];
 
-    function renderBlueprintWithPhases(md) {
+    // Blueprint section names in order (matches the numbered ## headings)
+    const BP_SECTION_NAMES = [
+      "Executive Summary",
+      "Business Context & Strategic Alignment",
+      "Core Insight",
+      "Hypothesis",
+      "Business Impact Potential",
+      "Audience & Buying Context",
+      "Scope & Size",
+      "Needs Assessment",
+      "Blind Spots & Assumptions",
+      "KPIs & High-Level Timeline",
+      "Strategic Quality Assessment",
+      "Advancement Decision",
+    ];
+
+    function renderBlueprintWithPhases(md, opts) {
+      const showThinking = opts && opts.thinking;
       let html = renderMarkdown(md);
 
       // Track which phases we've already injected
@@ -3021,6 +3114,28 @@
           }
         }
       });
+
+      // Append thinking indicator for the next section if streaming
+      if (showThinking) {
+        // Count existing numbered h2 sections
+        const sectionCount = (html.match(/<h2>/gi) || []).length;
+        const nextIdx = sectionCount; // 0-indexed into BP_SECTION_NAMES
+        if (nextIdx < BP_SECTION_NAMES.length) {
+          const nextNum = nextIdx + 1;
+          const nextName = BP_SECTION_NAMES[nextIdx];
+          html += `<div class="bp-thinking-section">
+            <div class="bp-thinking-header">
+              <span class="bp-thinking-number">${nextNum}<span class="bp-thinking-dots"><span></span><span></span><span></span></span></span>
+              ${nextName}
+            </div>
+            <div class="bp-thinking-shimmer">
+              <div class="bp-shimmer-line"></div>
+              <div class="bp-shimmer-line"></div>
+              <div class="bp-shimmer-line"></div>
+            </div>
+          </div>`;
+        }
+      }
 
       return html;
     }
@@ -3146,6 +3261,12 @@
       bpEl.classList.add("visible");
       $("#bpStreamingDot").classList.add("active");
 
+      // Show thinking indicator on visible panel while streaming
+      if (hadExistingContent) {
+        // Re-render with thinking indicator appended
+        bpEl.innerHTML = renderBlueprintWithPhases(rawBlueprintMarkdown, { thinking: true });
+      }
+
       // Clear hidden buffer for incoming content
       bufferEl.innerHTML = "";
 
@@ -3219,7 +3340,7 @@
 
                   // Stream into hidden buffer — existing content stays untouched
                   if (blueprintConfirmed) {
-                    bufferEl.innerHTML = renderBlueprintWithPhases(incomingMarkdown);
+                    bufferEl.innerHTML = renderBlueprintWithPhases(incomingMarkdown, { thinking: true });
                   }
                 }
               } catch (e) {
@@ -3231,22 +3352,41 @@
 
         // Stream finished — decide what to keep
         if (blueprintConfirmed) {
-          // Swap buffer content into visible panel in one shot
+          // Count sections before swap for fade-in animation
+          const prevH2Count = (bpEl.innerHTML.match(/<h2>/gi) || []).length;
+
+          // Render final content — show thinking indicator if more sections expected
           rawBlueprintMarkdown = incomingMarkdown;
           bpEl.classList.remove("fading");
-          bpEl.innerHTML = bufferEl.innerHTML;
+          const newH2Count = (renderMarkdown(incomingMarkdown).match(/<h2>/gi) || []).length;
+          const hasMoreSections = newH2Count < BP_SECTION_NAMES.length;
+          bpEl.innerHTML = renderBlueprintWithPhases(incomingMarkdown, { thinking: hasMoreSections });
           bpEl.classList.add("visible");
           bufferEl.innerHTML = "";
           $("#copyBtn").classList.add("visible"); $("#exportDropdown").classList.add("visible");
+
+          // Animate newly appeared h2 sections with fade-in
+          const allH2s = bpEl.querySelectorAll("h2");
+          for (let i = prevH2Count; i < allH2s.length; i++) {
+            // Animate the h2 and all siblings until next h2 or phase header
+            let el = allH2s[i];
+            while (el) {
+              el.classList.add("bp-section-new");
+              el = el.nextElementSibling;
+              if (el && (el.tagName === "H2" || el.tagName === "H1" || el.classList.contains("bp-phase-header") || el.classList.contains("bp-thinking-section"))) break;
+            }
+          }
+
           // Scroll to show new content at the bottom
           const bpBody = $(".blueprint-body");
           bpBody.scrollTop = bpBody.scrollHeight;
         } else if (hadExistingContent) {
           // Incoming content was NOT a real blueprint (just conversational text).
-          // Keep the previous blueprint exactly as-is.
+          // Keep the previous blueprint exactly as-is, with thinking indicator.
           rawBlueprintMarkdown = previousMarkdown;
           bpEl.classList.remove("fading");
-          bpEl.innerHTML = renderBlueprintWithPhases(rawBlueprintMarkdown);
+          const prevH2s = (renderMarkdown(previousMarkdown).match(/<h2>/gi) || []).length;
+          bpEl.innerHTML = renderBlueprintWithPhases(rawBlueprintMarkdown, { thinking: prevH2s < BP_SECTION_NAMES.length });
           $("#copyBtn").classList.add("visible"); $("#exportDropdown").classList.add("visible");
         }
         // else: no existing content and no valid blueprint — leave panel empty
@@ -3262,7 +3402,8 @@
         if (hadExistingContent) {
           rawBlueprintMarkdown = previousMarkdown;
           bpEl.classList.remove("fading");
-          bpEl.innerHTML = renderBlueprintWithPhases(rawBlueprintMarkdown);
+          const errH2s = (renderMarkdown(previousMarkdown).match(/<h2>/gi) || []).length;
+          bpEl.innerHTML = renderBlueprintWithPhases(rawBlueprintMarkdown, { thinking: errH2s < BP_SECTION_NAMES.length });
           $("#copyBtn").classList.add("visible"); $("#exportDropdown").classList.add("visible");
         } else {
           $("#bpContent").innerHTML = `<p style="color:#B33A3A">Failed to generate blueprint: ${err.message}</p>`;
