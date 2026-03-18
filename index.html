@@ -2135,51 +2135,59 @@
     }
 
     // Show thinking placeholders in the blueprint panel before the first
-    // real blueprint stream. Maps progress-section completions to the number
-    // of blueprint sections the user is "working toward."
+    // real blueprint stream. Placeholders follow the CONVERSATION flow
+    // (what the user is building toward next), not the final document order.
+    // Executive Summary & Business Context appear last since they're
+    // syntheses that need most inputs collected first.
     function showPreBlueprintThinking() {
       // Only show pre-blueprint thinking if we don't have real blueprint content yet
       if (rawBlueprintMarkdown) return;
       if (completedSections.size === 0) return;
 
-      // Map progress sections → how many blueprint sections to tease
-      // Progress 1 (name) → 1 thinking placeholder (Executive Summary)
-      // Progress 2 (concept) → 1 placeholder
-      // Progress 3 (company) → 2 placeholders (+ Business Context)
-      // Progress 4-5 (audience, sales) → 3 placeholders (+ Audience)
-      // Progress 6-7 (goal, KPIs) → 4 placeholders
-      // Beyond that, streamBlueprint takes over
-      const maxSection = Math.max(...completedSections);
-      let thinkingCount;
-      if (maxSection <= 2) thinkingCount = 1;
-      else if (maxSection <= 3) thinkingCount = 2;
-      else if (maxSection <= 5) thinkingCount = 3;
-      else thinkingCount = 4;
-
-      // Determine which phase header to show based on which sections are teased
-      const phaseForSection = [
-        "Phase 1: Foundation",           // 1. Executive Summary
-        "Phase 1: Foundation",           // 2. Business Context
-        "Phase 3: Insight & Thesis",     // 3. Core Insight
-        "Phase 3: Insight & Thesis",     // 4. Hypothesis
-        "Phase 2: Strategy",             // 5. Business Impact
-        "Phase 2: Strategy",             // 6. Audience & Buying Context
+      // Each entry: { name, phase } — ordered by when the data becomes available.
+      // Progress sections 1-3 (Name, Concept, Company) → tease Audience (collected next)
+      // Progress sections 4-5 (Audience, Sales Motion) → tease Business Impact, KPIs
+      // Progress sections 6-7 (Goal, KPIs) → tease Core Insight, Hypothesis
+      // After that, streamBlueprint takes over with real content.
+      const THINKING_STAGES = [
+        { maxProgress: 3,  sections: [
+          { name: "Audience & Buying Context",    phase: "Phase 2: Strategy" },
+        ]},
+        { maxProgress: 5,  sections: [
+          { name: "Audience & Buying Context",    phase: "Phase 2: Strategy" },
+          { name: "Business Impact Potential",    phase: "Phase 2: Strategy" },
+        ]},
+        { maxProgress: 7,  sections: [
+          { name: "Audience & Buying Context",    phase: "Phase 2: Strategy" },
+          { name: "Business Impact Potential",    phase: "Phase 2: Strategy" },
+          { name: "Core Insight",                 phase: "Phase 3: Insight & Thesis" },
+          { name: "Hypothesis",                   phase: "Phase 3: Insight & Thesis" },
+        ]},
       ];
+
+      const maxSection = Math.max(...completedSections);
+
+      // Find the right stage
+      let sections = null;
+      for (const stage of THINKING_STAGES) {
+        if (maxSection <= stage.maxProgress) {
+          sections = stage.sections;
+          break;
+        }
+      }
+      if (!sections) sections = THINKING_STAGES[THINKING_STAGES.length - 1].sections;
 
       let html = "";
       let lastPhase = "";
-      for (let i = 0; i < thinkingCount; i++) {
-        const phase = phaseForSection[i] || "";
-        if (phase && phase !== lastPhase) {
-          html += `<div class="bp-phase-header">${phase}</div>`;
-          lastPhase = phase;
+      sections.forEach((sec, i) => {
+        if (sec.phase !== lastPhase) {
+          html += `<div class="bp-phase-header">${sec.phase}</div>`;
+          lastPhase = sec.phase;
         }
-        const num = i + 1;
-        const name = BP_SECTION_NAMES[i];
         html += `<div class="bp-thinking-section">
           <div class="bp-thinking-header">
-            <span class="bp-thinking-number">${num}<span class="bp-thinking-dots"><span></span><span></span><span></span></span></span>
-            ${name}
+            <span class="bp-thinking-number"><span class="bp-thinking-dots"><span></span><span></span><span></span></span></span>
+            ${sec.name}
           </div>
           <div class="bp-thinking-shimmer">
             <div class="bp-shimmer-line"></div>
@@ -2187,7 +2195,7 @@
             <div class="bp-shimmer-line"></div>
           </div>
         </div>`;
-      }
+      });
 
       const bpEl = document.getElementById("bpContent");
       const placeholder = document.getElementById("bpPlaceholder");
