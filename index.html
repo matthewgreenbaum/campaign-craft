@@ -3168,14 +3168,41 @@
     }
 
     function markdownToCleanDocsRequests(md) {
-      // Clean approach: strip markdown syntax, build requests with formatting
+      // Rich formatting: Open Sans font, styled headings with colors & spacing
       const requests = [];
       let idx = 1;
       const lines = md.split("\n");
 
+      // Track heading ranges for post-insert styling
+      const headingRanges = [];
+
+      // Brand colors
+      const colors = {
+        h1: { red: 67/255, green: 56/255, blue: 202/255 },   // #4338CA
+        h2: { red: 61/255, green: 56/255, blue: 176/255 },    // #3D38B0
+        h3: { red: 91/255, green: 33/255, blue: 182/255 },    // #5B21B6
+        body: { red: 26/255, green: 26/255, blue: 46/255 },   // #1A1A2E
+      };
+
       for (const line of lines) {
         if (line.trim() === "---") {
+          // Insert horizontal rule as a styled empty paragraph
           requests.push({ insertText: { location: { index: idx }, text: "\n" } });
+          requests.push({
+            updateParagraphStyle: {
+              range: { startIndex: idx, endIndex: idx + 1 },
+              paragraphStyle: {
+                borderBottom: {
+                  color: { color: { rgbColor: { red: 224/255, green: 222/255, blue: 247/255 } } },
+                  width: { magnitude: 1, unit: "PT" },
+                  padding: { magnitude: 6, unit: "PT" },
+                  dashStyle: "SOLID"
+                },
+                spaceBelow: { magnitude: 8, unit: "PT" }
+              },
+              fields: "borderBottom,spaceBelow"
+            }
+          });
           idx += 1;
           continue;
         }
@@ -3220,6 +3247,7 @@
               fields: "namedStyleType"
             }
           });
+          headingRanges.push({ start: idx, end: idx + text.length, level: heading });
         }
 
         if (isBullet) {
@@ -3243,6 +3271,67 @@
 
         idx += text.length;
       }
+
+      const endIdx = idx;
+
+      // Apply Open Sans font to entire document body
+      requests.push({
+        updateTextStyle: {
+          range: { startIndex: 1, endIndex: endIdx },
+          textStyle: {
+            weightedFontFamily: { fontFamily: "Open Sans", weight: 400 },
+            foregroundColor: { color: { rgbColor: colors.body } },
+            fontSize: { magnitude: 10, unit: "PT" }
+          },
+          fields: "weightedFontFamily,foregroundColor,fontSize"
+        }
+      });
+
+      // Style headings with colors, sizes, and spacing
+      for (const h of headingRanges) {
+        let fontSize, color, spaceAbove, spaceBelow;
+        if (h.level === "HEADING_1") {
+          fontSize = 20; color = colors.h1; spaceAbove = 24; spaceBelow = 8;
+        } else if (h.level === "HEADING_2") {
+          fontSize = 14; color = colors.h2; spaceAbove = 18; spaceBelow = 6;
+        } else {
+          fontSize = 12; color = colors.h3; spaceAbove = 14; spaceBelow = 4;
+        }
+
+        requests.push({
+          updateTextStyle: {
+            range: { startIndex: h.start, endIndex: h.end },
+            textStyle: {
+              weightedFontFamily: { fontFamily: "Open Sans", weight: 700 },
+              foregroundColor: { color: { rgbColor: color } },
+              fontSize: { magnitude: fontSize, unit: "PT" }
+            },
+            fields: "weightedFontFamily,foregroundColor,fontSize"
+          }
+        });
+
+        requests.push({
+          updateParagraphStyle: {
+            range: { startIndex: h.start, endIndex: h.end },
+            paragraphStyle: {
+              spaceAbove: { magnitude: spaceAbove, unit: "PT" },
+              spaceBelow: { magnitude: spaceBelow, unit: "PT" }
+            },
+            fields: "spaceAbove,spaceBelow"
+          }
+        });
+      }
+
+      // Add body text line spacing
+      requests.push({
+        updateParagraphStyle: {
+          range: { startIndex: 1, endIndex: endIdx },
+          paragraphStyle: {
+            lineSpacing: 135
+          },
+          fields: "lineSpacing"
+        }
+      });
 
       return requests;
     }
