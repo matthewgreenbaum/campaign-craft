@@ -1213,7 +1213,8 @@
       font-size: 0.92rem;
       font-weight: 700;
       margin: 24px 0 10px;
-      padding: 0;
+      padding: 0 0 0 12px;
+      border-left: 2px solid #B8B4D8;
       color: #2D2A4A;
       text-transform: uppercase;
       letter-spacing: 0.04em;
@@ -1345,14 +1346,15 @@
     /* ---------- THINKING INDICATOR (next section placeholder) ---------- */
     /* ---------- EMPTY BLUEPRINT SECTIONS ---------- */
     .bp-section-empty h2 {
-      color: #C0BDDA;
+      color: #2D2A4A;
+      border-left-color: #D8D5F0;
       margin-bottom: 2px;
     }
     .bp-section-desc {
-      font-size: 0.78rem;
-      color: #B0ADC8;
+      font-size: 0.76rem;
+      color: #C4C0DA;
       font-style: italic;
-      margin: 0 0 8px 0;
+      margin: 0 0 8px 14px;
       line-height: 1.4;
     }
 
@@ -3528,7 +3530,7 @@
           renderMarkdown(rawBlueprintMarkdown)
             // Inline styles on headings for paste targets that strip classes
             .replace(/<h1>/g, '<h1 style="font-size: 18pt; font-weight: 700; margin: 0 0 12px; padding-bottom: 8px; border-bottom: 2px solid #3D38B0; color: #1A1A1A;">')
-            .replace(/<h2>/g, '<h2 style="font-size: 11pt; font-weight: 700; margin: 22px 0 8px; padding: 0; color: #2D2A4A; text-transform: uppercase; letter-spacing: 0.04em;">')
+            .replace(/<h2>/g, '<h2 style="font-size: 11pt; font-weight: 700; margin: 22px 0 8px; padding: 0 0 0 12px; border-left: 2px solid #B8B4D8; color: #2D2A4A; text-transform: uppercase; letter-spacing: 0.04em;">')
             .replace(/<h3>/g, '<h3 style="font-size: 11pt; font-weight: 600; margin: 16px 0 6px; color: #1A1A1A;">')
             .replace(/<p>/g, '<p style="margin: 0 0 10px; color: #1A1A1A;">')
             .replace(/<ul>/g, '<ul style="margin: 4px 0 14px 18px; padding: 0; color: #1A1A1A;">')
