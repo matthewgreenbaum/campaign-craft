@@ -1347,70 +1347,31 @@
     }
 
     /* ---------- THINKING INDICATOR (next section placeholder) ---------- */
-    .bp-thinking-section {
-      margin-top: 28px;
-      animation: bp-thinking-fadein 0.4s ease;
-    }
-    @keyframes bp-thinking-fadein {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .bp-thinking-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 700;
+    /* ---------- EMPTY BLUEPRINT SECTIONS ---------- */
+    .bp-section-empty h2 {
       color: #B0ADC8;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-      padding: 8px 14px;
       background: #F5F4FA;
-      border-left: 4px solid #D0CEE8;
-      border-radius: 0 6px 6px 0;
+      border-left-color: #D0CEE8;
     }
-    .bp-thinking-number {
-      display: inline-flex;
-      align-items: center;
-      gap: 1px;
-      min-width: 1.2em;
+
+    /* ---------- ACTIVE PHASE PULSE ---------- */
+    .bp-phase-active {
+      position: relative;
     }
-    .bp-thinking-dots {
-      display: inline-flex;
-      gap: 2px;
-      margin-left: 2px;
-    }
-    .bp-thinking-dots span {
-      width: 4px;
-      height: 4px;
+    .bp-phase-active::after {
+      content: '';
+      display: inline-block;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      background: #B0ADC8;
-      animation: bp-dot-pulse 1.4s ease-in-out infinite;
+      background: #3D38B0;
+      margin-left: 8px;
+      vertical-align: middle;
+      animation: bp-phase-pulse 1.6s ease-in-out infinite;
     }
-    .bp-thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
-    .bp-thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes bp-dot-pulse {
-      0%, 80%, 100% { opacity: 0.25; transform: scale(0.8); }
-      40% { opacity: 1; transform: scale(1.1); }
-    }
-    .bp-thinking-shimmer {
-      padding: 12px 14px 8px;
-    }
-    .bp-shimmer-line {
-      height: 10px;
-      border-radius: 5px;
-      background: linear-gradient(90deg, #EEEDF5 25%, #F8F7FC 50%, #EEEDF5 75%);
-      background-size: 200% 100%;
-      animation: bp-shimmer 1.8s ease-in-out infinite;
-      margin-bottom: 10px;
-    }
-    .bp-shimmer-line:nth-child(1) { width: 85%; }
-    .bp-shimmer-line:nth-child(2) { width: 60%; }
-    .bp-shimmer-line:nth-child(3) { width: 72%; animation-delay: 0.2s; }
-    @keyframes bp-shimmer {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
+    @keyframes bp-phase-pulse {
+      0%, 100% { opacity: 0.3; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.15); }
     }
 
     /* Fade-in for newly populated sections */
@@ -2155,6 +2116,79 @@
       "Advancement Decision",
     ];
 
+    // Blueprint skeleton layout — maps phases to sections in display order.
+    // Each section has its canonical number and full name.
+    const BLUEPRINT_LAYOUT = [
+      { phase: "Phase 1: Foundation", sections: [
+        { num: 1, name: "Executive Summary" },
+        { num: 2, name: "Business Context & Strategic Alignment" },
+      ]},
+      { phase: "Phase 3: Insight & Thesis", sections: [
+        { num: 3, name: "Core Insight" },
+        { num: 4, name: "Hypothesis" },
+      ]},
+      { phase: "Phase 2: Strategy", sections: [
+        { num: 5, name: "Business Impact Potential" },
+        { num: 6, name: "Audience & Buying Context" },
+      ]},
+      { phase: "Phase 4: Planning & Requirements", sections: [
+        { num: 7, name: "Scope & Size" },
+        { num: 8, name: "Needs Assessment" },
+      ]},
+      { phase: "Phase 5: Stress Test", sections: [
+        { num: 9, name: "Blind Spots & Assumptions" },
+      ]},
+      { phase: "Phase 2: Strategy", phaseSuffix: " (cont.)", sections: [
+        { num: 10, name: "KPIs & High-Level Timeline" },
+      ]},
+      { phase: "Phase 5: Stress Test", phaseSuffix: " (cont.)", sections: [
+        { num: 11, name: "Strategic Quality Assessment" },
+      ]},
+      { phase: "Phase 6: Decision", sections: [
+        { num: 12, name: "Advancement Decision" },
+      ]},
+    ];
+
+    // Parse blueprint markdown into { title, sections: { num: contentHtml } }
+    function parseBlueprintSections(md) {
+      if (!md) return { title: "", sections: {} };
+      const lines = md.split("\n");
+      let title = "";
+      const sections = {};
+      let currentNum = null;
+      let currentLines = [];
+
+      function flush() {
+        if (currentNum !== null && currentLines.length > 0) {
+          sections[currentNum] = currentLines.join("\n");
+        }
+        currentLines = [];
+      }
+
+      for (const line of lines) {
+        // Campaign title: # heading
+        const titleMatch = line.match(/^#\s+(.+)/);
+        if (titleMatch && !line.match(/^##/)) {
+          title = titleMatch[1].trim();
+          continue;
+        }
+        // Section heading: ## N. Section Name
+        const secMatch = line.match(/^##\s+(\d+)\.\s+/);
+        if (secMatch) {
+          flush();
+          currentNum = parseInt(secMatch[1]);
+          // Include the heading line itself in the section content
+          currentLines.push(line);
+          continue;
+        }
+        if (currentNum !== null) {
+          currentLines.push(line);
+        }
+      }
+      flush();
+      return { title, sections };
+    }
+
     function getPhaseStatus(phase) {
       const allDone = phase.sections.every(s => completedSections.has(s));
       const anyDone = phase.sections.some(s => completedSections.has(s));
@@ -2196,39 +2230,10 @@
       const fill = document.getElementById("chatProgressFill");
       if (fill) fill.style.width = pct + "%";
       updatePhaseStepper();
-      showPreBlueprintThinking();
-    }
-
-    // Show thinking placeholders in the blueprint panel before the first
-    // real blueprint stream. Placeholders follow the CONVERSATION flow
-    // (what the user is building toward next), not the final document order.
-    // Executive Summary & Business Context appear last since they're
-    // syntheses that need most inputs collected first.
-    function showPreBlueprintThinking() {
-      // Only show pre-blueprint thinking if we don't have real blueprint content yet
-      if (rawBlueprintMarkdown) return;
-      if (completedSections.size === 0) return;
-
-      // Pre-blueprint thinking appears BEFORE the first real blueprint stream
-      // (which fires at MIN_TURNS_FOR_BLUEPRINT = 4 user messages, ~progress 4).
-      //
-      // At progress 1-3, the user has only discussed Name, Concept, Company.
-      // No blueprint sections can be populated from that data alone (Audience
-      // needs audience + sales motion, Business Impact needs goals, etc.).
-      // So we show a generic building shimmer — no specific section names that
-      // would imply data has been collected that hasn't.
-      const html = `<div class="bp-thinking-section" style="animation: none;">
-        <div class="bp-thinking-header" style="color: #B0C4DE; border-left-color: #B0C4DE; background: #F7F9FC;">
-          Building your blueprint…
-        </div>
-      </div>`;
-
-      const bpEl = document.getElementById("bpContent");
-      const placeholder = document.getElementById("bpPlaceholder");
-      if (!bpEl || !placeholder) return;
-      placeholder.style.display = "none";
-      bpEl.innerHTML = html;
-      bpEl.classList.add("visible");
+      // Re-render skeleton to update active phase indicator
+      if (!blueprintBusy) {
+        $("#bpContent").innerHTML = renderBlueprintWithPhases(rawBlueprintMarkdown);
+      }
     }
 
     // Restore progress from conversation history (for returning sessions)
@@ -2686,9 +2691,9 @@
       rawBlueprintMarkdown = "";
       completedSections.clear();
       $("#messages").innerHTML = "";
-      $("#bpContent").innerHTML = "";
-      $("#bpContent").classList.remove("visible");
-      $("#bpPlaceholder").style.display = "";
+      $("#bpPlaceholder").style.display = "none";
+      $("#bpContent").innerHTML = renderBlueprintWithPhases("");
+      $("#bpContent").classList.add("visible");
       $("#copyBtn").classList.remove("visible"); $("#exportDropdown").classList.remove("visible");
       const fill = document.getElementById("chatProgressFill");
       if (fill) fill.style.width = "0%";
@@ -2728,16 +2733,13 @@
         addMessage(m.role, display);
       });
 
-      // Rebuild blueprint UI
+      // Rebuild blueprint UI — always show skeleton
+      $("#bpPlaceholder").style.display = "none";
+      $("#bpContent").innerHTML = renderBlueprintWithPhases(rawBlueprintMarkdown);
+      $("#bpContent").classList.add("visible");
       if (rawBlueprintMarkdown) {
-        $("#bpPlaceholder").style.display = "none";
-        $("#bpContent").innerHTML = renderBlueprintWithPhases(rawBlueprintMarkdown);
-        $("#bpContent").classList.add("visible");
         $("#copyBtn").classList.add("visible"); $("#exportDropdown").classList.add("visible");
       } else {
-        $("#bpContent").innerHTML = "";
-        $("#bpContent").classList.remove("visible");
-        $("#bpPlaceholder").style.display = "";
         $("#copyBtn").classList.remove("visible"); $("#exportDropdown").classList.remove("visible");
       }
 
@@ -2774,10 +2776,11 @@
           currentCampaignId = null;
           conversationHistory = [];
           rawBlueprintMarkdown = "";
+          completedSections.clear();
           $("#messages").innerHTML = "";
-          $("#bpContent").innerHTML = "";
-          $("#bpContent").classList.remove("visible");
-          $("#bpPlaceholder").style.display = "";
+          $("#bpPlaceholder").style.display = "none";
+          $("#bpContent").innerHTML = renderBlueprintWithPhases("");
+          $("#bpContent").classList.add("visible");
           $("#copyBtn").classList.remove("visible"); $("#exportDropdown").classList.remove("visible");
           updateBlueprintPanelTitle();
         }
@@ -3217,103 +3220,52 @@
       return html;
     }
 
-    // ─── blueprint phase injection ───
-    // Maps blueprint H2 section headings to their phase group.
-    // When rendering the blueprint, phase headers are injected before the first
-    // heading of each new phase group — matching the How It Works page style.
-    const BP_PHASE_MAP = [
-      { phase: "Phase 1: Foundation",           headings: ["Campaign Concept", "Executive Summary", "Business Context"] },
-      { phase: "Phase 2: Strategy",             headings: ["Business Impact", "Audience", "KPIs"] },
-      { phase: "Phase 3: Insight & Thesis",     headings: ["Core Insight", "Hypothesis"] },
-      { phase: "Phase 4: Planning & Requirements", headings: ["Scope", "Needs Assessment"] },
-      { phase: "Phase 5: Stress Test",          headings: ["Blind Spots", "Strategic Quality"] },
-      { phase: "Phase 6: Decision",             headings: ["Advancement"] },
-    ];
+    // ─── blueprint skeleton renderer ───
+    // Always shows all section headers grouped by phase.
+    // Sections with content get populated; empty ones show muted headers.
+    // The active conversation phase gets a pulsing dot.
 
-    function renderBlueprintWithPhases(md, opts) {
-      const showThinking = opts && opts.thinking;
-      let html = renderMarkdown(md);
+    // Determine which blueprint phase is "active" based on conversation progress.
+    function getActiveBlueprintPhase() {
+      const maxProgress = completedSections.size > 0 ? Math.max(...completedSections) : 0;
+      // Map conversation progress to the blueprint phase being worked on
+      if (maxProgress <= 3)  return "Phase 1: Foundation";
+      if (maxProgress <= 7)  return "Phase 2: Strategy";
+      if (maxProgress <= 12) return "Phase 3: Insight & Thesis";
+      if (maxProgress <= 22) return "Phase 4: Planning & Requirements";
+      if (maxProgress <= 24) return "Phase 5: Stress Test";
+      return "Phase 6: Decision";
+    }
 
-      // Track which phases we've already injected
-      const injected = new Set();
+    function renderBlueprintWithPhases(md) {
+      const parsed = parseBlueprintSections(md);
+      const activePhase = getActiveBlueprintPhase();
+      let html = "";
 
-      // For each phase, find the first matching <h2> or <h1> and inject the phase header before it
-      BP_PHASE_MAP.forEach(({ phase, headings }) => {
-        for (const heading of headings) {
-          // Match h1 or h2 containing the heading text (case-insensitive partial match)
-          const regex = new RegExp(`(<h[12]>(?:[^<]*?)${heading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, "i");
-          const match = html.match(regex);
-          if (match && !injected.has(phase)) {
-            html = html.replace(match[0], `<div class="bp-phase-header">${phase}</div>${match[0]}`);
-            injected.add(phase);
-            break;
+      // Campaign title
+      if (parsed.title) {
+        html += `<h1>${parsed.title}</h1>`;
+      }
+
+      const renderedPhases = new Set();
+      for (const group of BLUEPRINT_LAYOUT) {
+        // Phase header — deduplicate phases that appear multiple times (e.g. Strategy, Stress Test)
+        const phaseKey = group.phase;
+        const phaseLabel = group.phaseSuffix ? group.phase + group.phaseSuffix : group.phase;
+        const isActive = phaseKey === activePhase && !renderedPhases.has(phaseKey);
+        const activeClass = isActive ? " bp-phase-active" : "";
+        html += `<div class="bp-phase-header${activeClass}">${phaseLabel}</div>`;
+        renderedPhases.add(phaseKey);
+
+        // Sections within this phase
+        for (const sec of group.sections) {
+          if (parsed.sections[sec.num]) {
+            // Render populated section — parse its markdown to HTML
+            html += renderMarkdown(parsed.sections[sec.num]);
+          } else {
+            // Empty section — show muted header only
+            html += `<div class="bp-section-empty"><h2>${sec.num}. ${sec.name}</h2></div>`;
           }
-        }
-      });
-
-      // Append thinking indicator for the next section based on conversation progress
-      if (showThinking) {
-        // Map conversation progress → next blueprint section to tease.
-        // Follows conversation flow: sections appear as teasers only AFTER
-        // the preceding data has been collected, so they correspond to what
-        // the user is actually working toward.
-        //
-        // Conversation order → blueprint section readiness:
-        //   Progress 4 (audience done, sales motion next) → Audience & Buying Context
-        //   Progress 5 (sales motion done)                → section populates, tease Business Impact
-        //   Progress 7 (KPIs done)                        → section populates, tease Core Insight
-        //   Progress 9 (core insight done)                → section populates, tease Hypothesis
-        //   Progress 12 (hypothesis done)                 → Exec Summary + Biz Context now ready (synthesis)
-        //   Progress 12+ (exec summary populated)         → tease Scope & Size
-        //   Progress 14 (scope done)                      → tease Needs Assessment
-        //   Progress 22 (needs done)                      → tease Blind Spots
-        //   Progress 23 (blind spots done)                → tease Strategic Quality
-        //   Progress 24 (strategic quality done)          → tease Advancement
-        const NEXT_SECTION_MAP = [
-          { maxProgress: 4,  name: "Audience & Buying Context",              phase: "Phase 2: Strategy" },
-          { maxProgress: 6,  name: "Business Impact Potential",              phase: "Phase 2: Strategy" },
-          { maxProgress: 7,  name: "Core Insight",                           phase: "Phase 3: Insight & Thesis" },
-          { maxProgress: 9,  name: "Hypothesis",                             phase: "Phase 3: Insight & Thesis" },
-          { maxProgress: 12, name: "Executive Summary",                      phase: "Phase 1: Foundation" },
-          { maxProgress: 12, name: "Scope & Size",                           phase: "Phase 4: Planning & Requirements" },
-          { maxProgress: 14, name: "Needs Assessment",                       phase: "Phase 4: Planning & Requirements" },
-          { maxProgress: 22, name: "Blind Spots & Assumptions",              phase: "Phase 5: Stress Test" },
-          { maxProgress: 23, name: "Strategic Quality Assessment",           phase: "Phase 5: Stress Test" },
-          { maxProgress: 24, name: "Advancement Decision",                   phase: "Phase 6: Decision" },
-        ];
-
-        const maxProgress = completedSections.size > 0 ? Math.max(...completedSections) : 0;
-
-        // Find the next section to tease, skipping any already rendered in the blueprint
-        let nextSection = null;
-        for (const entry of NEXT_SECTION_MAP) {
-          if (maxProgress <= entry.maxProgress) {
-            // Check if this section is already in the rendered blueprint.
-            // Must check both literal & and HTML entity &amp; since markdown-it encodes &.
-            const nameVariant = entry.name.replace(/&/g, '&amp;');
-            const escapedName = entry.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const escapedVariant = nameVariant.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const alreadyRendered = new RegExp(escapedName, 'i').test(html) ||
-                                    new RegExp(escapedVariant, 'i').test(html);
-            if (!alreadyRendered) {
-              nextSection = entry;
-              break;
-            }
-          }
-        }
-
-        if (nextSection) {
-          html += `<div class="bp-thinking-section">
-            <div class="bp-thinking-header">
-              <span class="bp-thinking-number"><span class="bp-thinking-dots"><span></span><span></span><span></span></span></span>
-              ${nextSection.name}
-            </div>
-            <div class="bp-thinking-shimmer">
-              <div class="bp-shimmer-line"></div>
-              <div class="bp-shimmer-line"></div>
-              <div class="bp-shimmer-line"></div>
-            </div>
-          </div>`;
         }
       }
 
@@ -3433,19 +3385,12 @@
       blueprintBusy = true;
       const bpEl = $("#bpContent");
       const bufferEl = $("#bpBuffer");
-      const hadExistingContent = !!(bpEl.innerHTML && rawBlueprintMarkdown);
       const previousMarkdown = rawBlueprintMarkdown;
 
-      // Keep existing content fully visible — only show spinner dot
+      // Keep existing skeleton/content visible — only show spinner dot
       $("#bpPlaceholder").style.display = "none";
       bpEl.classList.add("visible");
       $("#bpStreamingDot").classList.add("active");
-
-      // Show thinking indicator on visible panel while streaming
-      if (hadExistingContent) {
-        // Re-render with thinking indicator appended
-        bpEl.innerHTML = renderBlueprintWithPhases(rawBlueprintMarkdown, { thinking: true });
-      }
 
       // Clear hidden buffer for incoming content
       bufferEl.innerHTML = "";
@@ -3512,15 +3457,12 @@
                   // Check if this looks like actual blueprint content (has a markdown heading)
                   if (!blueprintConfirmed && /^#{1,3}\s/m.test(incomingMarkdown)) {
                     blueprintConfirmed = true;
-                    // Subtly indicate update in progress — but keep existing content fully visible
-                    if (hadExistingContent) {
-                      bpEl.classList.add("fading");
-                    }
+                    bpEl.classList.add("fading");
                   }
 
                   // Stream into hidden buffer — existing content stays untouched
                   if (blueprintConfirmed) {
-                    bufferEl.innerHTML = renderBlueprintWithPhases(incomingMarkdown, { thinking: true });
+                    bufferEl.innerHTML = renderBlueprintWithPhases(incomingMarkdown);
                   }
                 }
               } catch (e) {
@@ -3532,44 +3474,21 @@
 
         // Stream finished — decide what to keep
         if (blueprintConfirmed) {
-          // Count sections before swap for fade-in animation
-          const prevH2Count = (bpEl.innerHTML.match(/<h2>/gi) || []).length;
-
-          // Render final content — show thinking indicator if more sections expected
           rawBlueprintMarkdown = incomingMarkdown;
           bpEl.classList.remove("fading");
-          const newH2Count = (renderMarkdown(incomingMarkdown).match(/<h2>/gi) || []).length;
-          const hasMoreSections = newH2Count < BP_SECTION_NAMES.length;
-          bpEl.innerHTML = renderBlueprintWithPhases(incomingMarkdown, { thinking: hasMoreSections });
+          bpEl.innerHTML = renderBlueprintWithPhases(incomingMarkdown);
           bpEl.classList.add("visible");
           bufferEl.innerHTML = "";
           $("#copyBtn").classList.add("visible"); $("#exportDropdown").classList.add("visible");
-
-          // Animate newly appeared h2 sections with fade-in
-          const allH2s = bpEl.querySelectorAll("h2");
-          for (let i = prevH2Count; i < allH2s.length; i++) {
-            // Animate the h2 and all siblings until next h2 or phase header
-            let el = allH2s[i];
-            while (el) {
-              el.classList.add("bp-section-new");
-              el = el.nextElementSibling;
-              if (el && (el.tagName === "H2" || el.tagName === "H1" || el.classList.contains("bp-phase-header") || el.classList.contains("bp-thinking-section"))) break;
-            }
-          }
-
-          // Scroll to show new content at the bottom
-          const bpBody = $(".blueprint-body");
-          bpBody.scrollTop = bpBody.scrollHeight;
-        } else if (hadExistingContent) {
-          // Incoming content was NOT a real blueprint (just conversational text).
-          // Keep the previous blueprint exactly as-is, with thinking indicator.
+        } else {
+          // Incoming content was NOT a real blueprint — keep previous content
           rawBlueprintMarkdown = previousMarkdown;
           bpEl.classList.remove("fading");
-          const prevH2s = (renderMarkdown(previousMarkdown).match(/<h2>/gi) || []).length;
-          bpEl.innerHTML = renderBlueprintWithPhases(rawBlueprintMarkdown, { thinking: prevH2s < BP_SECTION_NAMES.length });
-          $("#copyBtn").classList.add("visible"); $("#exportDropdown").classList.add("visible");
+          bpEl.innerHTML = renderBlueprintWithPhases(rawBlueprintMarkdown);
+          if (previousMarkdown) {
+            $("#copyBtn").classList.add("visible"); $("#exportDropdown").classList.add("visible");
+          }
         }
-        // else: no existing content and no valid blueprint — leave panel empty
 
         saveCurrent();
       } catch (err) {
@@ -3577,16 +3496,13 @@
           bufferEl.innerHTML = "";
           return;
         }
-        // On error, keep existing content if we had it
+        // On error, keep existing content
         bufferEl.innerHTML = "";
-        if (hadExistingContent) {
-          rawBlueprintMarkdown = previousMarkdown;
-          bpEl.classList.remove("fading");
-          const errH2s = (renderMarkdown(previousMarkdown).match(/<h2>/gi) || []).length;
-          bpEl.innerHTML = renderBlueprintWithPhases(rawBlueprintMarkdown, { thinking: errH2s < BP_SECTION_NAMES.length });
+        rawBlueprintMarkdown = previousMarkdown;
+        bpEl.classList.remove("fading");
+        bpEl.innerHTML = renderBlueprintWithPhases(rawBlueprintMarkdown);
+        if (previousMarkdown) {
           $("#copyBtn").classList.add("visible"); $("#exportDropdown").classList.add("visible");
-        } else {
-          $("#bpContent").innerHTML = `<p style="color:#B33A3A">Failed to generate blueprint: ${err.message}</p>`;
         }
       } finally {
         blueprintBusy = false;
@@ -4114,21 +4030,23 @@
           addMessage(m.role, display);
         });
 
-        // Rebuild blueprint
-        if (rawBlueprintMarkdown) {
-          $("#bpPlaceholder").style.display = "none";
-          $("#bpContent").innerHTML = renderBlueprintWithPhases(rawBlueprintMarkdown);
-          $("#bpContent").classList.add("visible");
-          $("#copyBtn").classList.add("visible"); $("#exportDropdown").classList.add("visible");
-        }
-
+        // Rebuild blueprint — always show skeleton
+        $("#bpPlaceholder").style.display = "none";
         renderCampaignList();
         restoreProgressFromHistory();
+        $("#bpContent").innerHTML = renderBlueprintWithPhases(rawBlueprintMarkdown);
+        $("#bpContent").classList.add("visible");
+        if (rawBlueprintMarkdown) {
+          $("#copyBtn").classList.add("visible"); $("#exportDropdown").classList.add("visible");
+        }
       } else {
-        // First visit or empty — show blank state, no auto-created campaign
+        // First visit or empty — show skeleton
         currentCampaignId = null;
         conversationHistory = [];
         rawBlueprintMarkdown = "";
+        $("#bpPlaceholder").style.display = "none";
+        $("#bpContent").innerHTML = renderBlueprintWithPhases("");
+        $("#bpContent").classList.add("visible");
         renderCampaignList();
       }
     });
