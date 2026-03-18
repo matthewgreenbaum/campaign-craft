@@ -1210,17 +1210,17 @@
       letter-spacing: -0.01em;
     }
     .bp-content h2 {
-      font-size: 1.0rem;
+      font-size: 0.85rem;
       font-weight: 700;
       margin: 28px 0 12px;
-      padding: 8px 14px;
-      background: #EEF2FF;
-      border-left: 4px solid #3D38B0;
-      border-radius: 0 6px 6px 0;
-      color: #1A1A1A;
+      padding: 6px 12px;
+      margin-left: 14px;
+      background: #F5F4FA;
+      border-left: 2px dotted #A09CC7;
+      border-radius: 0 5px 5px 0;
+      color: #44406A;
       text-transform: uppercase;
       letter-spacing: 0.03em;
-      font-size: 0.85rem;
     }
     .bp-content h3 {
       font-size: 0.92rem;
@@ -1350,7 +1350,7 @@
     /* ---------- EMPTY BLUEPRINT SECTIONS ---------- */
     .bp-section-empty h2 {
       color: #B0ADC8;
-      background: #F5F4FA;
+      background: #F0EFF5;
       border-left-color: #D0CEE8;
       margin-bottom: 4px;
     }
@@ -1358,7 +1358,7 @@
       font-size: 0.78rem;
       color: #B0ADC8;
       font-style: italic;
-      margin: 0 0 8px 18px;
+      margin: 0 0 8px 32px;
       line-height: 1.4;
     }
 
@@ -3534,7 +3534,7 @@
           renderMarkdown(rawBlueprintMarkdown)
             // Inline styles on headings for paste targets that strip classes
             .replace(/<h1>/g, '<h1 style="font-size: 18pt; font-weight: 700; margin: 0 0 12px; padding-bottom: 8px; border-bottom: 2px solid #3D38B0; color: #1A1A1A;">')
-            .replace(/<h2>/g, '<h2 style="font-size: 12pt; font-weight: 700; margin: 20px 0 8px; padding: 6px 10px; background: #EEF2FF; border-left: 4px solid #3D38B0; color: #1A1A1A; text-transform: uppercase; letter-spacing: 0.03em;">')
+            .replace(/<h2>/g, '<h2 style="font-size: 12pt; font-weight: 700; margin: 20px 0 8px; padding: 6px 10px; margin-left: 14px; background: #F5F4FA; border-left: 2px dotted #A09CC7; color: #44406A; text-transform: uppercase; letter-spacing: 0.03em;">')
             .replace(/<h3>/g, '<h3 style="font-size: 11pt; font-weight: 600; margin: 16px 0 6px; color: #1A1A1A;">')
             .replace(/<p>/g, '<p style="margin: 0 0 10px; color: #1A1A1A;">')
             .replace(/<ul>/g, '<ul style="margin: 4px 0 14px 18px; padding: 0; color: #1A1A1A;">')
