@@ -3290,18 +3290,43 @@
         }
       });
 
-      // Append thinking indicator for the next section if streaming
+      // Append thinking indicator for the next section based on conversation progress
       if (showThinking) {
-        // Count existing numbered h2 sections
-        const sectionCount = (html.match(/<h2>/gi) || []).length;
-        const nextIdx = sectionCount; // 0-indexed into BP_SECTION_NAMES
-        if (nextIdx < BP_SECTION_NAMES.length) {
-          const nextNum = nextIdx + 1;
-          const nextName = BP_SECTION_NAMES[nextIdx];
+        // Map conversation progress → next blueprint section to tease.
+        // This follows the conversation flow, NOT document order.
+        // Exec Summary & Business Context are synthesis sections that appear last.
+        const NEXT_SECTION_MAP = [
+          { maxProgress: 3,  name: "Audience & Buying Context",              phase: "Phase 2: Strategy" },
+          { maxProgress: 5,  name: "Business Impact Potential",              phase: "Phase 2: Strategy" },
+          { maxProgress: 7,  name: "Core Insight",                           phase: "Phase 3: Insight & Thesis" },
+          { maxProgress: 9,  name: "Hypothesis",                             phase: "Phase 3: Insight & Thesis" },
+          { maxProgress: 12, name: "Executive Summary",                      phase: "Phase 1: Foundation" },
+          { maxProgress: 14, name: "Scope & Size",                           phase: "Phase 4: Planning & Requirements" },
+          { maxProgress: 23, name: "Needs Assessment",                       phase: "Phase 4: Planning & Requirements" },
+          { maxProgress: 24, name: "Strategic Quality Assessment",           phase: "Phase 5: Stress Test" },
+          { maxProgress: 25, name: "Advancement Decision",                   phase: "Phase 6: Decision" },
+        ];
+
+        const maxProgress = completedSections.size > 0 ? Math.max(...completedSections) : 0;
+
+        // Find the next section to tease, skipping any already rendered in the blueprint
+        let nextSection = null;
+        for (const entry of NEXT_SECTION_MAP) {
+          if (maxProgress <= entry.maxProgress) {
+            // Check if this section is already in the rendered blueprint
+            const escapedName = entry.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            if (!new RegExp(escapedName, 'i').test(html)) {
+              nextSection = entry;
+              break;
+            }
+          }
+        }
+
+        if (nextSection) {
           html += `<div class="bp-thinking-section">
             <div class="bp-thinking-header">
-              <span class="bp-thinking-number">${nextNum}<span class="bp-thinking-dots"><span></span><span></span><span></span></span></span>
-              ${nextName}
+              <span class="bp-thinking-number"><span class="bp-thinking-dots"><span></span><span></span><span></span></span></span>
+              ${nextSection.name}
             </div>
             <div class="bp-thinking-shimmer">
               <div class="bp-shimmer-line"></div>
@@ -3449,7 +3474,7 @@
         ...conversationHistory.map(m => ({ role: m.role, content: m.content })),
         {
           role: "user",
-          content: "Based on everything we've discussed so far, output ONLY the blueprint sections for which we have actually collected sufficient information through our conversation. Do NOT include sections we haven't discussed yet — no placeholders, no TBD sections, no skeleton outlines for future sections.\n\nThe full list of blueprint sections in order is:\n1. Executive Summary\n2. Business Context & Strategic Alignment\n3. Core Insight\n4. Hypothesis\n5. Business Impact Potential\n6. Audience & Buying Context\n7. Scope & Size (T-Shirt Classification)\n8. Needs Assessment\n9. Blind Spots & Assumptions\n10. KPIs & High-Level Timeline\n11. Strategic Quality Assessment\n12. Advancement Decision\n\nFor each section where we have discussed and collected sufficient information in the conversation, include that section in the output. If a section has not been discussed yet, omit it entirely. For example, if we've covered through Hypothesis, output sections 1–4 only.\n\nIMPORTANT: Output ONLY the formatted blueprint markdown. Do NOT include any conversational text, questions, commentary, or requests for more information. If you don't have enough info for a section, simply omit that section entirely. Never mix conversation with blueprint output.\n\nFormatting rules:\n- Use a markdown # heading for the campaign title at the top.\n- Number each section sequentially using ## headings in the format: ## 1. Executive Summary, ## 2. Business Context & Strategic Alignment, ## 3. Core Insight, etc.\n- Use standard markdown bullet lists with '- ' (dash space) for all bullet points. NEVER use the • bullet character.\n- Use **bold** for key labels within bullets (e.g., - **Campaign Focus**: ...).\n- Each bullet point MUST be on its own line.\n\nSPECIAL FORMATTING for Section 11 (Strategic Quality Assessment):\nFor the three assessment dimensions (Alignment with Business Goals, Potential Impact, Readiness / Feasibility), you MUST use scorecard directives instead of plain bullets. Output each as:\n<!--SCORECARD:Dimension Name|Tier Label|1-2 sentence rationale|color-->\nColor mapping: Strongly Aligned/High/Ready→green, Partially Aligned/Medium/Some Gaps→amber, Needs Work/Low/Not Ready→red\nOutput all three scorecard directives consecutively. You may include the Overall Verdict as regular markdown text after the scorecards.",
+          content: "Based on everything we've discussed so far, output ONLY the blueprint sections for which we have actually collected sufficient information through our conversation. Do NOT include sections we haven't discussed yet — no placeholders, no TBD sections, no skeleton outlines for future sections.\n\nThe full list of blueprint sections in order is:\n1. Executive Summary\n2. Business Context & Strategic Alignment\n3. Core Insight\n4. Hypothesis\n5. Business Impact Potential\n6. Audience & Buying Context\n7. Scope & Size (T-Shirt Classification)\n8. Needs Assessment\n9. Blind Spots & Assumptions\n10. KPIs & High-Level Timeline\n11. Strategic Quality Assessment\n12. Advancement Decision\n\nFor each section where we have discussed and collected sufficient information in the conversation, include that section in the output. If a section has not been discussed yet, omit it entirely.\n\nIMPORTANT SECTION ORDERING RULE — SYNTHESIS SECTIONS LAST:\nSections 1 (Executive Summary) and 2 (Business Context & Strategic Alignment) are SYNTHESIS sections that summarize the entire campaign. Do NOT include them until Core Insight AND Hypothesis have been discussed and collected. Before that point, start the blueprint with whichever section has data first (e.g., Audience & Buying Context, Business Impact Potential, KPIs). Once Core Insight and Hypothesis are collected, include Executive Summary and Business Context at the top in their proper positions.\n\nIMPORTANT: Output ONLY the formatted blueprint markdown. Do NOT include any conversational text, questions, commentary, or requests for more information. If you don't have enough info for a section, simply omit that section entirely. Never mix conversation with blueprint output.\n\nFormatting rules:\n- Use a markdown # heading for the campaign title at the top.\n- Number each section sequentially using ## headings in the format: ## 1. Executive Summary, ## 2. Business Context & Strategic Alignment, ## 3. Core Insight, etc.\n- Use standard markdown bullet lists with '- ' (dash space) for all bullet points. NEVER use the • bullet character.\n- Use **bold** for key labels within bullets (e.g., - **Campaign Focus**: ...).\n- Each bullet point MUST be on its own line.\n\nSPECIAL FORMATTING for Section 11 (Strategic Quality Assessment):\nFor the three assessment dimensions (Alignment with Business Goals, Potential Impact, Readiness / Feasibility), you MUST use scorecard directives instead of plain bullets. Output each as:\n<!--SCORECARD:Dimension Name|Tier Label|1-2 sentence rationale|color-->\nColor mapping: Strongly Aligned/High/Ready→green, Partially Aligned/Medium/Some Gaps→amber, Needs Work/Low/Not Ready→red\nOutput all three scorecard directives consecutively. You may include the Overall Verdict as regular markdown text after the scorecards.",
         },
       ];
 
