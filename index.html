@@ -3252,9 +3252,11 @@
 
       // Executive Summary (section 1) at top — synthesis section, populated last
       if (parsed.sections[1]) {
-        html += renderMarkdown(parsed.sections[1]);
+        let execHtml = renderMarkdown(parsed.sections[1]);
+        execHtml = execHtml.replace(/<h2>\d+\.\s*/g, "<h2>");
+        html += execHtml;
       } else {
-        html += `<div class="bp-section-empty"><h2>1. Executive Summary</h2><p class="bp-section-desc">Auto-generated synthesis once all key sections are complete</p></div>`;
+        html += `<div class="bp-section-empty"><h2>Executive Summary</h2><p class="bp-section-desc">Auto-generated synthesis once all key sections are complete</p></div>`;
       }
 
       for (const group of BLUEPRINT_LAYOUT) {
@@ -3265,11 +3267,13 @@
         // Sections within this phase
         for (const sec of group.sections) {
           if (parsed.sections[sec.num]) {
-            // Render populated section — parse its markdown to HTML
-            html += renderMarkdown(parsed.sections[sec.num]);
+            // Render populated section — strip canonical numbers from headings
+            let sectionHtml = renderMarkdown(parsed.sections[sec.num]);
+            sectionHtml = sectionHtml.replace(/<h2>\d+\.\s*/g, "<h2>");
+            html += sectionHtml;
           } else {
-            // Empty section — show muted header with description
-            html += `<div class="bp-section-empty"><h2>${sec.num}. ${sec.name}</h2><p class="bp-section-desc">${sec.desc}</p></div>`;
+            // Empty section — show muted header with description (no number)
+            html += `<div class="bp-section-empty"><h2>${sec.name}</h2><p class="bp-section-desc">${sec.desc}</p></div>`;
           }
         }
       }
