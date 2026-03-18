@@ -2038,6 +2038,7 @@
     // Section-based progress: tracks completed sections via AI directives.
     const PROGRESS_TOTAL_SECTIONS = 26;
     let completedSections = new Set();
+    let rawBlueprintMarkdown = ""; // raw markdown of the current blueprint
 
     function launchConfetti() {
       const container = document.createElement("div");
@@ -2071,6 +2072,22 @@
       { id: 4, name: "Planning",    sections: [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23] },
       { id: 5, name: "Stress Test", sections: [24, 25] },
       { id: 6, name: "Decision",    sections: [26] },
+    ];
+
+    // Blueprint section names in order (matches the numbered ## headings in the output)
+    const BP_SECTION_NAMES = [
+      "Executive Summary",
+      "Business Context & Strategic Alignment",
+      "Core Insight",
+      "Hypothesis",
+      "Business Impact Potential",
+      "Audience & Buying Context",
+      "Scope & Size",
+      "Needs Assessment",
+      "Blind Spots & Assumptions",
+      "KPIs & High-Level Timeline",
+      "Strategic Quality Assessment",
+      "Advancement Decision",
     ];
 
     function getPhaseStatus(phase) {
@@ -2114,6 +2131,70 @@
       const fill = document.getElementById("chatProgressFill");
       if (fill) fill.style.width = pct + "%";
       updatePhaseStepper();
+      showPreBlueprintThinking();
+    }
+
+    // Show thinking placeholders in the blueprint panel before the first
+    // real blueprint stream. Maps progress-section completions to the number
+    // of blueprint sections the user is "working toward."
+    function showPreBlueprintThinking() {
+      // Only show pre-blueprint thinking if we don't have real blueprint content yet
+      if (rawBlueprintMarkdown) return;
+      if (completedSections.size === 0) return;
+
+      // Map progress sections → how many blueprint sections to tease
+      // Progress 1 (name) → 1 thinking placeholder (Executive Summary)
+      // Progress 2 (concept) → 1 placeholder
+      // Progress 3 (company) → 2 placeholders (+ Business Context)
+      // Progress 4-5 (audience, sales) → 3 placeholders (+ Audience)
+      // Progress 6-7 (goal, KPIs) → 4 placeholders
+      // Beyond that, streamBlueprint takes over
+      const maxSection = Math.max(...completedSections);
+      let thinkingCount;
+      if (maxSection <= 2) thinkingCount = 1;
+      else if (maxSection <= 3) thinkingCount = 2;
+      else if (maxSection <= 5) thinkingCount = 3;
+      else thinkingCount = 4;
+
+      // Determine which phase header to show based on which sections are teased
+      const phaseForSection = [
+        "Phase 1: Foundation",           // 1. Executive Summary
+        "Phase 1: Foundation",           // 2. Business Context
+        "Phase 3: Insight & Thesis",     // 3. Core Insight
+        "Phase 3: Insight & Thesis",     // 4. Hypothesis
+        "Phase 2: Strategy",             // 5. Business Impact
+        "Phase 2: Strategy",             // 6. Audience & Buying Context
+      ];
+
+      let html = "";
+      let lastPhase = "";
+      for (let i = 0; i < thinkingCount; i++) {
+        const phase = phaseForSection[i] || "";
+        if (phase && phase !== lastPhase) {
+          html += `<div class="bp-phase-header">${phase}</div>`;
+          lastPhase = phase;
+        }
+        const num = i + 1;
+        const name = BP_SECTION_NAMES[i];
+        html += `<div class="bp-thinking-section">
+          <div class="bp-thinking-header">
+            <span class="bp-thinking-number">${num}<span class="bp-thinking-dots"><span></span><span></span><span></span></span></span>
+            ${name}
+          </div>
+          <div class="bp-thinking-shimmer">
+            <div class="bp-shimmer-line"></div>
+            <div class="bp-shimmer-line"></div>
+            <div class="bp-shimmer-line"></div>
+          </div>
+        </div>`;
+      }
+
+      const bpEl = document.getElementById("bpContent");
+      const placeholder = document.getElementById("bpPlaceholder");
+      if (!bpEl || !placeholder) return;
+      placeholder.style.display = "none";
+      bpEl.innerHTML = html;
+      bpEl.classList.add("visible");
     }
 
     // Restore progress from conversation history (for returning sessions)
@@ -3078,22 +3159,6 @@
       { phase: "Phase 6: Decision",             headings: ["Advancement"] },
     ];
 
-    // Blueprint section names in order (matches the numbered ## headings)
-    const BP_SECTION_NAMES = [
-      "Executive Summary",
-      "Business Context & Strategic Alignment",
-      "Core Insight",
-      "Hypothesis",
-      "Business Impact Potential",
-      "Audience & Buying Context",
-      "Scope & Size",
-      "Needs Assessment",
-      "Blind Spots & Assumptions",
-      "KPIs & High-Level Timeline",
-      "Strategic Quality Assessment",
-      "Advancement Decision",
-    ];
-
     function renderBlueprintWithPhases(md, opts) {
       const showThinking = opts && opts.thinking;
       let html = renderMarkdown(md);
@@ -3226,7 +3291,7 @@
     }
 
     // ─── streaming blueprint update ───
-    let rawBlueprintMarkdown = "";
+    // rawBlueprintMarkdown declared earlier near progress tracking
     let blueprintAbortController = null;
 
     // Minimum conversation turns before auto-generating a blueprint
