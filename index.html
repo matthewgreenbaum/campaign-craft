@@ -3620,22 +3620,37 @@
     // ─── copy (rich text) ───
     async function copyBlueprint() {
       try {
-        // Build styled HTML for rich-text paste (Google Docs, Word, etc.)
-        const richHtml = `<html><body style="font-family: 'Open Sans', Arial, Helvetica, sans-serif; color: #1A1A1A; font-size: 11pt; line-height: 1.6;">` +
-          renderMarkdown(rawBlueprintMarkdown)
-            // Inline styles on headings for paste targets that strip classes
-            .replace(/<h1>/g, '<h1 style="font-size: 18pt; font-weight: 700; margin: 0 0 12px; padding-bottom: 8px; border-bottom: 2px solid #3D38B0; color: #1A1A1A;">')
-            .replace(/<h2>/g, '<h2 style="font-size: 11pt; font-weight: 700; margin: 22px 0 8px; padding: 0; color: #2D2A4A; text-transform: uppercase; letter-spacing: 0.04em;">')
-            .replace(/<h3>/g, '<h3 style="font-size: 11pt; font-weight: 600; margin: 16px 0 6px; color: #1A1A1A;">')
-            .replace(/<p>/g, '<p style="margin: 0 0 10px; color: #1A1A1A;">')
-            .replace(/<ul>/g, '<ul style="margin: 4px 0 14px 18px; padding: 0; color: #1A1A1A;">')
-            .replace(/<ol>/g, '<ol style="margin: 4px 0 14px 18px; padding: 0; color: #1A1A1A;">')
-            .replace(/<li>/g, '<li style="margin-bottom: 4px; color: #1A1A1A;">')
-            .replace(/<table>/g, '<table style="width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 10pt;">')
-            .replace(/<th>/g, '<th style="padding: 8px 12px; border: 1px solid #D8D5F2; background: #EEF2FF; font-weight: 600; text-align: left; color: #1A1A1A;">')
-            .replace(/<td>/g, '<td style="padding: 8px 12px; border: 1px solid #D8D5F2; text-align: left; color: #1A1A1A;">')
-            .replace(/<strong>/g, '<strong style="font-weight: 600; color: #1A1A1A;">')
-          + `</body></html>`;
+        // Build styled HTML with phase headers for rich-text paste (Google Docs, Word, etc.)
+        const parsed = parseBlueprintSections(rawBlueprintMarkdown);
+        let body = "";
+
+        // Campaign title
+        if (parsed.title) {
+          body += `<h1 style="font-family: 'Open Sans', Arial, sans-serif; font-size: 20pt; font-weight: 700; color: #4338CA; margin: 0 0 4px; padding-bottom: 8px; border-bottom: 3px solid #4338CA;">${parsed.title}</h1>`;
+        }
+
+        // Executive Summary at top (strip section numbers from headings)
+        if (parsed.sections[1]) {
+          let execHtml = renderMarkdown(parsed.sections[1]);
+          execHtml = execHtml.replace(/<h2>\d+\.\s*/g, "<h2>");
+          body += styledSection(execHtml);
+        }
+
+        // Phase-grouped sections
+        for (const group of BLUEPRINT_LAYOUT) {
+          // Phase header — styled as a colored label
+          body += `<p style="font-family: 'Open Sans', Arial, sans-serif; font-size: 9pt; font-weight: 700; color: #4A4578; margin: 28px 0 6px; padding-top: 14px; border-top: 1px solid #D8D5F2; letter-spacing: 1px;">${group.phase.toUpperCase()}</p>`;
+
+          for (const sec of group.sections) {
+            if (parsed.sections[sec.num]) {
+              let secHtml = renderMarkdown(parsed.sections[sec.num]);
+              secHtml = secHtml.replace(/<h2>\d+\.\s*/g, "<h2>");
+              body += styledSection(secHtml);
+            }
+          }
+        }
+
+        const richHtml = `<html><body style="font-family: 'Open Sans', Arial, Helvetica, sans-serif; color: #1A1A2E; font-size: 10.5pt; line-height: 1.6;">${body}</body></html>`;
 
         const htmlBlob = new Blob([richHtml], { type: "text/html" });
         const textBlob = new Blob([rawBlueprintMarkdown], { type: "text/plain" });
@@ -3651,6 +3666,21 @@
       } catch {
         alert("Copy failed — please select and copy manually.");
       }
+    }
+
+    // Apply inline styles to rendered HTML for clipboard paste (Google Docs, Word)
+    function styledSection(html) {
+      return html
+        .replace(/<h2>/g, '<h2 style="font-family: \'Open Sans\', Arial, sans-serif; font-size: 13pt; font-weight: 700; color: #3D38B0; margin: 20px 0 6px;">')
+        .replace(/<h3>/g, '<h3 style="font-family: \'Open Sans\', Arial, sans-serif; font-size: 11pt; font-weight: 600; color: #5B21B6; margin: 14px 0 4px;">')
+        .replace(/<p>/g, '<p style="font-family: \'Open Sans\', Arial, sans-serif; margin: 0 0 8px; color: #1A1A2E;">')
+        .replace(/<ul>/g, '<ul style="margin: 4px 0 12px 18px; padding: 0; color: #1A1A2E;">')
+        .replace(/<ol>/g, '<ol style="margin: 4px 0 12px 18px; padding: 0; color: #1A1A2E;">')
+        .replace(/<li>/g, '<li style="font-family: \'Open Sans\', Arial, sans-serif; margin-bottom: 4px; color: #1A1A2E;">')
+        .replace(/<table>/g, '<table style="width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 10pt;">')
+        .replace(/<th>/g, '<th style="font-family: \'Open Sans\', Arial, sans-serif; padding: 8px 12px; border: 1px solid #D8D5F2; background: #EEF2FF; font-weight: 600; text-align: left; color: #1A1A2E;">')
+        .replace(/<td>/g, '<td style="font-family: \'Open Sans\', Arial, sans-serif; padding: 8px 12px; border: 1px solid #D8D5F2; text-align: left; color: #1A1A2E;">')
+        .replace(/<strong>/g, '<strong style="font-weight: 600; color: #1A1A2E;">');
     }
 
     // ─── Google Docs export ───
