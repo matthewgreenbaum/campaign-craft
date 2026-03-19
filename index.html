@@ -2212,6 +2212,11 @@
       return md.trim();
     }
 
+    // Strip chat-style blue spans from blueprint content — these are for chat transitions only
+    function stripChatSpans(text) {
+      return text.replace(/<span\s+style="[^"]*">(.*?)<\/span>/gi, "$1");
+    }
+
     // Merge a single blueprint section into rawBlueprintMarkdown and re-render the preview
     function mergeBlueprintSection(num, content) {
       const parsed = parseBlueprintSections(rawBlueprintMarkdown);
@@ -2527,8 +2532,7 @@
       while ((bpMatch = bpRegex.exec(reply)) !== null) {
         const secNum = parseInt(bpMatch[1]);
         // Strip chat-style blue spans — they're for chat transitions, not blueprint content
-        let secContent = bpMatch[2].trim()
-          .replace(/<span\s+style="[^"]*">(.*?)<\/span>/gi, "$1");
+        let secContent = stripChatSpans(bpMatch[2].trim());
         if (secContent) {
           mergeBlueprintSection(secNum, secContent);
         }
@@ -3334,7 +3338,7 @@
 
       // Executive Summary (section 1) at top — synthesis section, populated last
       if (parsed.sections[1]) {
-        let execHtml = renderMarkdown(parsed.sections[1]);
+        let execHtml = renderMarkdown(stripChatSpans(parsed.sections[1]));
         execHtml = execHtml.replace(/<h2>\d+\.\s*/g, "<h2>");
         html += execHtml;
       } else {
@@ -3349,8 +3353,8 @@
         // Sections within this phase
         for (const sec of group.sections) {
           if (parsed.sections[sec.num]) {
-            // Render populated section — strip canonical numbers from headings
-            let sectionHtml = renderMarkdown(parsed.sections[sec.num]);
+            // Render populated section — strip chat-style blue spans + canonical numbers
+            let sectionHtml = renderMarkdown(stripChatSpans(parsed.sections[sec.num]));
             sectionHtml = sectionHtml.replace(/<h2>\d+\.\s*/g, "<h2>");
             html += sectionHtml;
           } else {
@@ -3569,6 +3573,8 @@
         // Stream finished — merge incoming sections with existing ones
         // so inline BP_START/BP_END updates aren't lost
         if (blueprintConfirmed) {
+          // Strip any chat-style blue spans that leaked into blueprint output
+          incomingMarkdown = stripChatSpans(incomingMarkdown);
           const existing = parseBlueprintSections(rawBlueprintMarkdown);
           const incoming = parseBlueprintSections(incomingMarkdown);
           // Use incoming title if available, otherwise keep existing
